@@ -64,17 +64,32 @@ function init(){
 
 	gui.push(new canvasEx({
 		canvas, context, type: pol, x: center, y: center + 150, v: 4, d: 45, r: 70, color: '#222',
-		label: 'Ground'
+		label: ['Ground', 'Hitbox']
 	}));
 
 	gui.push(new canvasEx({
 		canvas, context, type: pol, x: center + '-150', y: center + 150, v: 4, d: 45, r: 70, color: '#222',
-		label: 'Ground'
+		label: ['Ground', 'Hitbox']
 	}));
 
 	gui.push(new canvasEx({
 		canvas, context, type: pol, x: center + 150, y: center + 150, v: 4, d: 45, r: 70, color: '#222',
-		label: 'Ground'
+		label: ['Ground', 'Hitbox']
+	}));
+	
+	/*
+	gui.push(new canvasEx({
+		canvas, context, type: txt, x: center, y: center + '-60', size: 100, text: 'データかえてみた。', align: center,
+	}));
+	gui.push(new canvasEx({
+		canvas, context, type: txt, x: center + 135, y: center, size: 100, text: 'うごいた！', align: center, mode: 1
+	}));
+	*/
+	
+	// feed
+    gui.push(new canvasEx({
+		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
+		src: 'Image/Screen/feedmask.png'
 	}));
 
 	// Init sounds
@@ -95,10 +110,14 @@ function init(){
     // Make group with add objects
 	grounds = new group();
 	gui.map(function(obj){
-		if(obj.label === 'Ground'){
+		if(obj.label !== void(0) && (obj.label === 'file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Ground' || obj.label.indexOf('Ground') > -1)){
 			grounds.add(obj);
 		}
 	});
+	
+	gameController = {
+		puzzle: false
+	};
 }
 
 function main(){
@@ -137,7 +156,7 @@ function draw(){
 
 function event(){
     _d.addEventListener('keydown', function(e){
-        pressedKeys[e.keyCode] = 1;
+        pressedKeys[e.keyCode] = !gameController.puzzle;
     });
 
     _d.addEventListener('keyup', function(e){
@@ -161,12 +180,18 @@ function setSize(){
 }
 
 function playerControl(){
+
     // Deceleration according to law of inertia
     player.accel.x += (pressedKeys[39] - pressedKeys[37]) * accelSpeed; // Rigth and Left arrow keys
-    //player.accel.y += (pressedKeys[40] - pressedKeys[38]) * accelSpeed; // Down and Up arrow keys
     player.accel.x *= lowAccel;
+	player.x += player.accel.x;
+	
+	
+	gui[gui.length - 1].alpha += ((gameController.puzzle * 0.3) - gui[gui.length - 1].alpha) / 5;
+	
+    //player.accel.y += (pressedKeys[40] - pressedKeys[38]) * accelSpeed; // Down and Up arrow keys
     //player.accel.y *= lowAccel;
-    player.x += player.accel.x;
+	
     player.y += player.accel.y + player.accel.gravity;
 
     // Move player's coordinates
