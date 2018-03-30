@@ -3,6 +3,8 @@ var canv,
     cont,
     size; // canvas area , context and div element of control canvas size
 
+var gameController; // to use change the game mode
+
 var width, height; // canvas width and height
 
 var soundset; // BGM and SE stacks
