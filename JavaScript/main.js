@@ -94,12 +94,6 @@ function init(){
 	}));
 	*/
 	
-	// feed
-    gui.push(new canvasEx({
-		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
-		src: 'Image/Screen/feedmask.png'
-	}));
-	
 	// test map chip
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center + 100, w: 200, h:200, center: 1,
@@ -114,6 +108,7 @@ function init(){
 		label: ['Ground', 'Hitbox']
 	}));
 	*/
+	
 	gui.push(new canvasEx({
 		canvas, context, type: pth, x: center, y: center + + 103, bold: 2, color: '#111',
 		pos: [
@@ -121,7 +116,13 @@ function init(){
 		],
 		label: ['Ground', 'Hitbox', 'Mapchip'], mapchipData: {x: 0, y: 103}
 	}));
-
+	
+	// feed (must be at last)
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
+		src: 'Image/Screen/feedmask.png'
+	}));
+	
 	// mapchips (prototype)
 	gui.map(function(e, i){
 		if(e.label !== void(0) && (e.label === 'file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Mapchip' || e.label.indexOf('Mapchip') > -1)){
