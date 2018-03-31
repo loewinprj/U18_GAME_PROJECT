@@ -16,6 +16,9 @@ function init(){
     _debug = {
         hitbox: false,
     };
+	
+	// reset mapchips array
+	mapchips = [];
 
     // Player's detailed information
     player = {
@@ -62,6 +65,8 @@ function init(){
 		label: ['Hitbox', 'Player'] // 複数のラベル保持も可能
 	}));
 
+	/*
+	// Test hitboxes of cube
 	gui.push(new canvasEx({
 		canvas, context, type: pol, x: center, y: center + 150, v: 4, d: 45, r: 70, color: '#222',
 		label: ['Ground', 'Hitbox']
@@ -76,11 +81,14 @@ function init(){
 		canvas, context, type: pol, x: center + 150, y: center + 150, v: 4, d: 45, r: 70, color: '#222',
 		label: ['Ground', 'Hitbox']
 	}));
+	*/
+	
 	
 	/*
 	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center + '-60', size: 100, text: 'データかえてみた。', align: center,
+		canvas, context, type: txt, x: center, y: center + '-60', size: 130, text: 'スクロールがうごいた！！！', align: center,
 	}));
+	
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center + 135, y: center, size: 100, text: 'うごいた！', align: center, mode: 1
 	}));
@@ -91,7 +99,54 @@ function init(){
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
 		src: 'Image/Screen/feedmask.png'
 	}));
+	
+	// test map chip
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center, y: center + 100, w: 200, h:200, center: 1,
+		src: 'Image/Screen/Mapchip/test.png',
+		label: 'Mapchip', mapchipData: {x: 0, y: 100}
+	}));
+	
+	/*
+	// done
+	gui.push(new canvasEx({
+		canvas, context, type: pol, x: center, y: center + 130, v: 4, d: 45, r: 70, color: '#222',
+		label: ['Ground', 'Hitbox']
+	}));
+	*/
+	gui.push(new canvasEx({
+		canvas, context, type: pth, x: center, y: center + + 103, bold: 2, color: '#111',
+		pos: [
+			{x: -80, y: -30}, {x: 100, y: -30}, {x: 100, y: 30}, {x: 100, y: 30}, {x: -80, y: 30}
+		],
+		label: ['Ground', 'Hitbox', 'Mapchip'], mapchipData: {x: 0, y: 103}
+	}));
 
+	// mapchips (prototype)
+	gui.map(function(e, i){
+		if(e.label !== void(0) && (e.label === 'file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Mapchip' || e.label.indexOf('Mapchip') > -1)){
+			mapchips.push(
+				{
+					x: e.mapchipData.x,
+					y: e.mapchipData.y,
+					index: i
+				}
+			);
+		}
+	});	
+	
+	/*
+	mapchips = [
+		{
+			x: 0,
+			y: 115,
+			obj: new canvasEx({
+				canvas, context, type: pth, x: center, y: center + 115, bold: 2, color: '#111', 
+				pos: [{x: -80, y: -30}, {x: 100, y: -30}, {x: 100, y: 30}, {x: 100, y: 30}, {x: -80, y: 30}], label: ['Ground', 'Hitbox']})
+		}
+	];
+	*/
+	
 	// Init sounds
 	const soundname = [
 	        'Sound/Test/U18-5(1).mp3'
@@ -109,15 +164,22 @@ function init(){
 
     // Make group with add objects
 	grounds = new group();
-	gui.map(function(obj){
-		if(obj.label !== void(0) && (obj.label === 'file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Ground' || obj.label.indexOf('Ground') > -1)){
-			grounds.add(obj);
+	gui.map(function(e){ // e is an object
+		if(e.label !== void(0) && (e.label === 'file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Ground' || e.label.indexOf('Ground') > -1)){
+			grounds.add(e);
 		}
 	});
 	
 	gameController = {
-		puzzle: false
+		puzzle: false,
+		scroll: {
+			x: 0, 
+			y: 0
+		}
 	};
+	
+	// test
+	_debug.hitbox = false;
 }
 
 function main(){
@@ -137,6 +199,7 @@ function update(){
     }
 
     playerControl();
+	scrollMapchips();
 }
 
 function draw(){
@@ -307,3 +370,12 @@ gui.push(new canvasEx({
 	}));
 	grounds = new group(gui[3], gui[4], gui[5],gui[6]);
 */
+
+function scrollMapchips(){
+	mapchips.map(function(e){
+		gui[e.index].x = center + (gui[e.index].mapchipData.x + gameController.scroll.x); //+ gameController.scroll.x;
+		gui[e.index].y = center + (gui[e.index].mapchipData.y + gameController.scroll.y); //+ gameController.scroll.y;
+		
+		//console.log(e.x, e.y);
+	});
+}
