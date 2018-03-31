@@ -8,6 +8,7 @@ var gameController; // to use change the game mode
 var width, height; // canvas width and height
 
 var soundset; // BGM and SE stacks
+var mapchips; // to use ground hit
 var grounds; // grounds stacks
 var gui; // gui stacks
 
