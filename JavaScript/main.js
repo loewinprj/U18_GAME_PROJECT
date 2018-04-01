@@ -15,6 +15,12 @@ function init(){
     // Debug status
     _debug = {
         hitbox: false,
+		screen: false,
+		keyBuffer: {
+			main: 0,
+			puzzle: 0
+		},
+		labelIndex: null
     };
 	
 	// reset mapchips array
@@ -65,64 +71,58 @@ function init(){
 		label: ['Hitbox', 'Player'] // 複数のラベル保持も可能
 	}));
 	
-
-	/*
-	// Test hitboxes of cube
-	gui.push(new canvasEx({
-		canvas, context, type: pol, x: center, y: center + 150, v: 4, d: 45, r: 70, color: '#222',
-		label: ['Ground', 'Hitbox']
-	}));
-	gui.push(new canvasEx({
-		canvas, context, type: pol, x: center + '-150', y: center + 150, v: 4, d: 45, r: 70, color: '#222',
-		label: ['Ground', 'Hitbox']
-	}));
-	gui.push(new canvasEx({
-		canvas, context, type: pol, x: center + 150, y: center + 150, v: 4, d: 45, r: 70, color: '#222',
-		label: ['Ground', 'Hitbox']
-	}));
-	*/
-	
-	
-	/*
-	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center + '-60', size: 130, text: 'スクロールがうごいた！！！', align: center,
-	}));
-	
-	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center + 135, y: center, size: 100, text: 'うごいた！', align: center, mode: 1
-	}));
-	*/
-	
-	/*
-	// Old
-	// test map chip
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: center, y: center + 100, w: 200, h: 200, center: 1,
-		src: 'Image/Screen/Mapchip/test.png',
-		label: 'Mapchip', mapchipData: {x: 0, y: 100}
-	}));
-	
-	gui.push(new canvasEx({
-		canvas, context, type: pth, x: center, y: center + + 103, bold: 2, color: '#111',
-		pos: [
-			{x: -80, y: -30}, {x: 100, y: -30}, {x: 100, y: 30}, {x: 100, y: 30}, {x: -80, y: 30}
-		],
-		label: ['Ground', 'Hitbox', 'Mapchip'], mapchipData: {x: 0, y: 103}
-	}));
-	*/
-	
 	// JS-System
-	init_mapchip(canvas, context);	
+	init_mapchip(canvas, context);
 	
-	// feed (must be at last)
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
-		src: 'Image/Screen/puzzleMask.png'
+		src: 'Image/Screen/puzzleMask.png',
+		label: 'Mask'
 	}));
+	
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0,
+		src: 'Image/Screen/puzzleMask_dropArea.png',
+		label: 'Mask'
+	}));
+	
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: -70, y: center + 200, w: 500, h: 500, alpha: 0,
+		src: 'Image/Screen/debugLabel.png',
+		label: 'Label'
+	}));
+	
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
+		src: 'Image/Screen/feedmask.png',
+		label: 'Feed'
+	}));
+	
+	// Init sounds
+	const soundname = [
+	        'Sound/Test/U18-6(1).mp3'
+	    ];
 
-	// mapchips (prototype)
+	soundset = new Array(1).fill(0);
+	soundset.forEach(function(e, index, array){
+	   array[index] = new sound({src: soundname[index], loop: 1});
+	});
+
+	// setup _animation object
+	_animation.bgmStart = 1 // Control the bgm
+	_animation.loadFinish = 30; // interval of start after loaded images
+	_animation.firstInterval = 10; // interval of first loaded to show in a time
+
+	pressedKeys = []; // Reset the array for stack pressed keys
+	pressedKeys[37] = pressedKeys[38] = pressedKeys[39] = pressedKeys[40] = 0; // Measures against NaN
+
+    // Make group with add objects
+	grounds = new group();
+	
+	// create new gui
 	gui.map(function(e, i){
-		if(e.label !== void(0) && (e.label === 'Mapchip' || e.label.indexOf('Mapchip') > -1)){
+		let label = e.label;
+		if(checkLabel(label, 'Mapchip')){
 			mapchips.push(
 				{
 					x: e.mapchipData.x,
@@ -131,30 +131,18 @@ function init(){
 				}
 			);
 		}
-	});	
-	
-	// Init sounds
-	const soundname = [
-	        'Sound/Test/U18-5(1).mp3'
-	    ];
-
-	soundset = new Array(1).fill(0);
-	soundset.forEach(function(e, index, array){
-	   array[index] = new sound({src: soundname[index], loop: 1});
-	});
-
-	_animation.bgmStart = 1 // Control the bgm
-
-	pressedKeys = []; // Reset the array for stack pressed keys
-	pressedKeys[37] = pressedKeys[38] = pressedKeys[39] = pressedKeys[40] = 0; // Measures against NaN
-
-    // Make group with add objects
-	grounds = new group();
-	gui.map(function(e){ // e is an object
-		if(e.label !== void(0) && (e.label === 'Ground' || e.label.indexOf('Ground') > -1)){
+		if(checkLabel(label, 'Ground')){
 			grounds.add(e);
 		}
+		if(checkLabel(label, 'Label')){
+			_debug.labelIndex = i;
+		}
+		if(checkLabel(label, 'Feed')){
+			_debug.feedIndex = i;
+		}
 	});
+	
+	//labelIndex
 	
 	gameController = {
 		puzzle: false,
@@ -165,7 +153,7 @@ function init(){
 	};
 	
 	// test
-	_debug.hitbox = true;
+	//_debug.hitbox = true;
 }
 
 function init_mapchip(canvas, context){
@@ -189,27 +177,46 @@ function init_mapchip(canvas, context){
 	});
 }
 
-
 // Start main
-
 function main(){
     requestAnimationFrame(main); // loop method
 
     if(_loadedImages === _maxImages){
-		draw();
-		update();
-		//console.log(player.standing)
-    }
+		if(!_animation.firstInterval){
+			draw();
+			update();
+		} else {
+			_animation.firstInterval --;
+		}
+	}
 }
 
 function update(){
     if(_animation.bgmStart){
+		_animation.bgmStart = 0;
+		soundset[0].volume(0);
         soundset[0].play(1);
-        _animation.bgmStart = 0;
     }
 
-    playerControl();
+	keyEvents();
+	playerControl();
 	scrollMapchips();
+	debugmodeLabel();
+	
+	// Mask alpha
+	gui.forEach(function(e){
+		if(checkLabel(e.label, 'Mask')){
+			e.alpha += (0.27 * gameController.puzzle - e.alpha) / 4; 
+		}
+	});
+	
+	_animation.loadFinish -= (_animation.loadFinish > 0);
+	
+	
+	gui[_debug.feedIndex].alpha = _animation.loadFinish / 30;
+	soundset[0].volume(abs(1 - (_animation.loadFinish / 30)));
+	
+	//console.log(gui[_debug.feedIndex].alpha);
 }
 
 function draw(){
@@ -229,8 +236,8 @@ function draw(){
 
 function event(){
     _d.addEventListener('keydown', function(e){
-        pressedKeys[e.keyCode] = !gameController.puzzle;
-    });
+		pressedKeys[e.keyCode] = 1;
+	});
 
     _d.addEventListener('keyup', function(e){
         pressedKeys[e.keyCode] = 0;
@@ -252,15 +259,41 @@ function setSize(){
 	width = canv.width;
 }
 
-function playerControl(){
+function checkLabel(base, search){
+	if(base === void(0)){
+		return false;
+	}
+	
+	return (base === search || base.indexOf(search) > -1);
+}
 
+function keyEvents(){
+	if(pressedKeys[17] && pressedKeys[32] && !_debug.keyBuffer.main){ // ctrl + space switch debug mode
+		_debug.keyBuffer.main = 15; // 30(fps) * 15 = 1500ms (1.5s) = interval
+		_debug.screen = !_debug.screen;
+		console.log(`User switched _debug.screen : ${_debug.screen}`);
+	}
+	
+	if(_debug.screen){
+		if((pressedKeys[48] || pressedKeys[96]) && !_debug.keyBuffer.puzzle){
+			_debug.keyBuffer.puzzle = 15;
+			gameController.puzzle = !gameController.puzzle;
+			console.log(`User switched gameController.puzzle : ${gameController.puzzle}`);
+		}
+	}
+	
+	Object.keys(_debug.keyBuffer).map(function(e){
+		_debug.keyBuffer[e] -= (_debug.keyBuffer[e] > 0);
+	});
+}
+
+function playerControl(){
+	let goCase = (_debug.screen || !gameController.puzzle);
+	
     // Deceleration according to law of inertia
-    player.accel.x += (pressedKeys[39] - pressedKeys[37]) * accelSpeed; // Rigth and Left arrow keys
+    player.accel.x += (pressedKeys[39] - pressedKeys[37]) * accelSpeed * goCase; // Rigth and Left arrow keys
     player.accel.x *= lowAccel;
 	player.x += player.accel.x;
-	
-	
-	gui[gui.length - 1].alpha += ((gameController.puzzle * 0.3) - gui[gui.length - 1].alpha) / 5;
 	
     //player.accel.y += (pressedKeys[40] - pressedKeys[38]) * accelSpeed; // Down and Up arrow keys
     //player.accel.y *= lowAccel;
@@ -272,13 +305,13 @@ function playerControl(){
     gui[1].y = gui[2].y = center + player.y;
 
     // Set player's direction
-    if(pressedKeys[37] || pressedKeys[39]){
+    if((pressedKeys[37] || pressedKeys[39]) && goCase){
         player.flip = pressedKeys[39] + 0;
         gui[1].flip = player.flip;
     }
 
     // Frame for Character animation
-    player.frame += (pressedKeys[37] || pressedKeys[39]) * player.standing;
+    player.frame += (pressedKeys[37] || pressedKeys[39]) * player.standing * goCase;
 
     // Your code here. (gravity, 当たり判定完成後)
     player.accel.gravity += 0.5;
@@ -317,7 +350,7 @@ function playerControl(){
 				player.hit = false;
 				player.accel.gravity = 0;
 				player.accel.y = 0;
-				player.accel.y += pressedKeys[38] * -jumpPower; //ジャンプを有効化する
+				player.accel.y += (pressedKeys[38] * -jumpPower) * goCase; //ジャンプを有効化する
 			}
 			player.x = result[0];
 			player.y = result[1];
@@ -371,21 +404,13 @@ function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 	return [tentativeX, tentativeY, isHit];
 }
 
-/*
-const canvas = canv;
-const context = cont;
-gui.push(new canvasEx({
-		canvas, context, type: pol, x: center + '300', y: center + 200, v: 4, d: 45, r: 70, color: '#222',
-		label: 'Ground'
-	}));
-	grounds = new group(gui[3], gui[4], gui[5],gui[6]);
-*/
-
 function scrollMapchips(){
 	mapchips.map(function(e){
 		gui[e.index].x = center + (gui[e.index].mapchipData.x + gameController.scroll.x); //+ gameController.scroll.x;
 		gui[e.index].y = center + (gui[e.index].mapchipData.y + gameController.scroll.y); //+ gameController.scroll.y;
-		
-		//console.log(e.x, e.y);
 	});
+}
+
+function debugmodeLabel(){
+	gui[_debug.labelIndex].alpha += (_debug.screen - gui[_debug.labelIndex].alpha) / 3;
 }
