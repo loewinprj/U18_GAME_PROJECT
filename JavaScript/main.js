@@ -11,7 +11,7 @@ function init(){
 
     setSize();
     clear();
-
+	
     // Debug status
     _debug = {
         hitbox: false,
@@ -64,6 +64,7 @@ function init(){
 		],
 		label: ['Hitbox', 'Player'] // 複数のラベル保持も可能
 	}));
+	
 
 	/*
 	// Test hitboxes of cube
@@ -71,12 +72,10 @@ function init(){
 		canvas, context, type: pol, x: center, y: center + 150, v: 4, d: 45, r: 70, color: '#222',
 		label: ['Ground', 'Hitbox']
 	}));
-
 	gui.push(new canvasEx({
 		canvas, context, type: pol, x: center + '-150', y: center + 150, v: 4, d: 45, r: 70, color: '#222',
 		label: ['Ground', 'Hitbox']
 	}));
-
 	gui.push(new canvasEx({
 		canvas, context, type: pol, x: center + 150, y: center + 150, v: 4, d: 45, r: 70, color: '#222',
 		label: ['Ground', 'Hitbox']
@@ -94,20 +93,14 @@ function init(){
 	}));
 	*/
 	
+	/*
+	// Old
 	// test map chip
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center, y: center + 100, w: 200, h:200, center: 1,
+		canvas, context, type: img, x: center, y: center + 100, w: 200, h: 200, center: 1,
 		src: 'Image/Screen/Mapchip/test.png',
 		label: 'Mapchip', mapchipData: {x: 0, y: 100}
 	}));
-	
-	/*
-	// done
-	gui.push(new canvasEx({
-		canvas, context, type: pol, x: center, y: center + 130, v: 4, d: 45, r: 70, color: '#222',
-		label: ['Ground', 'Hitbox']
-	}));
-	*/
 	
 	gui.push(new canvasEx({
 		canvas, context, type: pth, x: center, y: center + + 103, bold: 2, color: '#111',
@@ -116,16 +109,20 @@ function init(){
 		],
 		label: ['Ground', 'Hitbox', 'Mapchip'], mapchipData: {x: 0, y: 103}
 	}));
+	*/
+	
+	// JS-System
+	init_mapchip(canvas, context);	
 	
 	// feed (must be at last)
-	gui.push(new canvasEx({
+    gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
 		src: 'Image/Screen/feedmask.png'
 	}));
-	
+
 	// mapchips (prototype)
 	gui.map(function(e, i){
-		if(e.label !== void(0) && (e.label === 'file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Mapchip' || e.label.indexOf('Mapchip') > -1)){
+		if(e.label !== void(0) && (e.label === 'Mapchip' || e.label.indexOf('Mapchip') > -1)){
 			mapchips.push(
 				{
 					x: e.mapchipData.x,
@@ -135,18 +132,6 @@ function init(){
 			);
 		}
 	});	
-	
-	/*
-	mapchips = [
-		{
-			x: 0,
-			y: 115,
-			obj: new canvasEx({
-				canvas, context, type: pth, x: center, y: center + 115, bold: 2, color: '#111', 
-				pos: [{x: -80, y: -30}, {x: 100, y: -30}, {x: 100, y: 30}, {x: 100, y: 30}, {x: -80, y: 30}], label: ['Ground', 'Hitbox']})
-		}
-	];
-	*/
 	
 	// Init sounds
 	const soundname = [
@@ -166,7 +151,7 @@ function init(){
     // Make group with add objects
 	grounds = new group();
 	gui.map(function(e){ // e is an object
-		if(e.label !== void(0) && (e.label === 'file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Ground' || e.label.indexOf('Ground') > -1)){
+		if(e.label !== void(0) && (e.label === 'Ground' || e.label.indexOf('Ground') > -1)){
 			grounds.add(e);
 		}
 	});
@@ -180,8 +165,32 @@ function init(){
 	};
 	
 	// test
-	_debug.hitbox = false;
+	_debug.hitbox = true;
 }
+
+function init_mapchip(canvas, context){
+	let keys = Object.keys(json_mapchip);
+	keys.map(function(e){
+		let data = json_mapchip[e];
+		let hitbox = data.hitbox;
+		let chip = data.chip;
+		
+		// Map chip image soruce
+		gui.push(new canvasEx({
+			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: 1,
+			src: chip.src, label: 'Mapchip', mapchipData: {x: chip.x, y: chip.y}
+		}));
+		
+		// Map chip hitbox source
+		gui.push(new canvasEx({
+			canvas, context, type: pth, x: center + hitbox.x, y: center + hitbox.y, bold: 2, color: '#111',
+			pos: hitbox.pos, label: ['Ground', 'Hitbox', 'Mapchip'], mapchipData: {x: hitbox.x, y: hitbox.y}
+		}));
+	});
+}
+
+
+// Start main
 
 function main(){
     requestAnimationFrame(main); // loop method
