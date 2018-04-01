@@ -117,7 +117,7 @@ function init(){
 	// feed (must be at last)
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
-		src: 'Image/Screen/feedmask.png'
+		src: 'Image/Screen/puzzleMask.png'
 	}));
 
 	// mapchips (prototype)
