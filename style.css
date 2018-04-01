@@ -1,20 +1,19 @@
 @charset "utf-8";
 
 body{
+	background-image: url("Image/Screen/domBackground.png");
+	background-color: #0F0F0F;
 	overflow: hidden;
 	height: 100%;
 	width: 100%;
 	margin: 0;
 }
 
-/* div of canvas */
 #size{
 	height: 100%;
 	width: 100%;
 }
 
-/* Canvas */
 #drawArea{
-    background: #111;
-    display: block;
+	display: block;
 }
