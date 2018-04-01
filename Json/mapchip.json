@@ -29,7 +29,7 @@ var json_mapchip = {
 			"w" : 200,
 			"h" : 200,
 			"src" : 
-			"file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Image/Screen/Mapchip/test.png"
+			"Image/Screen/Mapchip/test.png"
 		},
 		"hitbox": {
 			"x" : 0,
