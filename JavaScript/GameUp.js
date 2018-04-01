@@ -1,6 +1,6 @@
 /*
 	*this is a library of original*
-	Made by YScratcher. (https://twitter.com/YScratcher)
+	Made by YScratcher. (https://twitter.com/YScratcher → https://twitter.com/JPNYKW)
 
 	Project start in 2018 / 2 / 13
 */
@@ -195,7 +195,7 @@ class canvasEx{
 						}
 					}
 				} else if(fontImg.src === ''){
-					fontImg.src = 'Image/Screen/font.png'; // On gitlab
+					fontImg.src = 'Image/Screen/font.png';
 					fontImg.onload = function(){
 						caseText = true;
 					};
@@ -335,6 +335,8 @@ class group{
 		this.objects = input;
 		this.posStack = [];
 		this.hitbox = [];
+		
+		this.label = 'Group';
 
 		this.corners = {
 			leftX: 0,
@@ -424,8 +426,8 @@ class group{
 
 	corner(){
 		// average of positions
-		var aveX = 0;
-		var aveY = 0;
+		let aveX = 0;
+		let aveY = 0;
 		this.posStack.map(function(e){
 			aveX += e.x;
 			aveY += e.y;
@@ -433,7 +435,7 @@ class group{
 		aveX /= this.posStack.length;
 		aveY /= this.posStack.length;
 
-		var corners = {
+		let corners = {
 			leftX: aveX,
 			righX: aveX,
 			topY: aveY,
@@ -465,7 +467,11 @@ class group{
 		this.height = abs(this.corners.topY - this.corners.lowY);
 	}
 	
-	checkHit(target){
+	checkHit(target, type){
+		if(type){
+			return target.label;
+		}
+		
 		const corners = this.corners;
 		for(var i in this.objects){
 			const e = this.objects[i];
@@ -521,6 +527,10 @@ class sound{
 
 	loop(input){
 		this.audio.loop = input;
+	}
+	
+	volume(input){
+		this.audio.volume = input;
 	}
 }
 
