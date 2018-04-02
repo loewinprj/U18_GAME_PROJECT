@@ -48,7 +48,8 @@ function init(){
     // Add the background image to use for game area
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
-		src: 'Image/Screen/background.png'
+		src: 'Image/Screen/background.png',
+		label: ['Background', 'Title']
 	}));
 
 	// Add the character of player
@@ -59,7 +60,7 @@ function init(){
             'Image/Character/mouse_0_0.png',
             'Image/Character/mouse_0_1.png'
         ],
-        label: 'Player' // プレイヤー固定
+        label: 'Player'
 	}));
 
 	// Add the hitbox of player
@@ -68,11 +69,30 @@ function init(){
 		pos: [
 			{x: -35, y: 15}, {x: 35, y: 15}, {x: 35, y: -15}, {x: -35, y: -15}
 		],
-		label: ['Hitbox', 'Player'] // 複数のラベル保持も可能
+		label: ['Player', 'Hitbox']
 	}));
 	
 	// JS-System
 	init_mapchip(canvas, context);
+	
+	// タイトルテストここから
+	
+	gui.push(new canvasEx({
+		canvas, context, type: txt, x: center, y: center + -200, size: 170, text: 'タイトルがここに', align: center,
+		label: ['Title', 'Only']
+	}));
+	
+	gui.push(new canvasEx({
+		canvas, context, type: txt, x: center, y: center + -160, size: 80, text: 'サブタイトルてきな', align: center,
+		label: ['Title', 'Only']
+	}));
+	
+	gui.push(new canvasEx({
+		canvas, context, type: txt, x: center, y: center + 160, size: 80, text: 'スペースキーで開始', align: center,
+		label: ['Title', 'Only']
+	}));
+	
+	//ここまで
 	
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
@@ -81,13 +101,7 @@ function init(){
 	}));
 	
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0,
-		src: 'Image/Screen/puzzleMask_dropArea.png',
-		label: 'Mask'
-	}));
-	
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: -70, y: center + 200, w: 500, h: 500, alpha: 0,
+		canvas, context, type: img, x: -75, y: center + 200, w: 500, h: 500, alpha: 0,
 		src: 'Image/Screen/debugLabel.png',
 		label: 'Label'
 	}));
@@ -95,23 +109,28 @@ function init(){
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
 		src: 'Image/Screen/feedmask.png',
-		label: 'Feed'
+		label: ['Title', 'Feed']
 	}));
 	
 	// Init sounds
 	const soundname = [
-	        'Sound/Test/U18-6(1).mp3'
+	        'Sound/Test/U18-6(1).mp3',
+			'Sound/Test/U18-8(1).mp3'
 	    ];
 
-	soundset = new Array(1).fill(0);
-	soundset.forEach(function(e, index, array){
-	   array[index] = new sound({src: soundname[index], loop: 1});
+	soundset = new Array(soundname.length).fill(0);
+	
+	soundset.forEach(function(e, i){
+	   soundset[i] = new sound({src: soundname[i], loop: 1});
 	});
 
-	// setup _animation object
-	_animation.bgmStart = 1 // Control the bgm
-	_animation.loadFinish = 30; // interval of start after loaded images
-	_animation.firstInterval = 10; // interval of first loaded to show in a time
+	// setup _animation object	
+	_animation = {
+		bgmStart: 1,
+		loadFinish: 30,
+		firstInterval: 10,
+		title: 1
+	}
 
 	pressedKeys = []; // Reset the array for stack pressed keys
 	pressedKeys[37] = pressedKeys[38] = pressedKeys[39] = pressedKeys[40] = 0; // Measures against NaN
@@ -139,11 +158,11 @@ function init(){
 		}
 		if(checkLabel(label, 'Feed')){
 			_debug.feedIndex = i;
+
 		}
 	});
 	
 	//labelIndex
-	
 	gameController = {
 		puzzle: false,
 		scroll: {
@@ -197,11 +216,18 @@ function update(){
 		soundset[0].volume(0);
         soundset[0].play(1);
     }
+	
+	if(player.frame > 4){
+		player.frame = 0;
+	}
 
 	keyEvents();
-	playerControl();
-	scrollMapchips();
-	debugmodeLabel();
+	
+	if(!_animation.title){
+		playerControl();
+		scrollMapchips();
+		debugmodeLabel();
+	}
 	
 	// Mask alpha
 	gui.forEach(function(e){
@@ -211,26 +237,60 @@ function update(){
 	});
 	
 	_animation.loadFinish -= (_animation.loadFinish > 0);
-	
-	
-	gui[_debug.feedIndex].alpha = _animation.loadFinish / 30;
 	soundset[0].volume(abs(1 - (_animation.loadFinish / 30)));
 	
-	//console.log(gui[_debug.feedIndex].alpha);
+
+	
+	switch(_animation.title){
+		case 0:
+			gui[_debug.feedIndex].alpha += (0 - gui[_debug.feedIndex].alpha) / 5;
+			soundset[1].volume(abs(1 - gui[_debug.feedIndex].alpha));
+		break;
+			
+		case 1:
+			gui[_debug.feedIndex].alpha = _animation.loadFinish / 30;
+			if(pressedKeys[32] && _animation.title && !_animation.loadFinish){
+				_animation.title = 2;
+			}
+		break;
+			
+		case 2:
+			gui[_debug.feedIndex].alpha += (1 - gui[_debug.feedIndex].alpha) / 7;
+			soundset[0].volume(abs(1 - gui[_debug.feedIndex].alpha));
+			if(soundset[0].audio.volume < 0.01){
+				gui[_debug.feedIndex].alpha = 1;
+				soundset[0].pause(1);
+				_animation.title = 3;
+			}
+		break;
+			
+		case 3:
+			soundset[1].volume(0);
+			soundset[1].play(1);
+			
+			_animation.title = 0;
+		break;
+	}
 }
 
 function draw(){
     clear();
-
+	
     gui.map(function(e){
-        if(e.label === 'Player'){
- 			e.draw(player.frame > 4);
-			if(player.frame > 4){
-				player.frame = 0;
+		if(_animation.title){ // draw title screen
+			if(checkLabel(e.label, 'Title')){
+				e.draw();
 			}
-        } else {
-            e.draw(); // Draw
-        }
+		} else {
+			if(e.label === 'Player'){
+				e.draw(player.frame > 4);
+			} else {
+				if(!(checkLabel(e.label, 'Only') && checkLabel(e.label, 'Title'))){
+					e.draw();
+				}
+				//e.draw(); // Draw
+			}
+		}
     });
 }
 
@@ -291,11 +351,16 @@ function playerControl(){
 	let goCase = (_debug.screen || !gameController.puzzle);
 	
     // Deceleration according to law of inertia
-    player.accel.x += (pressedKeys[39] - pressedKeys[37]) * accelSpeed * goCase; // Rigth and Left arrow keys
-    player.accel.x *= lowAccel;
+    
+	//player.accel.x += (pressedKeys[39] - pressedKeys[37]) * accelSpeed * goCase; // Rigth and Left arrow keys
+	gameController.scroll.x += (pressedKeys[37] - pressedKeys[39]) * accelSpeed * goCase * 1.5; // scroll test
+	
+	
+	player.accel.x *= lowAccel;
 	player.x += player.accel.x;
 	
     //player.accel.y += (pressedKeys[40] - pressedKeys[38]) * accelSpeed; // Down and Up arrow keys
+    //player.accel.y *= lowAccel;
     //player.accel.y *= lowAccel;
 	
     player.y += player.accel.y + player.accel.gravity;
@@ -366,6 +431,7 @@ function playerControl(){
 		player.x = 0;
 		player.y = 0;
 		player.accel.gravity = 0;
+		gameController.scroll.x = 0;
 	}
 	//console.log(player.standing)
 	//console.log(player.hit)
