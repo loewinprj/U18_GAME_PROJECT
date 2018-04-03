@@ -183,17 +183,7 @@ class canvasEx{
 					for(var i in text){
 						let txt = text[i];
 						let fontStack = json_font[txt];
-						
-						if(fontStack === void(0)){
-							txt = unescape(encodeURI(txt));
-							fontStack = json_font[txt];
-						}
-						
-						// reverse
-						if(fontStack === void(0)){
-							txt = decodeURI(escape(txt));
-							fontStack = json_font[txt];
-						}
+
 						
 						if(fontStack !== void(0)){
 							let charCode = txt.charCodeAt(0);
