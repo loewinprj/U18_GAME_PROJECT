@@ -20,7 +20,8 @@ function init(){
 			main: 0,
 			puzzle: 0
 		},
-		labelIndex: null
+		labelIndex: null,
+		girdLine: false
     };
 	
 	// reset mapchips array
@@ -30,7 +31,7 @@ function init(){
     player = {
         x: 0,
         y: 0,
-        flip: 0,
+        reverse: 0,
         frame: 0,
         accel: {
             x: 0,
@@ -40,6 +41,15 @@ function init(){
         standing: false,
         hit: false,
     };
+	
+	// Mouse positions
+	mouse = {
+		x: 0,
+		y: 0,
+		drag: -1,
+		down: false,
+		lastdrag: -1
+	};
 
     gui = [];
     const canvas = canv;
@@ -54,7 +64,7 @@ function init(){
 
 	// Add the character of player
 	gui.push(new canvasEx({
-	    canvas, context, type: img, x: center, y: center, w: 90, h: 90, flip: 0, center: 1,
+	    canvas, context, type: img, x: center, y: center, w: 90, h: 90, center: 1, reverse: 0, direction: 0,
 	    src: 'Image/Character/mouse_0_0.png',
 	    animation: [
             'Image/Character/mouse_0_0.png',
@@ -97,7 +107,7 @@ function init(){
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
 		src: 'Image/Screen/puzzleMask.png',
-		label: 'Mask'
+		label: 'Mask', maxAlpha: 0.4
 	}));
 	
 	gui.push(new canvasEx({
@@ -111,12 +121,67 @@ function init(){
 		src: 'Image/Screen/feedmask.png',
 		label: ['Title', 'Feed']
 	}));
+
+	// パズルピース
+	let puzzlePos = [
+		{x: 397, y: 353}, // 0
+		{x: 469, y: 334}, // 1
+		{x: 398, y: 258}, // 2
+		{x: 433, y: 334}, // 3
+		{x: 453, y: 240}, // 4
+		{x: 469, y: 278}, // 5
+		{x: 416, y: 314}, // 6
+	];
+	
+	let dx = -430;
+	let dy = -300;
+	puzzlePos.forEach(function(e){
+		e.x += dx;
+		e.y += dy;
+	});
+	
+	for(var i = 0; i < 7; i ++){
+		gui.push(new canvasEx({
+			canvas, context, type: img, x: center + puzzlePos[i].x, y: center + puzzlePos[i].y, w: 150, h: 150, alpha: 0, center: 1,
+			src: `file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Image/Puzzle/board_0${i + 1}.png`,
+			label: ['Puzzle', 'Mask', 'Selector'], drag: 1, maxAlpha: 1, reverse: 0, direction: 0,
+		}));
+	}
+	
+	// 回転ボタン
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center + -300, y: center + 300, w: 130, h: 130, alpha: 0, center: 1,
+		src: 'Image/Puzzle/buttonRotation.png',
+		label: ['Puzzle', 'Mask', 'Rot'], maxAlpha: 0.92, reverse: 0, direction: 0,
+	}));
+	
+	// 反転ボタン
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center + -300, y: center + 200, w: 130, h: 130, alpha: 0, center: 1,
+		src: 'Image/Puzzle/buttonReverse.png',
+		label: ['Puzzle', 'Mask', 'Rev'], maxAlpha: 0.92, reverse: 0, direction: 0,
+	}));
+	
+	// スクロールバー
+	gui.push(new canvasEx({
+		canvas, context, type: pth, x: center + -100, y: center + 300, bold: 2, color: '#222', mode: stroke, alpha: 0,
+		pos: [{x: -100, y: 0}, {x: 100, y:0}], label: 'Mask', maxAlpha: 0.92
+	}));
+	
+	// スクロールボタン
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: 1,
+		src: 'Image/Puzzle/buttonScroll.png',
+		label: 'Mask', maxAlpha: 0.92, reverse: 0, direction: 0, pinY: 1, drag: 1
+	}));
+	
+	//_debug.girdLine = 1;
 	
 	// Init sounds
 	const soundname = [
 	        'Sound/Test/U18-6(1).mp3',
 			'Sound/Test/U18-8(1).mp3'
-	    ];
+	];
 
 	soundset = new Array(soundname.length).fill(0);
 	
@@ -164,12 +229,33 @@ function init(){
 	
 	//labelIndex
 	gameController = {
-		puzzle: false,
+		puzzle: {
+			mode: false,
+			reverse: {
+				id: -1
+				// interval いらなくね?
+			},
+			rotation: {
+				id: -1,
+				interval: 0
+			}
+		},
 		scroll: {
 			x: 0, 
 			y: 0
 		}
 	};
+
+	gui.map(function(e, i){
+		let label = e.label;
+		if(checkLabel(label, 'Puzzle') && (checkLabel(label, 'Rot') || checkLabel(label, 'Rev'))){
+			if(checkLabel(label, 'Rot')){
+				gameController.puzzle.rotation.id = i;
+			} else {
+				gameController.puzzle.reverse.id = i;
+			}
+		}
+	});
 	
 	// test
 	//_debug.hitbox = true;
@@ -223,7 +309,12 @@ function update(){
 
 	keyEvents();
 	
+	if(gameController.puzzle.mode){
+		puzzleEvent();
+	}
+	
 	if(!_animation.title){
+		dragObjects();
 		playerControl();
 		scrollMapchips();
 		debugmodeLabel();
@@ -232,7 +323,7 @@ function update(){
 	// Mask alpha
 	gui.forEach(function(e){
 		if(checkLabel(e.label, 'Mask')){
-			e.alpha += (0.27 * gameController.puzzle - e.alpha) / 4; 
+			e.alpha += ((e.maxAlpha || 0.27) * gameController.puzzle.mode - e.alpha) / 4; 
 		}
 	});
 	
@@ -292,9 +383,40 @@ function draw(){
 			}
 		}
     });
+	
+	drawLastDragObject();
+	
+	// assistant grid line
+	if(_debug.girdLine){
+		cont.beginPath();
+		cont.lineWidth = 3;
+		cont.strokeStyle = '#121212';
+		
+		cont.moveTo(0, height / 2);
+		cont.lineTo(width, height / 2);
+		
+		cont.moveTo(width / 2, 0);
+		cont.lineTo(width / 2, height);
+		
+		cont.stroke();
+	}
 }
 
 function event(){
+	_d.addEventListener('mousemove', function(e){
+		let rect = e.target.getBoundingClientRect();
+		mouse.x = e.clientX - rect.left;
+		mouse.y = e.clientY - rect.top;
+	});
+	
+	_d.addEventListener('mousedown', function(e){
+		mouse.down = true;
+	});
+	
+	_d.addEventListener('mouseup', function(e){
+		mouse.down = false;
+	});
+	
     _d.addEventListener('keydown', function(e){
 		pressedKeys[e.keyCode] = 1;
 	});
@@ -331,14 +453,14 @@ function keyEvents(){
 	if(pressedKeys[17] && pressedKeys[32] && !_debug.keyBuffer.main){ // ctrl + space switch debug mode
 		_debug.keyBuffer.main = 15; // 30(fps) * 15 = 1500ms (1.5s) = interval
 		_debug.screen = !_debug.screen;
-		console.log(`User switched _debug.screen : ${_debug.screen}`);
+		_c.log(`User switched _debug.screen : ${_debug.screen}`);
 	}
 	
 	if(_debug.screen){
 		if((pressedKeys[48] || pressedKeys[96]) && !_debug.keyBuffer.puzzle){
 			_debug.keyBuffer.puzzle = 15;
-			gameController.puzzle = !gameController.puzzle;
-			console.log(`User switched gameController.puzzle : ${gameController.puzzle}`);
+			gameController.puzzle.mode = !gameController.puzzle.mode;
+			_c.log(`User switched gameController.puzzle.mode : ${gameController.puzzle.mode}`);
 		}
 	}
 	
@@ -348,7 +470,7 @@ function keyEvents(){
 }
 
 function playerControl(){
-	let goCase = (_debug.screen || !gameController.puzzle);
+	let goCase = (_debug.screen || !gameController.puzzle.mode);
 	
     // Deceleration according to law of inertia
     
@@ -371,8 +493,8 @@ function playerControl(){
 
     // Set player's direction
     if((pressedKeys[37] || pressedKeys[39]) && goCase){
-        player.flip = pressedKeys[39] + 0;
-        gui[1].flip = player.flip;
+        player.reverse = pressedKeys[39] + 0;
+        gui[1].reverse = player.reverse;
     }
 
     // Frame for Character animation
@@ -433,8 +555,8 @@ function playerControl(){
 		player.accel.gravity = 0;
 		gameController.scroll.x = 0;
 	}
-	//console.log(player.standing)
-	//console.log(player.hit)
+	//_c.log(player.standing)
+	//_c.log(player.hit)
 }
 
 function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
@@ -472,11 +594,116 @@ function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 
 function scrollMapchips(){
 	mapchips.map(function(e){
-		gui[e.index].x = center + (gui[e.index].mapchipData.x + gameController.scroll.x); //+ gameController.scroll.x;
-		gui[e.index].y = center + (gui[e.index].mapchipData.y + gameController.scroll.y); //+ gameController.scroll.y;
+		gui[e.index].x = center + (gui[e.index].mapchipData.x + gameController.scroll.x);
+		gui[e.index].y = center + (gui[e.index].mapchipData.y + gameController.scroll.y);
 	});
 }
 
 function debugmodeLabel(){
 	gui[_debug.labelIndex].alpha += (_debug.screen - gui[_debug.labelIndex].alpha) / 3;
+}
+
+function dragObjects(){
+	let drag = mouse.drag;
+	let down = mouse.down;
+	
+	if(drag > -1){
+		if(!gui[drag].pinX){
+			gui[drag].x = center + (mouse.x - width / 2);
+		}
+		
+		if(!gui[drag].pinY){
+			gui[drag].y = center + (mouse.y - height / 2);
+		}
+		
+		if(checkLabel(gui[drag].label, 'Puzzle') && !gameController.puzzle.mode){
+			mouse.drag = -1;
+		}
+	}
+	
+	if(down){
+		if(drag === -1){
+			// search index
+			let max = 170 / 2;
+			gui.map(function(e, i){
+				if(e.drag){
+					
+					if(checkLabel(e.label, 'Puzzle') && !gameController.puzzle.mode){
+						return false;
+					} else {
+						if((distance(e.x, e.y, mouse.x, mouse.y, canv) < max) && drag === -1){
+							max = distance(e.x, e.y, mouse.x, mouse.y, canv);
+							mouse.drag = i;
+							
+							if(checkLabel(e.label, 'Selector')){
+								mouse.lastdrag = mouse.drag;
+							}
+						}
+					}
+				}
+			});
+		}
+	} else {
+		if(drag > -1){
+			mouse.drag = -1;
+		}
+	}
+}
+
+function drawLastDragObject(){
+	if(mouse.lastdrag > -1 && gameController.puzzle.mode){
+		let obj = gui[mouse.lastdrag];
+		let h = obj.h || obj.height;
+		let w = obj.w || obj.width;
+		let x = obj.x;
+		let y = obj.y;
+		
+		if(isNaN(x)){
+			x = convertPosition(x, 'x', canv);
+		}
+		
+		if(isNaN(y)){
+			y = convertPosition(y, 'y', canv);
+		}
+		
+		cont.beginPath();
+		
+		if(_debug.screen){
+			let yScale = h / 2;
+			let xScale = w / 2;
+
+			cont.lineWidth = 2;
+			cont.strokeStyle = '#C00';
+
+			cont.moveTo(x - xScale, y - yScale);
+			
+			
+			cont.lineTo(x - xScale, y + yScale);
+			cont.lineTo(x + xScale, y + yScale);
+			cont.lineTo(x + xScale, y - yScale);
+			cont.lineTo(x - xScale, y - yScale);
+			cont.stroke();
+		} else {
+			cont.fillStyle = 'rgba(0, 0, 0, 0.5)';
+			cont.arc(x, y, 50, 0, PI * 2, false);
+			cont.fill();
+		}
+	}
+}
+
+function puzzleEvent(){
+	let rot = gui[gameController.puzzle.rotation.id];
+	let rev = gui[gameController.puzzle.reverse.id];
+	
+	if(distance(convertPosition(rot.x, 'x', canv), convertPosition(rot.y, 'y', canv), mouse.x, mouse.y) < rot.w / 2 && mouse.down){
+		
+	}
+	if(distance(convertPosition(rev.x, 'x', canv), convertPosition(rev.y, 'y', canv), mouse.x, mouse.y) < rev.w / 2 && mouse.down){
+		if(!gameController.puzzle.reverse.interval && mouse.lastdrag > -1){
+			gui[mouse.lastdrag].reverse = !gui[mouse.lastdrag].reverse;
+			gameController.puzzle.reverse.interval = 7;
+		}
+	}
+		
+	gameController.puzzle.reverse.interval -= (gameController.puzzle.reverse.interval > 0);
 }
