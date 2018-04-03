@@ -189,13 +189,11 @@ class canvasEx{
 							fontStack = json_font[txt];
 						}
 						
-						/*
-						// 一応逆変換
-						if(text[i].length > 1){
-							text[i] = decodeURI(escape(text[i]));
-							fontStack = json_font[text[i]];
+						// reverse
+						if(fontStack === void(0)){
+							txt = decodeURI(escape(txt));
+							fontStack = json_font[txt];
 						}
-						*/
 						
 						if(fontStack !== void(0)){
 							let charCode = txt.charCodeAt(0);
