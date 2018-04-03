@@ -143,7 +143,7 @@ function init(){
 	for(var i = 0; i < 7; i ++){
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + puzzlePos[i].x, y: center + puzzlePos[i].y, w: 150, h: 150, alpha: 0, center: 1,
-			src: `file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Image/Puzzle/board_0${i + 1}.png`,
+			src: `Image/Puzzle/board_0${i + 1}.png`,
 			label: ['Puzzle', 'Mask', 'Selector'], drag: 1, maxAlpha: 1, reverse: 0, direction: 0,
 		}));
 	}
