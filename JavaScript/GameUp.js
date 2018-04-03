@@ -64,6 +64,7 @@ class canvasEx{
 	}
 
 	draw(status){
+		const direction = this.d || this.dir || this.direction;
 	    const label = this.label;
 		var canvas = this.canvas;
 		var ctx = this.context;
@@ -74,8 +75,8 @@ class canvasEx{
 		var alpha = this.alpha;
 		var isCenter = false;
 
-		var h = this.height || this.h;
-		var w = this.width || this.w;
+		var h = this.h || this.height;
+		var w = this.w || this.width;
 		var x = this.x;
 		var y = this.y;
 
@@ -117,6 +118,12 @@ class canvasEx{
     		    ctx.globalAlpha = this.alpha;
     		    alpha = this.alpha;
     		}
+		}
+		
+		if(direction !== void(0)){
+			ctx.translate(x, y);
+			ctx.rotate(direction * Math.PI / 180);
+			ctx.translate(-x, -y);
 		}
 
 		switch(this.type){
@@ -205,7 +212,7 @@ class canvasEx{
 			// draw image
 			case img:
 				var imgSrc = this.img;
-				var flip = this.flip;
+				var reverse = this.reverse;
 
 				var fw = img.width / 2 * isCenter;
 				var fh = img.height / 2 * isCenter;
@@ -221,7 +228,7 @@ class canvasEx{
 					fh = 0;
 				}
 
-				if(flip){
+				if(reverse){
 					ctx.scale(-1, 1);
 				}
 
@@ -232,9 +239,9 @@ class canvasEx{
 					var height = Number(this.json.height);
 
 					if(w !== void(0) && h !== void(0)){
-						ctx.drawImage(imgSrc, jx, jy, width, height, (flip ? -1 : 1) * x - fw, y - fh, w, h); // Draw!
+						ctx.drawImage(imgSrc, jx, jy, width, height, (reverse ? -1 : 1) * x - fw, y - fh, w, h); // Draw!
 					}else{
-						ctx.drawImage(imgSrc, jx, jy, width, height, (flip ? -1 : 1) * x - fw, y - fh, img.width, img.height); // Draw!
+						ctx.drawImage(imgSrc, jx, jy, width, height, (reverse ? -1 : 1) * x - fw, y - fh, img.width, img.height); // Draw!
 					}
 				}else if(w !== void(0) && h !== void(0)){
 					fw = w / 2 * this.center;
@@ -247,9 +254,9 @@ class canvasEx{
 						fh = 0;
 					}
 
-					ctx.drawImage(imgSrc, (flip ? -1 : 1) * x - fw, y - fh, w, h); // Draw!
+					ctx.drawImage(imgSrc, (reverse ? -1 : 1) * x - fw, y - fh, w, h); // Draw!
 				}else{
-					ctx.drawImage(imgSrc, (flip ? -1 : 1) * x - fw, y - fh); // Draw!
+					ctx.drawImage(imgSrc, (reverse ? -1 : 1) * x - fw, y - fh); // Draw!
 				}
 
 				if(this.anime && status){
@@ -308,8 +315,8 @@ class canvasEx{
 			break;
 
 			case img:
-				var width = this.img.width;
-				var height = this.img.height;
+				var width = this.w || this.width || this.img.width;
+				var height = this.h || this.height || this.img.height;
 
 				if(this.center){
 					var wid = width / 2;
@@ -534,39 +541,6 @@ class sound{
 	}
 }
 
-// Context prototype methods
-CanvasRenderingContext2D.prototype.line = function(x_0, y_0, x_1, y_1, bold, color){
-	this.beginPath();
-	this.lineWidth = bold;
-	this.strokeStyle = color;
-
-	this.moveTo(x_0, y_0);
-	this.lineTo(x_1, y_1);
-
-	this.stroke();
-};
-
-CanvasRenderingContext2D.prototype.text = function(input){
-	var align = input.align || input.a;
-	var color = input.color || input.c;
-	var bold = input.bold || input.b;
-	var size = input.size || input.s;
-	var font = input.font || input.f;
-	var text = input.text || input.t;
-	var x = input.x;
-	var y = input.y;
-
-	this.beginPath();
-	this.fillStyle = color;
-	this.strokeStyle = color;
-	this.lineWidth = bold;
-
-	this.font = `${size}px ${font}`;
-	this.textAlign = align;
-
-	input.mode === stroke ? this.strokeText(text, x, y) : this.fillText(text, x, y);
-}
-
 // Short codes and math methods
 var _m = Math;
 var _w = window;
@@ -593,7 +567,16 @@ function random(min, max){
 	return ~~(Math.random() * ((max - min + 1) + min));
 }
 
-function distance(x_0, y_0, x_1, y_1){
+function distance(x_0, y_0, x_1, y_1, canvas){
+	
+	if(canvas !== void(0)){
+		x_0 = convertPosition(x_0, 'x', canvas);
+		x_1 = convertPosition(x_1, 'x', canvas);
+
+		y_0 = convertPosition(y_0, 'y', canvas);
+		y_1 = convertPosition(y_1, 'y', canvas);
+	}
+	
 	return sqrt(pow(x_0 - x_1, 2) + pow(y_0 - y_1, 2));
 }
 
@@ -668,11 +651,11 @@ function checkCrossTwoLines(x_0, y_0, x_1, y_1, x_2, y_2, x_3, y_3){
 		|| checkOnLinePoint(x_2, y_2, x_3, y_3, x_1, y_1);
 }
 
-function crossProductZ(a_1,a_2,b_1,b_2){
+function crossProductZ(a_1, a_2, b_1, b_2){
 	return a_1 * b_2 - b_1 * a_2
 }
 
-function checkObjectInObject(objPos_0,objPos_1){
+function checkObjectInObject(objPos_0, objPos_1){
 	var plus = 0;
 	var minus = 0;
 
@@ -699,7 +682,6 @@ function convertPosition(...input){
 	var canvas = input[2];
 
 	var rTex = 0;
-
 	if(isNaN(tex)){
 		var ary = tex !== center ? tex.split('center') : [''];
 
