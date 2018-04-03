@@ -181,9 +181,25 @@ class canvasEx{
 					}
 
 					for(var i in text){
-						let fontStack = json_font[text[i]];
+						let txt = text[i];
+						let fontStack = json_font[txt];
+						
+						if(fontStack === void(0)){
+							txt = unescape(encodeURI(txt));
+							fontStack = json_font[txt];
+						}
+						
+						/*
+						// 一応逆変換
+						if(text[i].length > 1){
+							text[i] = decodeURI(escape(text[i]));
+							fontStack = json_font[text[i]];
+						}
+						*/
+						
 						if(fontStack !== void(0)){
-							if(text[i] === '、' || text[i] === '。'){
+							let charCode = txt.charCodeAt(0);
+							if(charCode === 12289 || charCode === 12290/*text[i] === '、' || text[i] === '。'*/){
 								if(mode){
 									ctx.drawImage(fontImg, fontStack.x, fontStack.y, 30, 30, x, y, size, size);
 								} else{
