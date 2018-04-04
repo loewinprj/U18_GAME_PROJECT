@@ -29,7 +29,7 @@ var json_mapchip = {
 			"w" : 200,
 			"h" : 200,
 			"src" : 
-			"Image/Screen/Mapchip/test.png"
+			"Image/Screen/Mapchip/chip_01.png"
 		},
 		"hitbox": {
 			"x" : 0,
@@ -59,46 +59,7 @@ var json_mapchip = {
 		}
 	},
 	
-	// wall
-	
-	"1" : {
-		"chip": {
-			"x" : 180,
-			"y" : 0,
-			"w" : 200,
-			"h" : 200,
-			"src" : 
-			"Image/Screen/Mapchip/test.png"
-		},
-		"hitbox": {
-			"x" : 180,
-			"y" : 3,
-			"pos" : [
-				{
-					"x" : -80,
-					"y" : -30
-				},
-				{
-					"x" : 100,
-					"y" : -30
-				},
-				{
-					"x" : 100,
-					"y" : 100
-				},
-				{
-					"x" : 100,
-					"y" : 100
-				},
-				{
-					"x" : -80,
-					"y" : 100
-				}
-			]
-		}
-	},
-/*
-	// テストで追加
+	// ground
 	
 	"1" : {
 		"chip": {
@@ -107,7 +68,7 @@ var json_mapchip = {
 			"w" : 200,
 			"h" : 200,
 			"src" : 
-			"Image/Screen/Mapchip/test.png"
+			"Image/Screen/Mapchip/chip_02.png"
 		},
 		"hitbox": {
 			"x" : 180,
@@ -144,7 +105,122 @@ var json_mapchip = {
 			"w" : 200,
 			"h" : 200,
 			"src" : 
-			"Image/Screen/Mapchip/test.png"
+			"Image/Screen/Mapchip/chip_02.png"
+		},
+		"hitbox": {
+			"x" : 360,
+			"y" : 103,
+			"pos" : [
+				{
+					"x" : -80,
+					"y" : -30
+				},
+				{
+					"x" : 100,
+					"y" : -30
+				},
+				{
+					"x" : 100,
+					"y" : 100
+				},
+				{
+					"x" : 100,
+					"y" : 100
+				},
+				{
+					"x" : -80,
+					"y" : 100
+				}
+			]
+		}
+	},
+	
+	// wall
+	
+	"3" : {
+		"chip": {
+			"x" : 540,
+			"y" : -20,
+			"w" : 200,
+			"h" : 200,
+			"src" : 
+			"Image/Screen/Mapchip/chip_01.png"
+		},
+		"hitbox": {
+			"x" : 540,
+			"y" : -23,
+			"pos" : [
+				{
+					"x" : -80,
+					"y" : -30
+				},
+				{
+					"x" : 100,
+					"y" : -30
+				},
+				{
+					"x" : 100,
+					"y" : 100
+				},
+				{
+					"x" : 100,
+					"y" : 100
+				},
+				{
+					"x" : -80,
+					"y" : 100
+				}
+			]
+		}
+	},
+/*
+	// テストで追加
+	
+	"1" : {
+		"chip": {
+			"x" : 180,
+			"y" : 100,
+			"w" : 200,
+			"h" : 200,
+			"src" : 
+			"Image/Screen/Mapchip/chip_01.png"
+		},
+		"hitbox": {
+			"x" : 180,
+			"y" : 103,
+			"pos" : [
+				{
+					"x" : -80,
+					"y" : -30
+				},
+				{
+					"x" : 100,
+					"y" : -30
+				},
+				{
+					"x" : 100,
+					"y" : 100
+				},
+				{
+					"x" : 100,
+					"y" : 100
+				},
+				{
+					"x" : -80,
+					"y" : 100
+				}
+			]
+		}
+	},
+	
+	"2" : {
+		"chip": {
+			"x" : 360,
+			"y" : 100,
+			"w" : 200,
+			"h" : 200,
+			"src" : 
+			"Image/Screen/Mapchip/chip_01.png"
 		},
 		"hitbox": {
 			"x" : 360,
@@ -181,7 +257,7 @@ var json_mapchip = {
 			"w" : 200,
 			"h" : 200,
 			"src" : 
-			"Image/Screen/Mapchip/test.png"
+			"Image/Screen/Mapchip/chip_01.png"
 		},
 		"hitbox": {
 			"x" : 180,
