@@ -89,12 +89,12 @@ function init(){
 	// タイトルテストここから
 
 	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center + -200, size: 170, text: 'タイトルがここに', align: center,
+		canvas, context, type: txt, x: center, y: center + -200, size: 200, text: '七変化風林火山', align: center, reverse: 1,
 		label: ['Title', 'Only']
 	}));
 
 	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center + -160, size: 80, text: 'サブタイトルてきな', align: center,
+		canvas, context, type: txt, x: center, y: center + -150, size: 110, text: '鳳凰物語', align: center, reverse: 1,
 		label: ['Title', 'Only']
 	}));
 
@@ -115,12 +115,6 @@ function init(){
 		canvas, context, type: img, x: -75, y: center + 200, w: 500, h: 500, alpha: 0,
 		src: 'Image/Screen/debugLabel.png',
 		label: 'Label'
-	}));
-
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
-		src: 'Image/Screen/feedmask.png',
-		label: ['Title', 'Feed']
 	}));
 
 	// パズルピース
@@ -175,6 +169,44 @@ function init(){
 		src: 'Image/Puzzle/buttonScroll.png',
 		label: 'Mask', maxAlpha: 0.92, reverse: 0, direction: 0, pinY: 1, drag: 1
 	}));
+	
+	// エフェクトオブジェクトの試作
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center, y: center + 100, w: 200, h: 200, center: 1, alpha: 0, direction: 0,
+		src: 'Image/Screen/Effect/leaf.png',
+		label: ['Effect', 'Title', 'Only'],
+		pattern: [
+			{
+				type: 'Feedin',
+				parameter: {
+					time: 60
+				}
+			},
+			{
+				type: 'moveY',
+				parameter: {
+					center,
+					start: -200,
+					end: 0,
+					time: 90
+				}
+			},
+			{
+				type: 'rotation',
+				parameter: {
+					delta: 0.7,
+					time: Infinity // 無限ループ(って怖くね?)
+				}
+			}
+		] 
+	}));
+	
+	// 画面全体を覆うオブジェクトは最上層レイヤーで追加
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
+		src: 'Image/Screen/feedmask.png',
+		label: ['Title', 'Feed']
+	}));
 
 	//_debug.girdLine = 1;
 
@@ -228,13 +260,12 @@ function init(){
 		}
 	});
 
-	//labelIndex
+	// controll object
 	gameController = {
 		puzzle: {
 			mode: false,
 			reverse: {
 				id: -1
-				// interval いらなくね?
 			},
 			rotation: {
 				id: -1,
@@ -247,6 +278,7 @@ function init(){
 		}
 	};
 
+	// setup index of somethings
 	gui.map(function(e, i){
 		let label = e.label;
 		if(checkLabel(label, 'Puzzle') && (checkLabel(label, 'Rot') || checkLabel(label, 'Rev'))){
@@ -257,7 +289,18 @@ function init(){
 			}
 		}
 	});
-
+	
+	// setup effects
+	gui.map(function(e_0, i_0){
+		if(checkLabel(e_0.label, 'Effect')){
+			e_0.pattern.map(function(e_1, i_1){
+				if(e_1.parameter.log === void(0)){
+					gui[i_0].pattern[i_1].parameter.log = e_1.parameter.time;
+				}
+			});
+		}
+	});
+	
 	// test
 	//_debug.hitbox = true;
 }
@@ -309,15 +352,18 @@ function update(){
 	}
 
 	keyEvents();
+	controlEffect();
 
 	if(gameController.puzzle.mode){
 		puzzleEvent();
 	}
 
-	if(!_animation.title){
-		dragObjects();
+	if(!_animation.title){		
 		playerControl();
+		
+		dragObjects();
 		scrollMapchips();
+		
 		debugmodeLabel();
 	}
 
@@ -330,8 +376,6 @@ function update(){
 
 	_animation.loadFinish -= (_animation.loadFinish > 0);
 	soundset[0].volume(abs(1 - (_animation.loadFinish / 30)));
-
-
 
 	switch(_animation.title){
 		case 0:
@@ -380,7 +424,6 @@ function draw(){
 				if(!(checkLabel(e.label, 'Only') && checkLabel(e.label, 'Title'))){
 					e.draw();
 				}
-				//e.draw(); // Draw
 			}
 		}
     });
@@ -718,4 +761,41 @@ function puzzleEvent(){
 	}
 
 	gameController.puzzle.reverse.interval -= (gameController.puzzle.reverse.interval > 0);
+}
+
+function controlEffect(){
+	gui.map(function(e_0, i_0){
+		if(checkLabel(e_0.label, 'Effect')){
+			e_0.pattern.map(function(e_1, i_1){
+				let parameter = e_1.parameter;
+				
+				if(parameter.log){
+					let value = (parameter.time - parameter.log);
+					gui[i_0].pattern[i_1].parameter.log -= (gui[i_0].pattern[i_1].parameter.log > 0); // decriment
+					
+					switch(e_1.type){
+						case 'Feedin':
+							gui[i_0].alpha = (1 / parameter.time) * value;
+						break;
+
+						case 'moveX':
+							gui[i_0].x = parameter.center + (parameter.start + (abs(parameter.start - parameter.end) / parameter.time) * value);
+						break;
+							
+						case 'moveY':
+							gui[i_0].y = parameter.center + (parameter.start + (abs(parameter.start - parameter.end) / parameter.time) * value);
+						break;
+							
+						case 'rotation':
+							if(parameter.time === Infinity){
+								gui[i_0].direction += parameter.delta;
+							} else {
+								
+							}
+						break;
+					}
+				}
+			});
+		}
+	})
 }
