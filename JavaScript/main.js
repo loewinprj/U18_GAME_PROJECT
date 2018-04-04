@@ -18,7 +18,8 @@ function init(){
 		screen: false,
 		keyBuffer: {
 			main: 0,
-			puzzle: 0
+			puzzle: 0,
+			hitbox : 0
 		},
 		labelIndex: null,
 		girdLine: false
@@ -461,6 +462,12 @@ function keyEvents(){
 			_debug.keyBuffer.puzzle = 15;
 			gameController.puzzle.mode = !gameController.puzzle.mode;
 			_c.log(`User switched gameController.puzzle.mode : ${gameController.puzzle.mode}`);
+		}
+		
+		if(pressedKeys[49] || pressedKeys[97] && !_debug.keyBuffer.hitbox){
+			_debug.keyBuffer.hitbox = 10;
+			_debug.hitbox = !_debug.hitbox;
+			_c.log(`User switched _debug.hitbox : ${_debug.hitbox}`);
 		}
 	}
 
