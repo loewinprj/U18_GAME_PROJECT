@@ -46,6 +46,10 @@ class canvasEx{
 				this.setPosition(type);
 			}
 		}
+		
+		if(type === txt && this.reverse){
+			this.text = this.text.split('').reverse().join('');
+		}
 
 		if(this.animation !== void(0)){
 			_maxImages += this.animation.length;
