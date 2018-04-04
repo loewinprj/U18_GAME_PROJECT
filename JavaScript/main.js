@@ -497,6 +497,7 @@ function keyEvents(){
 	if(pressedKeys[17] && pressedKeys[32] && !_debug.keyBuffer.main){ // ctrl + space switch debug mode
 		_debug.keyBuffer.main = 15; // 30(fps) * 15 = 1500ms (1.5s) = interval
 		_debug.screen = !_debug.screen;
+		alert(`User switched _debug.screen : ${_debug.screen}`);
 		_c.log(`User switched _debug.screen : ${_debug.screen}`);
 	}
 
