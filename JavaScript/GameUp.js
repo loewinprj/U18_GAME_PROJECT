@@ -523,7 +523,6 @@ class sound{
 
 		this.audio = new Audio();
 		this.audio.src = this.src;
-		this.audio.loop = this.loop;
 	}
 
 	play(init){
@@ -541,10 +540,18 @@ class sound{
 	}
 
 	loop(input){
+		if(isNaN(input)){
+			return false;
+		}
+		
 		this.audio.loop = input;
 	}
 	
 	volume(input){
+		if(isNaN(input)){
+			return false;
+		}
+		
 		this.audio.volume = input;
 	}
 }
