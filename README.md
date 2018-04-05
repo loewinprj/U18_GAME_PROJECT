@@ -1,8 +1,8 @@
-# From gitlab
-
 **GameUp.js の<a href="https://github.com/loewinprj/U18_GAME_PROJECT/blob/master/markdown/How%20to%20use%20GameUp.md">説明書</a>です（未完成）**  
 
-プロジェクトサイト **https://loewinprj.github.io/U18_GAME_PROJECT/**  
+# From gitlab
+
+https://loewinprj.github.io/U18_GAME_PROJECT/  
 
 <b>Ctrl + Space</b> で デバッグモードの切り替え
 
