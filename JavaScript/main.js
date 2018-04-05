@@ -4,7 +4,7 @@ _w.onload = function(){
 	event();
 	
 	// prototype
-	setInterval(main, fps);
+	setInterval(main, fps); // start main loop of the game
 }
 
 function init(){
@@ -51,6 +51,11 @@ function init(){
 		
 		index: 0,
 		hitbox: 0,
+		
+		save: {
+			x: 0,
+			y: 0
+		}
 	};
 
 	// Mouse positions
@@ -127,7 +132,7 @@ function init(){
 
 	for(var i = 0; i < 7; i ++){
 		gui.push(new canvasEx({
-			canvas, context, type: img, x: center + puzzlePos[i].x, y: center + puzzlePos[i].y, w: 150, h: 150, alpha: 0, center: 1,
+			canvas, context, type: img, x: center + puzzlePos[i].x, y: center + puzzlePos[i].y, w: 150, h: 150, alpha: 0, center: true,
 			src: `Image/Puzzle/board_0${i + 1}.png`, label: ['Puzzle', 'Mask', 'Selector'], 
 			drag: 1, maxAlpha: 1, reverse: 0, direction: 0,
 		}));
@@ -135,14 +140,14 @@ function init(){
 
 	// 回転ボタン
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -300, y: center + 300, w: 130, h: 130, alpha: 0, center: 1,
+		canvas, context, type: img, x: center + -300, y: center + 300, w: 130, h: 130, alpha: 0, center: true,
 		src: 'Image/Puzzle/buttonRotation.png',
 		label: ['Puzzle', 'Mask', 'Rot'], maxAlpha: 0.92, reverse: 0, direction: 0,
 	}));
 
 	// 反転ボタン
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -300, y: center + 200, w: 130, h: 130, alpha: 0, center: 1,
+		canvas, context, type: img, x: center + -300, y: center + 200, w: 130, h: 130, alpha: 0, center: true,
 		src: 'Image/Puzzle/buttonReverse.png',
 		label: ['Puzzle', 'Mask', 'Rev'], maxAlpha: 0.92, reverse: 0, direction: 0,
 	}));
@@ -155,14 +160,14 @@ function init(){
 
 	// スクロールボタン
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: 1,
+		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: true,
 		src: 'Image/Puzzle/buttonScroll.png',
-		label: 'Mask', maxAlpha: 0.92, reverse: 0, direction: 0, pinY: 1, drag: 1
+		label: 'Mask', maxAlpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true
 	}));
 	
 	// Effect for an object (Prototype)
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center, y: center + 100, w: 200, h: 200, center: 1, alpha: 0, direction: 0,
+		canvas, context, type: img, x: center, y: center + 100, w: 200, h: 200, center: true, alpha: 0, direction: 0,
 		src: 'Image/Screen/Effect/leaf.png',
 		label: ['Effect', 'Title', 'Only'],
 		pattern: [
@@ -192,7 +197,7 @@ function init(){
 	}));
 
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center, y: center, w: 110, h: 110, center: 1, alpha: 0, direction: 0,
+		canvas, context, type: img, x: center, y: center, w: 110, h: 110, center: true, alpha: 0, direction: 0,
 		src: 'Image/Screen/Effect/leaf.png',
 		label: ['Effect', 'Title', 'Only'],
 		pattern: [
@@ -232,7 +237,7 @@ function init(){
 	
 	// Add the character of player
 	gui.push(new canvasEx({
-	    canvas, context, type: img, x: center, y: center, w: 90, h: 90, center: 1, reverse: 0, direction: 0,
+	    canvas, context, type: img, x: center, y: center, w: 90, h: 90, center: true, reverse: 0, direction: 0,
 	    src: 'Image/Character/mouse_0_0.png',
 	    animation: [
             'Image/Character/mouse_0_0.png',
@@ -248,27 +253,37 @@ function init(){
 			{x: -35, y: 15}, {x: 35, y: 15}, {x: 35, y: -15}, {x: -35, y: -15}
 		],
 		label: ['Player', 'Hitbox']
-	}));
+	}));	
 	
 	// 画面全体を覆うオブジェクトは最上層レイヤーで追加
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
 		src: 'Image/Screen/feedmask.png',
-		label: ['Title', 'Feed']
+		label: ['Title', 'Feedmask']
+	}));
+	
+	// Settings
+	gui.push(new canvasEx({
+		canvas, context, type: txt, x: center, y: center + -180, size: 200, text: '設定', align: center, alpha: 0,
+		label: 'Setting'
 	}));
 
 	//_debug.girdLine = 1;
 
 	// Init sounds
 	const soundname = [
-	        'Sound/Test/U18-6(1).mp3',
-			'Sound/Test/U18-8(1).mp3'
+		{src: 'Sound/Test/U18-6(1).mp3', volume: 1, loop: 1},
+		{src: 'Sound/Test/U18-8(1).mp3', volume: 1, loop: 1},
+		{src: 'Sound/Test/SE-7(1)_remix.mp3', volume: 0.6, loop: 0},
 	];
 
 	soundset = new Array(soundname.length).fill(0);
 
 	soundset.forEach(function(e, i){
-	   soundset[i] = new sound({src: soundname[i], loop: 1});
+		let _this = soundname[i];
+		soundset[i] = new sound({src: _this.src});
+		soundset[i].volume(_this.volume);
+		soundset[i].loop(_this.loop);
 	});
 
 	// setup _animation object
@@ -303,7 +318,7 @@ function init(){
 		if(checkLabel(label, 'Label')){
 			_debug.labelIndex = i;
 		}
-		if(checkLabel(label, 'Feed')){
+		if(checkLabel(label, 'Feedmask')){
 			_debug.feedIndex = i;
 
 		}
@@ -324,7 +339,12 @@ function init(){
 		scroll: {
 			x: 0,
 			y: 0
-		}
+		},
+		pause: {
+			mode: false,
+			interval: 0
+		},
+		respawn: false
 	};
 
 	// setup index of somethings
@@ -375,7 +395,7 @@ function init_mapchip(canvas, context){
 
 		// Map chip image soruce
 		gui.push(new canvasEx({
-			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: 1,
+			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true,
 			src: chip.src, label: 'Mapchip', mapchipData: {x: chip.x, y: chip.y}
 		}));
 
@@ -399,6 +419,17 @@ function main(){
 			_animation.firstInterval --;
 		}
 	}
+	
+	// Pause control
+	if(!gameController.pause.interval && pressedKeys[80]){
+		gameController.pause.mode = !gameController.pause.mode;
+		gameController.pause.interval = 15;
+		soundset[2].play(1);
+		
+		_c.log(`Switched pause mode : ${gameController.pause.mode}`);
+	}
+	
+	gameController.pause.interval -= (gameController.pause.interval > 0);
 }
 
 function update(){
@@ -408,24 +439,34 @@ function update(){
         soundset[0].play(1);
     }
 
-	if(player.frame > player.frameSpeed){
-		player.frame = 0;
-	}
+	gui.map(function(e, i){
+		if(checkLabel(e.label, 'Setting')){
+			gui[i].alpha += (gameController.pause.mode - gui[i].alpha) / 4;
+		}
+	});
+	
+	if(!gameController.pause.mode){
+		if(player.frame > player.frameSpeed){
+			player.frame = 0;
+		}
 
-	keyEvents();
-	controlEffect();
+		keyEvents();
+		controlEffect();
 
-	if(gameController.puzzle.mode){
-		puzzleEvent();
-	}
+		if(gameController.puzzle.mode){
+			puzzleEvent();
+		}
 
-	if(!_animation.title){		
-		playerControl();
-		
-		dragObjects();
-		scrollMapchips();
-		
-		debugmodeLabel();
+		if(!_animation.title){
+			if(!gameController.respawn){
+				playerControl();
+			}
+
+			dragObjects();
+			scrollMapchips();
+
+			debugmodeLabel();
+		}
 	}
 
 	// Mask alpha
@@ -440,8 +481,10 @@ function update(){
 
 	switch(_animation.title){
 		case 0:
-			gui[_debug.feedIndex].alpha += (0 - gui[_debug.feedIndex].alpha) / 5;
-			soundset[1].volume(abs(1 - gui[_debug.feedIndex].alpha));
+			if(!gameController.respawn){
+				gui[_debug.feedIndex].alpha += (gameController.pause.mode * 0.7 - gui[_debug.feedIndex].alpha) / 6;
+				soundset[1].volume(abs(1 - gui[_debug.feedIndex].alpha));
+			}
 		break;
 
 		case 1:
@@ -458,6 +501,8 @@ function update(){
 				gui[_debug.feedIndex].alpha = 1;
 				soundset[0].pause(1);
 				_animation.title = 3;
+				
+				_c.log(gui[_debug.feedIndex].alpha);
 			}
 		break;
 
@@ -465,7 +510,9 @@ function update(){
 			soundset[1].volume(0);
 			soundset[1].play(1);
 
-			_animation.title = 0;
+			setTimeout(function(){
+				_animation.title = 0;
+			}, 400);
 		break;
 	}
 }
@@ -489,21 +536,23 @@ function draw(){
 		}
     });
 
-	drawLastDragObject();
+	if(!gameController.pause.mode){
+		drawLastDragObject();
 
-	// assistant grid line
-	if(_debug.girdLine){
-		cont.beginPath();
-		cont.lineWidth = 3;
-		cont.strokeStyle = '#121212';
+		// assistant grid line
+		if(_debug.girdLine){
+			cont.beginPath();
+			cont.lineWidth = 3;
+			cont.strokeStyle = '#121212';
 
-		cont.moveTo(0, height / 2);
-		cont.lineTo(width, height / 2);
+			cont.moveTo(0, height / 2);
+			cont.lineTo(width, height / 2);
 
-		cont.moveTo(width / 2, 0);
-		cont.lineTo(width / 2, height);
+			cont.moveTo(width / 2, 0);
+			cont.lineTo(width / 2, height);
 
-		cont.stroke();
+			cont.stroke();
+		}
 	}
 }
 
@@ -648,8 +697,8 @@ function playerControl(){
 				player.accel.x = 0;
 			} else {
 				player.hit = false;
-				player.accel.gravity = 0;
 				player.accel.y = 0;
+				player.accel.gravity = 0;
 				player.accel.y += (pressedKeys[38] * -jumpPower) * goCase; //ジャンプを有効化する
 			}
 			player.x = result[0];
@@ -662,20 +711,45 @@ function playerControl(){
 	}
 
 	// if the player went void, set y to scratch.
-	if(height < player.y){
-		player.x = 0;
-		player.y = 0;
-		player.accel.gravity = 0;
-		gameController.scroll.x = 0;
+	if(height < player.y || gameController.respawn){
+		//player.x = 0;
+		//player.y = 0;
+		//player.accel.gravity = 0;
+		//gameController.scroll.x = 0;
+		
+		if(!gameController.respawn){
+			gameController.respawn = true;
+			gui[player.index].alpha = 0;
+			player.accel.gravity = 0;
+			player.accel.y = 0;
+			player.y = 0;
+			
+			let respawn = setInterval(function(){
+				gui[_debug.feedIndex].alpha += (1 - gui[_debug.feedIndex].alpha) / 6; // 画面を暗くする
+				gameController.scroll.x += (player.save.x - gameController.scroll.x) / 4; // save.x がリスポーンx座標 yも一応格納可能
+
+				
+				if(abs(player.save.x - gameController.scroll.x) + (1 - gui[_debug.feedIndex].alpha)< 0.1){
+					setTimeout(function(){
+						gameController.scroll.x = 0;
+						gui[player.index].alpha = 1;
+						player.accel.gravity = 0;
+
+						gameController.respawn = false;
+						clearInterval(respawn);
+					}, 800);
+				}
+			}, fps);
+		}
 	}
 	//_c.log(player.standing)
 	//_c.log(player.hit)
 
 	gameController.scroll.x -= player.x;
 	player.x = prePlayerX;
+	
 	gui[player.index].x = gui[player.hitbox].x = center + player.x;
-	gui[player.hitbox].draw();
-
+	//gui[player.hitbox].draw();
 }
 
 function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
