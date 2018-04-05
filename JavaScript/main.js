@@ -2,6 +2,9 @@ _w.onload = function(){
 	init();
 	main();
 	event();
+	
+	// prototype
+	setInterval(main, fps);
 }
 
 function init(){
@@ -33,15 +36,22 @@ function init(){
         x: 0,
         y: 0,
         reverse: 0,
-        frame: 0,
+		
+		frame: 0,
+		frameSpeed: 6,
+		
         accel: {
             x: 0,
             y: 0,
             gravity: 0
         },
+		
+		hit: false,
         standing: false,
-        hit: false,
-    };
+		
+		index: 0,
+		hitbox: 0,
+	};
 
 	// Mouse positions
 	mouse = {
@@ -63,26 +73,6 @@ function init(){
 		label: ['Background', 'Title']
 	}));
 
-	// Add the character of player
-	gui.push(new canvasEx({
-	    canvas, context, type: img, x: center, y: center, w: 90, h: 90, center: 1, reverse: 0, direction: 0,
-	    src: 'Image/Character/mouse_0_0.png',
-	    animation: [
-            'Image/Character/mouse_0_0.png',
-            'Image/Character/mouse_0_1.png'
-        ],
-        label: 'Player'
-	}));
-
-	// Add the hitbox of player
-	gui.push(new canvasEx({
-		canvas, context, type: pth, x: center, y: center, bold: 2, color: '#D00', mode: stroke,
-		pos: [
-			{x: -35, y: 15}, {x: 35, y: 15}, {x: 35, y: -15}, {x: -35, y: -15}
-		],
-		label: ['Player', 'Hitbox']
-	}));
-
 	// JS-System
 	init_mapchip(canvas, context);
 
@@ -99,7 +89,7 @@ function init(){
 	}));
 
 	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center + 160, size: 80, text: 'スペースキーで開始', align: center,
+		canvas, context, type: txt, x: center, y: center + 180, size: 90, text: 'スペースキーで開始', align: center,
 		label: ['Title', 'Only']
 	}));
 
@@ -138,8 +128,8 @@ function init(){
 	for(var i = 0; i < 7; i ++){
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + puzzlePos[i].x, y: center + puzzlePos[i].y, w: 150, h: 150, alpha: 0, center: 1,
-			src: `Image/Puzzle/board_0${i + 1}.png`,
-			label: ['Puzzle', 'Mask', 'Selector'], drag: 1, maxAlpha: 1, reverse: 0, direction: 0,
+			src: `Image/Puzzle/board_0${i + 1}.png`, label: ['Puzzle', 'Mask', 'Selector'], 
+			drag: 1, maxAlpha: 1, reverse: 0, direction: 0,
 		}));
 	}
 
@@ -170,7 +160,7 @@ function init(){
 		label: 'Mask', maxAlpha: 0.92, reverse: 0, direction: 0, pinY: 1, drag: 1
 	}));
 	
-	// エフェクトオブジェクトの試作
+	// Effect for an object (Prototype)
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center + 100, w: 200, h: 200, center: 1, alpha: 0, direction: 0,
 		src: 'Image/Screen/Effect/leaf.png',
@@ -199,6 +189,65 @@ function init(){
 				}
 			}
 		] 
+	}));
+
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center, y: center, w: 110, h: 110, center: 1, alpha: 0, direction: 0,
+		src: 'Image/Screen/Effect/leaf.png',
+		label: ['Effect', 'Title', 'Only'],
+		pattern: [
+			{
+				type: 'Feedin',
+				parameter: {
+					time: 60
+				}
+			},
+			{
+				type: 'moveX',
+				parameter: {
+					center,
+					delta: 1,
+					accelDelta: 1,
+					time: Infinity
+				}
+			},
+			{
+				type: 'moveY',
+				parameter: {
+					center,
+					delta: 1,
+					accelDelta: 1,
+					time: Infinity
+				}
+			},
+			{
+				type: 'rotation',
+				parameter: {
+					delta: 0.7,
+					time: Infinity // 無限ループ(って怖くね?)
+				}
+			}
+		] 
+	}));
+	
+	// Add the character of player
+	gui.push(new canvasEx({
+	    canvas, context, type: img, x: center, y: center, w: 90, h: 90, center: 1, reverse: 0, direction: 0,
+	    src: 'Image/Character/mouse_0_0.png',
+	    animation: [
+            'file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Image/Character/mouse_0_0.png',
+            'Image/Character/mouse_0_1.png'
+        ],
+        label: 'Player'
+	}));
+	
+	// Add the hitbox of player
+	gui.push(new canvasEx({
+		canvas, context, type: pth, x: center, y: center, bold: 2, color: '#D00', mode: stroke,
+		pos: [
+			{x: -35, y: 15}, {x: 35, y: 15}, {x: 35, y: -15}, {x: -35, y: -15}
+		],
+		label: ['Player', 'Hitbox']
 	}));
 	
 	// 画面全体を覆うオブジェクトは最上層レイヤーで追加
@@ -301,6 +350,18 @@ function init(){
 		}
 	});
 	
+	// playerと当たり判定のindex
+	gui.map(function(e, i){
+		let label = e.label;
+		if(checkLabel(label, 'Player')){
+			if(checkLabel(label, 'Hitbox')){
+				player.hitbox = i;
+			} else {
+				player.index = i;
+			}
+		}
+	});
+	
 	// test
 	//_debug.hitbox = true;
 }
@@ -328,7 +389,7 @@ function init_mapchip(canvas, context){
 
 // Start main
 function main(){
-    requestAnimationFrame(main); // loop method
+    //requestAnimationFrame(main); // loop method
 
     if(_loadedImages === _maxImages){
 		if(!_animation.firstInterval){
@@ -347,7 +408,7 @@ function update(){
         soundset[0].play(1);
     }
 
-	if(player.frame > 4){
+	if(player.frame > player.frameSpeed){
 		player.frame = 0;
 	}
 
@@ -419,7 +480,7 @@ function draw(){
 			}
 		} else {
 			if(e.label === 'Player'){
-				e.draw(player.frame > 4);
+				e.draw(player.frame > player.frameSpeed);
 			} else {
 				if(!(checkLabel(e.label, 'Only') && checkLabel(e.label, 'Title'))){
 					e.draw();
@@ -541,49 +602,49 @@ function playerControl(){
     player.y += player.accel.y + player.accel.gravity;
 
     // Move player's coordinates
-    gui[1].x = gui[2].x = center + player.x;
-    gui[1].y = gui[2].y = center + player.y;
+    gui[player.index].x = gui[player.hitbox].x = center + player.x;
+    gui[player.index].y = gui[player.hitbox].y = center + player.y;
 
     // Set player's direction
     if((pressedKeys[37] || pressedKeys[39]) && goCase){
         player.reverse = pressedKeys[39] + 0;
-        gui[1].reverse = player.reverse;
+        gui[player.index].reverse = player.reverse;
     }
 
     // Frame for Character animation
-    player.frame += (pressedKeys[37] || pressedKeys[39]) * player.standing * goCase;
+	player.frame += (pressedKeys[37] || pressedKeys[39]) * player.standing * goCase;
 
     // Your code here. (gravity, 当たり判定完成後)
     player.accel.gravity += 0.5;
     player.y += 5;
 
-    gui[2].y = center + player.y;
-    gui[2].draw();
+    gui[player.hitbox].y = center + player.y;
+    gui[player.hitbox].draw();
     player.standing = false;
     player.hit = false;
 
-    if(grounds.checkHit(gui[2])){ // Done!!
+    if(grounds.checkHit(gui[player.hitbox])){ // Done!!
 			var count = 300;
 			var step = 0.1;
 			player.standing = true;
 			player.hit = true;
 
-			var result = moveUntilNotHit(2, 3, count, step, player.x, player.y, 0, -1);
+			var result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y, 0, -1);
 			if(result[2]){
 				player.y -= 5
 				count = 15;
 				step = 2;
-				result = moveUntilNotHit(2, 3, count, step, player.x, player.y - 15, 1, 0);
+				result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, 1, 0);
 				result[1] += 15;
 
 				if(result[2]){
-				    result = moveUntilNotHit(2, 3, count, step, player.x, player.y - 15, -1, 0);
+				    result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, -1, 0);
 				    result[1] += 15;
 				}
 				player.y += 5;
-				gui[2].y = center + player.y;
-				gui[2].draw();
-				player.standing = grounds.checkHit(gui[2])
+				gui[player.hitbox].y = center + player.y;
+				gui[player.hitbox].draw();
+				player.standing = grounds.checkHit(gui[player.hitbox])
 				player.accel.x = 0;
 			} else {
 				player.hit = false;
@@ -593,11 +654,11 @@ function playerControl(){
 			}
 			player.x = result[0];
 			player.y = result[1];
-			gui[1].x = gui[2].x = center + player.x;
-			gui[1].y = gui[2].y = center + player.y;
+			gui[player.index].x = gui[player.hitbox].x = center + player.x;
+			gui[player.index].y = gui[player.hitbox].y = center + player.y;
 	}else{
 		player.y -= 5;
-		gui[2].y = center + player.y;
+		gui[player.hitbox].y = center + player.y;
 	}
 
 	// if the player went void, set y to scratch.
@@ -612,8 +673,8 @@ function playerControl(){
 
 	gameController.scroll.x -= player.x;
 	player.x = prePlayerX;
-	gui[1].x = gui[2].x = center + player.x;
-	gui[2].draw();
+	gui[player.index].x = gui[player.hitbox].x = center + player.x;
+	gui[player.hitbox].draw();
 
 }
 
@@ -630,7 +691,7 @@ function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 	gui[obj_1].draw();
 
 	for(var i = 0; i < count && isHit; i++){
-		isHit = grounds.checkHit(gui[2]);
+		isHit = grounds.checkHit(gui[player.hitbox]);
 
 		tentativeX += step * changeX;
 		tentativeY += step * changeY;
@@ -782,18 +843,29 @@ function controlEffect(){
 						break;
 
 						case 'moveX':
-							gui[i_0].x = parameter.center + (parameter.start + (abs(parameter.start - parameter.end) / parameter.time) * value);
+							if(parameter.time === Infinity){
+								gui[i_0].x = parameter.center + parameter.delta;
+								gui[i_0].pattern[i_1].parameter.delta += parameter.accelDelta;
+							} else {
+								gui[i_0].x = parameter.center + (parameter.start + (abs(parameter.start - parameter.end) / parameter.time) * value);
+							}
 						break;
 							
 						case 'moveY':
-							gui[i_0].y = parameter.center + (parameter.start + (abs(parameter.start - parameter.end) / parameter.time) * value);
+							if(parameter.time === Infinity){
+								gui[i_0].y = parameter.center + parameter.delta;
+								gui[i_0].pattern[i_1].parameter.delta += parameter.accelDelta;
+							} else {
+								gui[i_0].y = parameter.center + (parameter.start + (abs(parameter.start - parameter.end) / parameter.time) * value);
+							}
 						break;
 							
 						case 'rotation':
 							if(parameter.time === Infinity){
 								gui[i_0].direction += parameter.delta;
 							} else {
-								
+								let maxDirection = parameter.start || 0;
+								gui[i_0].direction = maxDirection + (abs(maxDirection - parameter.end) / parameter.time) * value;
 							}
 						break;
 					}
