@@ -235,7 +235,7 @@ function init(){
 	    canvas, context, type: img, x: center, y: center, w: 90, h: 90, center: 1, reverse: 0, direction: 0,
 	    src: 'Image/Character/mouse_0_0.png',
 	    animation: [
-            'file:///E:/____E_drive_2017desktop/_JavaScript/___________contestOfU18/Image/Character/mouse_0_0.png',
+            'Image/Character/mouse_0_0.png',
             'Image/Character/mouse_0_1.png'
         ],
         label: 'Player'
