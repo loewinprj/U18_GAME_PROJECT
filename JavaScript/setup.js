@@ -19,3 +19,5 @@ var player; // player object
 const accelSpeed = 2.3; // Change rate of acceleration
 const jumpPower = 7; // Jump pwoer of player
 const lowAccel = 0.7; // The force of inertia
+
+const fps = 1000 / 30; // for setinterval
