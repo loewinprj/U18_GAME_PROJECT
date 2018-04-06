@@ -70,6 +70,7 @@ class canvasEx{
 	draw(status){
 		const direction = this.d || this.dir || this.direction;
 	    const label = this.label;
+		
 		var canvas = this.canvas;
 		var ctx = this.context;
 
@@ -92,7 +93,7 @@ class canvasEx{
 			y = convertPosition(y, 'y', canvas);
 			isCenter = true;
 		}
-		if(isCenter && this.type === pol || this.type === pth){
+		if(isCenter && (this.type === pol || this.type === pth)){
 			this.setPosition(this.type, x, y);
 		}
 
@@ -133,7 +134,8 @@ class canvasEx{
 		switch(this.type){
 			// draw dot
 			case dot:
-				ctx.arc(x, y, this.r, 0, Math.PI * 2, false);
+				let radius = this.radius || this.r;
+				ctx.arc(x, y, radius, 0, Math.PI * 2, false);
 				this.mode === stroke ? ctx.stroke() : ctx.fill(); // Draw!
 			break;
 
@@ -299,9 +301,9 @@ class canvasEx{
 
 		switch(mode[0]){
 			case pol:
-				var r = this.r || this.rad;
-				var dir = this.dir || this.d;
-				var vertex = this.vertex || this.v;
+				var r = this.r || this.radius;
+				var dir = this.d || this.direction;
+				var vertex = this.v || this.vertex;
 				var intAngle = 360 / vertex;
 
 				for(var theta = 0; theta < vertex; theta++){
