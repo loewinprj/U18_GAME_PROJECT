@@ -195,7 +195,7 @@ function init(){
 			}
 		] 
 	}));
-
+/*
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center, w: 110, h: 110, center: true, alpha: 0, direction: 0,
 		src: 'Image/Screen/Effect/leaf.png',
@@ -234,6 +234,7 @@ function init(){
 			}
 		] 
 	}));
+*/
 	
 	// Add the character of player
 	gui.push(new canvasEx({
@@ -264,7 +265,7 @@ function init(){
 	
 	// Settings
 	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center + -180, size: 200, text: '設定', align: center, alpha: 0,
+		canvas, context, type: txt, x: center, y: center + -180, size: 200, text: 'ポーズ', align: center, alpha: 0,
 		label: 'Setting'
 	}));
 
@@ -382,6 +383,9 @@ function init(){
 		}
 	});
 	
+	// Init effect array
+	effects = [];
+	
 	// test
 	//_debug.hitbox = true;
 }
@@ -421,7 +425,7 @@ function main(){
 	}
 	
 	// Pause control
-	if(!gameController.pause.interval && pressedKeys[80]){
+	if(!gameController.pause.interval && pressedKeys[80] && !_animation.title && !gameController.respawn){
 		gameController.pause.mode = !gameController.pause.mode;
 		gameController.pause.interval = 15;
 		soundset[2].play(1);
