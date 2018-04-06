@@ -106,8 +106,8 @@ function init(){
 		label: 'Mask', maxAlpha: 0.4
 	}));
 
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: -75, y: center + 200, w: 500, h: 500, alpha: 0,
+	gui.push(new canvasEx({ // center + -200 を maximum + -700 に変更
+		canvas, context, type: img, x: -75, y: maximum + -280, w: 500, h: 500, alpha: 0,
 		src: 'Image/Screen/debugLabel.png',
 		label: 'Label'
 	}));
@@ -612,9 +612,6 @@ function keyEvents(){
 		_debug.keyBuffer.main = 15; // 30(fps) * 15 = 1500ms (1.5s) = interval
 		_debug.screen = !_debug.screen;
 		_c.log(`User switched _debug.screen : ${_debug.screen}`);
-		
-		alert(`User switched _debug.screen : ${_debug.screen}`);
-		pressedKeys[17] = pressedKeys[32] = 0;
 	}
 
 	if(_debug.screen){
