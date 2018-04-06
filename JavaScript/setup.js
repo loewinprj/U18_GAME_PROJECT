@@ -10,6 +10,8 @@ var width, height; // canvas width and height
 var soundset; // BGM and SE stacks
 var mapchips; // to use ground hit
 var grounds; // grounds stacks
+
+var effects; // effects stack
 var gui; // gui stacks
 
 var pressedKeys; // user input keys
