@@ -24,7 +24,9 @@ var img = 'img';
 var fit = 'fit';
 var fill = 'fill';
 var stroke = 'stroke';
-var center = 'center';
+
+var center = 'center'; // 中心
+var maximum = 'maximum'; // 最大値
 
 // canvas draw methods
 class canvasEx{
@@ -426,7 +428,7 @@ class group{
 		const context = cont;
 		
 		this.objects.push(new canvasEx({
-			canvas, context, type: pth, x: center, y: center, bold: 2, color: '#D00', mode: stroke,
+			canvas, context, type: pth, x: 'center', y: 'center', bold: 2, color: '#D00', mode: stroke,
 			pos: stack, label: 'Group hitbox'
 		}));
 	}
@@ -696,28 +698,55 @@ function checkObjectInObject(objPos_0, objPos_1){
 
 function convertPosition(...input){
 	var tex = input[0];
+	var mode = input[1];
 	var canvas = input[2];
+	var calcValue = mode === 'x' ? canvas.width : canvas.height;
 
-	var rTex = 0;
-	if(isNaN(tex)){
-		var ary = tex !== center ? tex.split('center') : [''];
-
-		ary.forEach(function(e, i){
-			if(e === ''){
-				if(input[1] === 'x'){
-					rTex += canvas.width / 2;
-				} else {
-					rTex += canvas.height / 2;
-				}
-			} else {
-				rTex += Number(e);
-			}
-		});
-
-		tex = rTex;
-	} else {
+	if(!isNaN(tex)){
 		return tex;
 	}
 
-	return rTex;
+	var ary = tex.replace(/center|miximum/, convertReplace);
+	ary = ary.split(/A|B/);
+
+	ary.map(function(e, i){
+		if(['cen', 'mix'].indexOf(e) > -1){
+			if(e === 'cen'){
+				ary[i] = calcValue / 2;
+			} else {
+				ary[i] = calcValue;
+			}
+		}
+	});
+
+	var result = 0;
+	ary.map(function(e){
+		var head = String(e)[0];
+		var num = e;
+
+		if(isNaN(head) && head !== '+'){
+			num = Number(num.substr(1, num.length - 1));
+
+			if(head === '-'){
+				result -= num;
+			} else if(head === '*'){
+				result *= num;
+			} else if(head === '/'){
+				result /= num;
+			}
+		} else {
+			if(head === '+'){
+				num = Number(num.substr(1, num.length - 1));
+			} else {
+				num = Number(num);
+			}
+			result += num;
+		}
+	});
+
+	return result;
+}
+
+function convertReplace(x){
+	return x.substr(0, 3) + (x === 'center' ? 'A' : 'B');
 }
