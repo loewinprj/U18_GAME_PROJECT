@@ -706,11 +706,11 @@ function convertPosition(...input){
 		return tex;
 	}
 
-	var ary = tex.replace(/center|miximum/, convertReplace);
+	var ary = tex.replace(/center|maximum/, convertReplace);
 	ary = ary.split(/A|B/);
 
 	ary.map(function(e, i){
-		if(['cen', 'mix'].indexOf(e) > -1){
+		if(['cen', 'max'].indexOf(e) > -1){
 			if(e === 'cen'){
 				ary[i] = calcValue / 2;
 			} else {
