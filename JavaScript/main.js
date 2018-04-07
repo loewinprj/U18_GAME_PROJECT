@@ -778,8 +778,8 @@ function scrollMapchips(){
 			let x = convertPosition(gui[e.index].x, 'x', canv);
 			let y = convertPosition(gui[e.index].y, 'y', canv);
 			let alpha = distance(width / 2, height / 2, x, y);
-			alpha /= (width < height ? width : height);
-			alpha = (1 - alpha) < 0 ? 0 : 1 - alpha;
+			alpha /= (width + height) / 2;
+			alpha = (1 - alpha * 1.1) < 0 ? 0 : 1 - alpha * 1.05;
 			gui[e.index].alpha = alpha;
 
 		}
