@@ -67,12 +67,12 @@ function init(){
 		lastdrag: -1
 	};
 
-    gui = [];
-    const canvas = canv;
-    const context = cont;
+	gui = [];
+	const canvas = canv;
+	const context = cont;
 
-    // Add the background image to use for game area
-    gui.push(new canvasEx({
+	// Add the background image to use for game area
+	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
 		src: 'Image/Screen/background.png',
 		label: ['Background', 'Title']
@@ -100,7 +100,7 @@ function init(){
 
 	//ここまで
 
-    gui.push(new canvasEx({
+	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
 		src: 'Image/Screen/puzzleMask.png',
 		label: 'Mask', maxAlpha: 0.4
@@ -258,7 +258,7 @@ function init(){
 	pressedKeys = []; // Reset the array for stack pressed keys
 	pressedKeys[37] = pressedKeys[38] = pressedKeys[39] = pressedKeys[40] = 0; // Measures against NaN
 
-    // Make group with add objects
+	// Make group with add objects
 	grounds = new group();
 
 	// create new gui
@@ -531,7 +531,9 @@ function draw(){
 		}
 	}
 	
-	drawEffects();
+	if(_animation.title){
+		drawEffects();
+	}
 }
 
 function event(){
