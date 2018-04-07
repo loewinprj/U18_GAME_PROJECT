@@ -12,6 +12,7 @@
 			"src" : 任意 描画 画像 ソースリンク
 			"center" : 1 か 0 中心描画か否か
 		},
+		// 当たり判定は付けなくても動く
 		"hitbox"{
 			"x" : 当たり判定 x
 			"y" : 当たり判定 y
@@ -26,7 +27,7 @@ var json_mapchip = {
 	"0" : {
 		"chip": {
 			"x" : 0,
-			"y" : 100,
+			"y" : 135,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_01.png",
@@ -66,7 +67,7 @@ var json_mapchip = {
 	"1" : {
 		"chip": {
 			"x" : 180,
-			"y" : 100,
+			"y" : 73,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_02.png",
@@ -78,7 +79,7 @@ var json_mapchip = {
 			"y" : 103,
 			"pos" : [
 				{
-					"x" : -80,
+					"x" : -100,
 					"y" : -30
 				},
 				{
@@ -94,7 +95,7 @@ var json_mapchip = {
 					"y" : 100
 				},
 				{
-					"x" : -80,
+					"x" : -100,
 					"y" : 100
 				}
 			]
@@ -103,8 +104,8 @@ var json_mapchip = {
 	
 	"2" : {
 		"chip": {
-			"x" : 360,
-			"y" : 100,
+			"x" : 280,
+			"y" : 73,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_02.png",
@@ -112,11 +113,11 @@ var json_mapchip = {
 			"center" : 1
 		},
 		"hitbox": {
-			"x" : 360,
+			"x" : 280,
 			"y" : 103,
 			"pos" : [
 				{
-					"x" : -80,
+					"x" : -100,
 					"y" : -30
 				},
 				{
@@ -132,17 +133,19 @@ var json_mapchip = {
 					"y" : 100
 				},
 				{
-					"x" : -80,
+					"x" : -100,
 					"y" : 100
 				}
 			]
 		}
 	},
+	
+	// 斜面
 	
 	"3" : {
 		"chip": {
-			"x" : 540,
-			"y" : 100,
+			"x" : 470,
+			"y" : 90,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_03.png",
@@ -150,11 +153,11 @@ var json_mapchip = {
 			"center" : 1
 		},
 		"hitbox": {
-			"x" : 540,
+			"x" : 470,
 			"y" : 103,
 			"pos" : [
 				{
-					"x" : -80,
+					"x" : -100,
 					"y" : -30
 				},
 				{
@@ -170,48 +173,10 @@ var json_mapchip = {
 					"y" : 100
 				},
 				{
-					"x" : -80,
+					"x" : -100,
 					"y" : 100
 				}
 			]
 		}
 	},
-	
-	"4" : {
-		"chip": {
-			"x" : 720,
-			"y" : 135,
-			"w" : 200,
-			"h" : 200,
-			"src" : "Image/Screen/Mapchip/chip_03.png",
-			"dir" : 0,
-			"center" : 1
-		},
-		"hitbox": {
-			"x" : 720,
-			"y" : 138,
-			"pos" : [
-				{
-					"x" : -80,
-					"y" : -30
-				},
-				{
-					"x" : 100,
-					"y" : 7
-				},
-				{
-					"x" : 100,
-					"y" : 100
-				},
-				{
-					"x" : 100,
-					"y" : 100
-				},
-				{
-					"x" : -80,
-					"y" : 100
-				}
-			]
-		}
-	}
 }
