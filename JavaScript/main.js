@@ -67,12 +67,12 @@ function init(){
 		lastdrag: -1
 	};
 
-	gui = [];
-	const canvas = canv;
-	const context = cont;
+    gui = [];
+    const canvas = canv;
+    const context = cont;
 
-	// Add the background image to use for game area
-	gui.push(new canvasEx({
+    // Add the background image to use for game area
+    gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
 		src: 'Image/Screen/background.png',
 		label: ['Background', 'Title']
@@ -100,7 +100,7 @@ function init(){
 
 	//ここまで
 
-	gui.push(new canvasEx({
+    gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
 		src: 'Image/Screen/puzzleMask.png',
 		label: 'Mask', maxAlpha: 0.4
@@ -258,7 +258,7 @@ function init(){
 	pressedKeys = []; // Reset the array for stack pressed keys
 	pressedKeys[37] = pressedKeys[38] = pressedKeys[39] = pressedKeys[40] = 0; // Measures against NaN
 
-	// Make group with add objects
+    // Make group with add objects
 	grounds = new group();
 
 	// create new gui
@@ -369,16 +369,18 @@ function init_mapchip(canvas, context){
 		let hitbox = data.hitbox;
 		let chip = data.chip;
 
+		if(hitbox !== void(0)){
+			// Map chip hitbox source
+			gui.push(new canvasEx({
+				canvas, context, type: pth, x: center + hitbox.x, y: center + hitbox.y, bold: 2, color: '#07E',
+				pos: hitbox.pos, label: ['Ground', 'Hitbox', 'Mapchip'], mapchipData: {x: hitbox.x, y: hitbox.y}
+			}));
+		}
+		
 		// Map chip image soruce
 		gui.push(new canvasEx({
-			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true,
+			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true, alpha: 1,
 			src: chip.src, label: 'Mapchip', mapchipData: {x: chip.x, y: chip.y}
-		}));
-
-		// Map chip hitbox source
-		gui.push(new canvasEx({
-			canvas, context, type: pth, x: center + hitbox.x, y: center + hitbox.y, bold: 2, color: '#111',
-			pos: hitbox.pos, label: ['Ground', 'Hitbox', 'Mapchip'], mapchipData: {x: hitbox.x, y: hitbox.y}
 		}));
 	});
 }
@@ -771,6 +773,16 @@ function scrollMapchips(){
 	mapchips.map(function(e){
 		gui[e.index].x = center + (gui[e.index].mapchipData.x + gameController.scroll.x);
 		gui[e.index].y = center + (gui[e.index].mapchipData.y + gameController.scroll.y);
+		
+		if(!checkLabel(e.label, 'Hitbox')){
+			let x = convertPosition(gui[e.index].x, 'x', canv);
+			let y = convertPosition(gui[e.index].y, 'y', canv);
+			let alpha = distance(width / 2, height / 2, x, y);
+			alpha /= (width < height ? width : height);
+			alpha = (1 - alpha) < 0 ? 0 : 1 - alpha;
+			gui[e.index].alpha = alpha;
+
+		}
 	});
 }
 
