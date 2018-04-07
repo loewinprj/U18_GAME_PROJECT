@@ -582,8 +582,8 @@ var round = _m.round;
 var floor = _m.floor;
 var ceil = _m.ceil;
 
-function random(x, y){
-	let num = new Array(Math.abs(x - y) + 1).fill(0);
+function random(x, y){	
+	let num = new Array(Math.abs(~~x - ~~y) + 1).fill(0);
 	num.map(function(e, i){
 		num[i] = x + i;
 	});
