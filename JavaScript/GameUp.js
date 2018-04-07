@@ -582,8 +582,12 @@ var round = _m.round;
 var floor = _m.floor;
 var ceil = _m.ceil;
 
-function random(min, max){
-	return ~~(Math.random() * ((max - min + 1) + min));
+function random(x, y){
+	let num = new Array(Math.abs(x - y) + 1).fill(0);
+	num.map(function(e, i){
+		num[i] = x + i;
+	});
+	return num[~~(Math.random() * num.length)];
 }
 
 function distance(x_0, y_0, x_1, y_1, canvas){
