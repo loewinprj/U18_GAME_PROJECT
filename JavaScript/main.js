@@ -641,7 +641,10 @@ function playerControl(){
 	player.accel.x += (pressedKeys[39] - pressedKeys[37]) * accelSpeed * goCase; // Rigth and Left arrow keys
 	//gameController.scroll.x += (pressedKeys[37] - pressedKeys[39]) * accelSpeed * goCase * 1.5; // scroll test
 	var prePlayerX = player.x
+    var prePlayerY = player.y
 	player.x = 0
+	player.y = 0
+    
 	player.accel.x *= lowAccel;
 	player.x += player.accel.x;
 
@@ -710,9 +713,18 @@ function playerControl(){
 		player.y -= 5;
 		gui[player.hitbox].y = center + player.y;
 	}
+    
+    gameController.scroll.x -= player.x;
+    gameController.scroll.y -= player.y;
+	player.x = prePlayerX;
+	player.y = prePlayerY;
+	
+	gui[player.index].x = gui[player.hitbox].x = center + player.x;
+    gui[player.index].y = gui[player.hitbox].y = center + player.y;
+	//gui[player.hitbox].draw();
 
 	// if the player went void, set y to scratch.
-	if(height < player.y || gameController.respawn){
+	if(height < 0 - gameController.scroll.y|| gameController.respawn){
 		//player.x = 0;
 		//player.y = 0;
 		//player.accel.gravity = 0;
@@ -728,6 +740,7 @@ function playerControl(){
 			let respawn = setInterval(function(){
 				gui[_debug.feedIndex].alpha += (1 - gui[_debug.feedIndex].alpha) / 6; // 画面を暗くする
 				gameController.scroll.x += (player.save.x - gameController.scroll.x) / 4; // save.x がリスポーンx座標 yも一応格納可能
+                gameController.scroll.y += (player.save.y - gameController.scroll.y) / 4;
 
 				
 				if(abs(player.save.x - gameController.scroll.x) + (1 - gui[_debug.feedIndex].alpha)< 0.1){
@@ -746,11 +759,7 @@ function playerControl(){
 	//_c.log(player.standing)
 	//_c.log(player.hit)
 
-	gameController.scroll.x -= player.x;
-	player.x = prePlayerX;
-	
-	gui[player.index].x = gui[player.hitbox].x = center + player.x;
-	//gui[player.hitbox].draw();
+
 }
 
 function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
