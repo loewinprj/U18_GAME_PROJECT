@@ -8,8 +8,9 @@
 			"y" : 任意 描画 y
 			"w" : 任意 描画 width
 			"h" : 任意 描画 height
-			"src" : // 改行を入れる
-			描画画像 パス
+			"dir" : 任意 描画 角度 direction
+			"src" : 任意 描画 画像 ソースリンク
+			"center" : 1 か 0 中心描画か否か
 		},
 		"hitbox"{
 			"x" : 当たり判定 x
@@ -28,8 +29,9 @@ var json_mapchip = {
 			"y" : 100,
 			"w" : 200,
 			"h" : 200,
-			"src" : 
-			"Image/Screen/Mapchip/chip_01.png"
+			"src" : "Image/Screen/Mapchip/chip_01.png",
+			"dir" : 0,
+			"center" : 1
 		},
 		"hitbox": {
 			"x" : 0,
@@ -67,8 +69,9 @@ var json_mapchip = {
 			"y" : 100,
 			"w" : 200,
 			"h" : 200,
-			"src" : 
-			"Image/Screen/Mapchip/chip_02.png"
+			"src" : "Image/Screen/Mapchip/chip_02.png",
+			"dir" : 0,
+			"center" : 1
 		},
 		"hitbox": {
 			"x" : 180,
@@ -104,8 +107,9 @@ var json_mapchip = {
 			"y" : 100,
 			"w" : 200,
 			"h" : 200,
-			"src" : 
-			"Image/Screen/Mapchip/chip_02.png"
+			"src" : "Image/Screen/Mapchip/chip_02.png",
+			"dir" : 0,
+			"center" : 1
 		},
 		"hitbox": {
 			"x" : 360,
@@ -134,21 +138,20 @@ var json_mapchip = {
 			]
 		}
 	},
-/*
-	// wall
 	
 	"3" : {
 		"chip": {
 			"x" : 540,
-			"y" : -20,
+			"y" : 100,
 			"w" : 200,
 			"h" : 200,
-			"src" : 
-			"Image/Screen/Mapchip/chip_01.png"
+			"src" : "Image/Screen/Mapchip/chip_03.png",
+			"dir" : 0,
+			"center" : 1
 		},
 		"hitbox": {
 			"x" : 540,
-			"y" : -23,
+			"y" : 103,
 			"pos" : [
 				{
 					"x" : -80,
@@ -156,7 +159,7 @@ var json_mapchip = {
 				},
 				{
 					"x" : 100,
-					"y" : -30
+					"y" : 7
 				},
 				{
 					"x" : 100,
@@ -173,5 +176,42 @@ var json_mapchip = {
 			]
 		}
 	},
-*/
+	
+	"4" : {
+		"chip": {
+			"x" : 720,
+			"y" : 135,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_03.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox": {
+			"x" : 720,
+			"y" : 138,
+			"pos" : [
+				{
+					"x" : -80,
+					"y" : -30
+				},
+				{
+					"x" : 100,
+					"y" : 7
+				},
+				{
+					"x" : 100,
+					"y" : 100
+				},
+				{
+					"x" : 100,
+					"y" : 100
+				},
+				{
+					"x" : -80,
+					"y" : 100
+				}
+			]
+		}
+	}
 }
