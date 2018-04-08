@@ -504,7 +504,7 @@ function update(){
 			soundset[1].play(1);
 
 			setTimeout(function(){
-				if(false){ // 此処から先には行かせない… 俺が食い止める…!
+				if(true){ // 此処から先には行かせない… 俺が食い止める…!
 					gameController.screenMode = 'Game';
 					_animation.title = 0; // 終焉 - バッドエンド（オープニング的な意味で）
 				} else { // 今のうちに逃げろ…!
