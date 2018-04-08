@@ -116,8 +116,8 @@ canvasEx を使う上で、必要な要素があります。
 ### 任意要素（無くても動作します）  
 * canvas  
 →描画エリアのcontextを保持するcanvasを格納  
- x座標あるいはy座標にcenterを用いた演算を利用する場合に、  
- 必要になります。
+ x座標あるいはy座標に**center**を用いた演算の  
+ 利用が可能になります。  
  
  (例)  
  ```
@@ -125,8 +125,20 @@ canvasEx を使う上で、必要な要素があります。
  // canvas を指定した状態では x,y において center が利用できます。
  // center は canvas から width,height を取得して 自動計算します。
  // x: center + 10 は canvas の 中心xから 10 正に増加させた位置で、
- // y: center + -70 は canvas の 中心yから 70 負に増減させた位置です。
+ // y: center + -70 は canvas の 中心yから 70 負に増減させた位置です。  
+ ```  
+ →またx座標あるいはy座標に**maximum**を用いた  
+  演算が可能になります。
+  
+ (例)  
  ```
+ {canvas: canvasDOM, x: maximum + -50, y: maximum + -150 ..., something}
+ // canvas を指定した状態では x,y において maximum が利用できます。
+ // maximum は canvas から width,height を取得して 自動計算します。
+ // x: maximum + 50 は canvas の 最大値xから 50 負に増加させた位置で、
+ // y: maximum + -150 は canvas の 最大値yから 150 負に増減させた位置です。
+ ```
+ 
 * label
 →生成したcanvasExにlabel情報を保持させます。  
  配列でも、単体の値でも可能です。  
@@ -259,6 +271,10 @@ canvasEx を使う上で、必要な要素があります。
 →左右書きを指定。  
  1ならば文字を左から右へ反転。  
  それ以外（0や未定義）は横書き。  
+ 
+ * align
+ →文字描画の位置を指定。  
+  centerならば中心、それ以外は左上。  
  
 ## img  
 **img** を利用する際の利用可能要素です。  
