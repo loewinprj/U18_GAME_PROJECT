@@ -75,41 +75,41 @@ function init(){
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
 		src: 'Image/Screen/background.png',
-		label: ['Background', 'Title']
+		label: ['Background', 'All']
 	}));
 
-	// JS-System
+	// mapchip.json からマップチップデータを読み込む
 	init_mapchip(canvas, context);
 
 	// タイトルテストここから
 
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center, y: center + -200, size: 200, text: '七変化風林火山', align: center, reverse: 1,
-		label: ['Title', 'Only']
+		label: ['Title']
 	}));
 
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center, y: center + -150, size: 110, text: '鳳凰物語', align: center, reverse: 1,
-		label: ['Title', 'Only']
+		label: ['Title']
 	}));
 
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center, y: center + 180, size: 90, text: 'スペースキーで開始', align: center,
-		label: ['Title', 'Only']
+		label: ['Title']
 	}));
 
 	//ここまで
 
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
-		src: 'Image/Screen/puzzleMask.png',
-		label: 'Mask', maxAlpha: 0.4
+		src: 'Image/Screen/puzzleMask.png', maxAlpha: 0.4,
+		label: ['Mask', 'Game']
 	}));
 
 	gui.push(new canvasEx({ // center + -200 を maximum + -700 に変更
 		canvas, context, type: img, x: -75, y: maximum + -280, w: 500, h: 500, alpha: 0,
 		src: 'Image/Screen/debugLabel.png',
-		label: 'Label'
+		label: ['Label', 'All']
 	}));
 
 	// パズルピース
@@ -133,43 +133,43 @@ function init(){
 	for(var i = 0; i < 7; i ++){
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + puzzlePos[i].x, y: center + puzzlePos[i].y, w: 150, h: 150, alpha: 0, center: true,
-			src: `Image/Puzzle/board_0${i + 1}.png`, label: ['Puzzle', 'Mask', 'Selector'], 
-			drag: 1, maxAlpha: 1, reverse: 0, direction: 0,
+			src: `Image/Puzzle/board_0${i + 1}.png`, drag: 1, maxAlpha: 1, reverse: 0, direction: 0,
+			label: ['Puzzle', 'Mask', 'Selector', 'Game']
 		}));
 	}
 
 	// 回転ボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -300, y: center + 300, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/buttonRotation.png',
-		label: ['Puzzle', 'Mask', 'Rot'], maxAlpha: 0.92, reverse: 0, direction: 0,
+		src: 'Image/Puzzle/buttonRotation.png', maxAlpha: 0.92, reverse: 0, direction: 0,
+		label: ['Puzzle', 'Mask', 'Rot', 'Game']
 	}));
 
 	// 反転ボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -300, y: center + 200, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/buttonReverse.png',
-		label: ['Puzzle', 'Mask', 'Rev'], maxAlpha: 0.92, reverse: 0, direction: 0,
+		src: 'Image/Puzzle/buttonReverse.png', maxAlpha: 0.92, reverse: 0, direction: 0,
+		label: ['Puzzle', 'Mask', 'Rev', 'Game']
 	}));
 
 	// スクロールバー
 	gui.push(new canvasEx({
 		canvas, context, type: pth, x: center + -100, y: center + 300, bold: 2, color: '#222', mode: stroke, alpha: 0,
-		pos: [{x: -100, y: 0}, {x: 100, y:0}], label: 'Mask', maxAlpha: 0.92
+		pos: [{x: -100, y: 0}, {x: 100, y:0}], maxAlpha: 0.92,
+		label: ['Mask', 'Game']
 	}));
 
 	// スクロールボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: true,
-		src: 'Image/Puzzle/buttonScroll.png',
-		label: 'Mask', maxAlpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true
+		src: 'Image/Puzzle/buttonScroll.png', maxAlpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
+		label: ['Mask', 'Game'],
 	}));
 	
 	// for an object (Prototype)
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center + 100, w: 200, h: 200, center: true, alpha: 0, direction: 0,
-		src: 'Image/Screen/Effect/leaf.png',
-		label: ['Effect', 'Title', 'Only'],
+		src: 'Image/Screen/Effect/leaf.png', label: ['Effect', 'Title'],
 		pattern: [
 			{
 				type: 'Feedin',
@@ -220,16 +220,17 @@ function init(){
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
 		src: 'Image/Screen/feedmask.png',
-		label: ['Title', 'Feedmask']
+		label: ['Feedmask', 'All']
 	}));
 	
 	// Settings
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center, y: center + -180, size: 200, text: 'ポーズ', align: center, alpha: 0,
-		label: 'Setting'
+		label: ['Setting', 'All']
 	}));
 
-	//_debug.girdLine = 1;
+	// オープニングデータのリセット
+	init_opening(canvas, context);
 
 	// Init sounds
 	const soundname = [
@@ -305,7 +306,8 @@ function init(){
 			mode: false,
 			interval: 0
 		},
-		respawn: false
+		respawn: false,
+		screenMode: 'Title' // 現在の画面状況
 	};
 
 	// setup index of somethings
@@ -346,15 +348,18 @@ function init(){
 	// Init effect array
 	effects = new Array(32).fill(0);
 	for(let i in effects){
-		let size = random(60, 80);
+		let size = random(50, 70);
 		effects[i] = {
 			object: new canvasEx({
-				canvas, context, type: img, x: random(-width / 4, width), y: -random(10, 70), w: size, h: size, center: true, alpha: 1,
-				src: 'Image/Screen/Effect/leaf.png',
-				label: ['Effect', 'Title', 'Only'],
+				canvas, context, type: img, x: random(-width / 4, width), y: -random(20, 120), w: size, h: size, alpha: rand() * 0.5 + 0.5,
+				center: true, direction: random(0, 360), src: 'Image/Screen/Effect/leaf.png', label: ['Effect', 'Title']
 			}),
 			dx: rand() * (size / 40),
-			dy: rand() * (size / 40)
+			dy: rand() * (size / 40),
+			dDir: rand() * 2.5 + 0.5,
+			mAlp: rand() * 0.3 + 0.5,
+			sAlp: rand() * 1 + 0.5,
+			frame: 0
 		}
 	}
 	
@@ -373,16 +378,26 @@ function init_mapchip(canvas, context){
 			// Map chip hitbox source
 			gui.push(new canvasEx({
 				canvas, context, type: pth, x: center + hitbox.x, y: center + hitbox.y, bold: 2, color: '#07E',
-				pos: hitbox.pos, label: ['Ground', 'Hitbox', 'Mapchip'], mapchipData: {x: hitbox.x, y: hitbox.y}
+				pos: hitbox.pos, mapchipData: {x: hitbox.x, y: hitbox.y}, label: ['Ground', 'Hitbox', 'Mapchip', 'Game']
 			}));
 		}
 		
 		// Map chip image soruce
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true, alpha: 1,
-			src: chip.src, label: 'Mapchip', mapchipData: {x: chip.x, y: chip.y}
+			src: chip.src, mapchipData: {x: chip.x, y: chip.y}, label: ['Mapchip', 'Game']
 		}));
 	});
+}
+
+function init_opening(canvas, context){
+	// Openingデータを追加する予定
+	/*
+	gui.push(new canvasEx({
+		canvas, context, type: txt, x: maximum - 100, y: 100, text: '', align: center
+		label: ['Opening', 'Text']
+	}));
+	*/
 }
 
 // Start main
@@ -473,7 +488,7 @@ function update(){
 		break;
 
 		case 2:
-			gui[_debug.feedIndex].alpha += (1 - gui[_debug.feedIndex].alpha) / 7;
+			gui[_debug.feedIndex].alpha += (1 - gui[_debug.feedIndex].alpha) / 6;
 			soundset[0].volume(abs(1 - gui[_debug.feedIndex].alpha));
 			if(soundset[0].audio.volume < 0.01){
 				gui[_debug.feedIndex].alpha = 1;
@@ -489,8 +504,19 @@ function update(){
 			soundset[1].play(1);
 
 			setTimeout(function(){
-				_animation.title = 0;
+				if(false){ // 此処から先には行かせない… 俺が食い止める…!
+					gameController.screenMode = 'Game';
+					_animation.title = 0; // 終焉 - バッドエンド（オープニング的な意味で）
+				} else { // 今のうちに逃げろ…!
+					gameController.screenMode = 'Opening'; // 天空は轟き、雷槌は龍の様に地面を這う
+					_animation.title = 4; // 誕生 - グッドエンド（オープニング的な意味で）
+				}
 			}, 400);
+		break;
+			
+		case 4:
+			// オープニングを付ける予定
+			gui[_debug.feedIndex].alpha += (0.3 - gui[_debug.feedIndex].alpha) / 16; // とりあえず画面明るくしておけ
 		break;
 	}
 }
@@ -498,20 +524,43 @@ function update(){
 function draw(){
 	clear();
 
+	let mode = gameController.screenMode;
+	
 	gui.map(function(e){
-		if(_animation.title){ // draw title screen
-			if(checkLabel(e.label, 'Title')){
-				e.draw();
-			}
-		} else {
-			if(e.label === 'Player'){
-				e.draw(player.frame > player.frameSpeed);
-			} else {
-				if(!(checkLabel(e.label, 'Only') && checkLabel(e.label, 'Title'))){
+		let label = e.label;
+		
+		switch(mode){
+			case 'Opening':
+				if(checkLabel(label, 'Opening')){
 					e.draw();
 				}
+			break;
+				
+			case 'Title':
+				if(checkLabel(label, 'Title')){
+					e.draw();
+				}
+			break;
+				
+			case 'Game':
+				if(checkLabel(label, 'Game')){
+					e.draw();
+				}
+			break;
+		}
+		
+		if(checkLabel(label, 'All')){ //　全場面描画
+			e.draw();
+		}
+		
+		if(checkLabel(label, 'Player') && mode === 'Game'){ // 特殊条件発火
+			if(label === 'Player'){
+				e.draw(player.frame > player.frameSpeed);
+			} else {
+				e.draw();
 			}
 		}
+
 	});
 
 	if(!gameController.pause.mode){
@@ -944,10 +993,41 @@ function controlEffect(){
 }
 
 function drawEffects(){
+	let mode = gameController.screenMode;
+	
 	effects.map(function(e, i){
-		e.object.draw();
+		let label = e.object.label;
+
+		switch(mode){
+			case 'Opening':
+				if(checkLabel(label, 'Opening')){
+					e.object.draw();
+				}
+			break;
+				
+			case 'Title':
+				if(checkLabel(label, 'Title')){
+					e.object.draw();
+				}
+			break;
+				
+			case 'Game':
+				if(checkLabel(label, 'Game')){
+					e.object.draw();
+				}
+			break;
+		}
+		
+		if(checkLabel(label, 'All')){ //　全場面描画
+			e.object.draw();
+		}
+
 		effects[i].object.x += e.dx;
 		effects[i].object.y += e.dy;
+		effects[i].object.direction += e.dDir;
+		effects[i].object.alpha = abs(sin(e.frame * PI / 180) - (1 - e.mAlp));
+
+		effects[i].frame += e.sAlp;
 		
 		if(width < e.object.x || height < e.object.y){
 			effects[i].object.x = random(-width / 4, width);
