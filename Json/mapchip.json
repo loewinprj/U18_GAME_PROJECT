@@ -355,7 +355,7 @@ var json_mapchip = {
 	"06_0" : {
 		"chip": {
 			"x" : 250,
-			"y" : -227,
+			"y" : -212,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_06.png",
@@ -364,7 +364,7 @@ var json_mapchip = {
 		}
 	},
 	
-	// chip 07 - grass
+	// chip 07 - Grass
 	
 	"07_0" : {
 		"chip": {
