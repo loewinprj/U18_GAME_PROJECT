@@ -18,7 +18,7 @@ function init(){
     // Debug status
     _debug = {
         hitbox: false,
-		screen: false,so
+		screen: false,
 		key_buffer: {
 			main: 0,
 			puzzle: 0,
