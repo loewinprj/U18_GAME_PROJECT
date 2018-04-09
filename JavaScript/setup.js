@@ -1,9 +1,9 @@
 // variable
-var canv,
-    cont,
-    size; // canvas area , context and div element of control canvas size
+var canv, // canvas
+    cont, // context
+    size; // controller of canvas size
 
-var gameController; // to use change the game mode
+var game_controller; // to use change the game mode
 
 var width, height; // canvas width and height
 
@@ -11,10 +11,11 @@ var soundset; // BGM and SE stacks
 var mapchips; // to use ground hit
 var grounds; // grounds stacks
 
-var effects; // effects stack
-var gui; // gui stacks
+var anime_index; // stack indexes of animation objects (effects)
+var effects; // stack objectes of effects
+var gui; // stack gui objects
 
-var pressedKeys; // user input keys
+var pressed_keys; // user input keys
 var player; // player object
 
 // constant
