@@ -5,27 +5,27 @@ _w.onload = function(){
 	
 	// prototype
 	setInterval(main, fps); // start main loop of the game
-}
+};
 
 function init(){
     size = _d.getElementById('size');
     canv = _d.getElementById('drawArea');
     cont = canv.getContext('2d');
 
-    setSize();
+    set_size();
     clear();
 
     // Debug status
     _debug = {
         hitbox: false,
-		screen: false,
-		keyBuffer: {
+		screen: false,so
+		key_buffer: {
 			main: 0,
 			puzzle: 0,
 			hitbox : 0
 		},
-		labelIndex: null,
-		girdLine: false
+		label_index: null,
+		grid_line: false
     };
 
 	// reset mapchips array
@@ -38,7 +38,7 @@ function init(){
         reverse: 0,
 		
 		frame: 0,
-		frameSpeed: 6,
+		frame_speed: 6,
 		
         accel: {
             x: 0,
@@ -64,7 +64,7 @@ function init(){
 		y: 0,
 		drag: -1,
 		down: false,
-		lastdrag: -1
+		last_drag_index: -1
 	};
 
     gui = [];
@@ -102,7 +102,7 @@ function init(){
 
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
-		src: 'Image/Screen/puzzleMask.png', maxAlpha: 0.4,
+		src: 'Image/Screen/puzzleMask.png', max_alpha: 0.4,
 		label: ['Mask', 'Game']
 	}));
 
@@ -113,7 +113,7 @@ function init(){
 	}));
 
 	// パズルピース
-	let puzzlePos = [
+	let puzzle_positions = [
 		{x: 397, y: 353}, // 0
 		{x: 469, y: 334}, // 1
 		{x: 398, y: 258}, // 2
@@ -125,15 +125,15 @@ function init(){
 
 	let dx = -430;
 	let dy = -300;
-	puzzlePos.forEach(function(e){
+	puzzle_positions.forEach(function(e){
 		e.x += dx;
 		e.y += dy;
 	});
 
 	for(var i = 0; i < 7; i ++){
 		gui.push(new canvasEx({
-			canvas, context, type: img, x: center + puzzlePos[i].x, y: center + puzzlePos[i].y, w: 150, h: 150, alpha: 0, center: true,
-			src: `Image/Puzzle/board_0${i + 1}.png`, drag: 1, maxAlpha: 1, reverse: 0, direction: 0,
+			canvas, context, type: img, x: center + puzzle_positions[i].x, y: center + puzzle_positions[i].y, w: 150, h: 150, alpha: 0, center: true,
+			src: `Image/Puzzle/board_0${i + 1}.png`, drag: 1, max_alpha: 1, reverse: 0, direction: 0,
 			label: ['Puzzle', 'Mask', 'Selector', 'Game']
 		}));
 	}
@@ -141,35 +141,40 @@ function init(){
 	// 回転ボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -300, y: center + 300, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/buttonRotation.png', maxAlpha: 0.92, reverse: 0, direction: 0,
+		src: 'Image/Puzzle/buttonRotation.png', max_alpha: 0.92, reverse: 0, direction: 0,
 		label: ['Puzzle', 'Mask', 'Rot', 'Game']
 	}));
 
 	// 反転ボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -300, y: center + 200, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/buttonReverse.png', maxAlpha: 0.92, reverse: 0, direction: 0,
+		src: 'Image/Puzzle/buttonReverse.png', max_alpha: 0.92, reverse: 0, direction: 0,
 		label: ['Puzzle', 'Mask', 'Rev', 'Game']
 	}));
 
 	// スクロールバー
 	gui.push(new canvasEx({
 		canvas, context, type: pth, x: center + -100, y: center + 300, bold: 2, color: '#222', mode: stroke, alpha: 0,
-		pos: [{x: -100, y: 0}, {x: 100, y:0}], maxAlpha: 0.92,
+		pos: [{x: -100, y: 0}, {x: 100, y:0}], max_alpha: 0.92,
 		label: ['Mask', 'Game']
 	}));
 
 	// スクロールボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: true,
-		src: 'Image/Puzzle/buttonScroll.png', maxAlpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
+		src: 'Image/Puzzle/buttonScroll.png', max_alpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
 		label: ['Mask', 'Game'],
 	}));
 	
 	// for an object (Prototype)
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center + 100, w: 200, h: 200, center: true, alpha: 0, direction: 0,
-		src: 'Image/Screen/Effect/leaf.png', label: ['Effect', 'Title'],
+		src: 'Image/Screen/Effect/leaf.png', switch: 'Audio 0',switch_frame: [7.1, 21.4, 41.4, 64.2],
+	    animation: [
+            'Image/Screen/Effect/leaf.png',
+            'Image/Character/mouse_0_0.png'
+        ],
+		label: ['Animation', 'Effect', 'Title'],
 		pattern: [
 			{
 				type: 'Feedin',
@@ -250,14 +255,14 @@ function init(){
 
 	// setup _animation object
 	_animation = {
-		bgmStart: 1,
-		loadFinish: 30,
-		firstInterval: 10,
+		bgm_start: 1,
+		load_finished: 30,
+		first_interval: 10,
 		title: 1
 	}
 
-	pressedKeys = []; // Reset the array for stack pressed keys
-	pressedKeys[37] = pressedKeys[38] = pressedKeys[39] = pressedKeys[40] = 0; // Measures against NaN
+	pressed_keys = []; // Reset the array for stack pressed keys
+	pressed_keys[37] = pressed_keys[38] = pressed_keys[39] = pressed_keys[40] = 0; // Measures against NaN
 
     // Make group with add objects
 	grounds = new group();
@@ -265,29 +270,29 @@ function init(){
 	// create new gui
 	gui.map(function(e, i){
 		let label = e.label;
-		if(checkLabel(label, 'Mapchip')){
+		if(check_include_label(label, 'Mapchip')){
 			mapchips.push(
 				{
-					x: e.mapchipData.x,
-					y: e.mapchipData.y,
+					x: e.mapchip_data.x,
+					y: e.mapchip_data.y,
 					index: i
 				}
 			);
 		}
-		if(checkLabel(label, 'Ground')){
+		if(check_include_label(label, 'Ground')){
 			grounds.add(e);
 		}
-		if(checkLabel(label, 'Label')){
-			_debug.labelIndex = i;
+		if(check_include_label(label, 'Label')){
+			_debug.label_index = i;
 		}
-		if(checkLabel(label, 'Feedmask')){
-			_debug.feedIndex = i;
+		if(check_include_label(label, 'Feedmask')){
+			_debug.feed_index = i;
 
 		}
 	});
 
 	// controll object
-	gameController = {
+	game_controller = {
 		puzzle: {
 			mode: false,
 			reverse: {
@@ -307,24 +312,24 @@ function init(){
 			interval: 0
 		},
 		respawn: false,
-		screenMode: 'Title' // 現在の画面状況
+		screen_mode: 'Title' // 現在の画面状況
 	};
 
 	// setup index of somethings
 	gui.map(function(e, i){
 		let label = e.label;
-		if(checkLabel(label, 'Puzzle') && (checkLabel(label, 'Rot') || checkLabel(label, 'Rev'))){
-			if(checkLabel(label, 'Rot')){
-				gameController.puzzle.rotation.id = i;
+		if(check_include_label(label, 'Puzzle') && (check_include_label(label, 'Rot') || check_include_label(label, 'Rev'))){
+			if(check_include_label(label, 'Rot')){
+				game_controller.puzzle.rotation.id = i;
 			} else {
-				gameController.puzzle.reverse.id = i;
+				game_controller.puzzle.reverse.id = i;
 			}
 		}
 	});
 	
 	// setup effects
 	gui.map(function(e_0, i_0){
-		if(checkLabel(e_0.label, 'Effect')){
+		if(check_include_label(e_0.label, 'Effect')){
 			e_0.pattern.map(function(e_1, i_1){
 				if(e_1.parameter.log === void(0)){
 					gui[i_0].pattern[i_1].parameter.log = e_1.parameter.time;
@@ -336,8 +341,8 @@ function init(){
 	// playerと当たり判定のindex
 	gui.map(function(e, i){
 		let label = e.label;
-		if(checkLabel(label, 'Player')){
-			if(checkLabel(label, 'Hitbox')){
+		if(check_include_label(label, 'Player')){
+			if(check_include_label(label, 'Hitbox')){
 				player.hitbox = i;
 			} else {
 				player.index = i;
@@ -363,6 +368,13 @@ function init(){
 		}
 	}
 	
+	anime_index = [];
+	gui.map(function(e, i){
+		if(check_include_label(e.label, 'Animation'), check_include_label(e.label, 'Effect')){
+			anime_index.push(i);
+		}
+	});
+	
 	// test
 	//_debug.hitbox = true;
 }
@@ -378,84 +390,84 @@ function init_mapchip(canvas, context){
 			// Map chip hitbox source
 			gui.push(new canvasEx({
 				canvas, context, type: pth, x: center + hitbox.x, y: center + hitbox.y, bold: 2, color: '#07E',
-				pos: hitbox.pos, mapchipData: {x: hitbox.x, y: hitbox.y}, label: ['Ground', 'Hitbox', 'Mapchip', 'Game']
+				pos: hitbox.pos, mapchip_data: {x: hitbox.x, y: hitbox.y},
+				label: ['Ground', 'Hitbox', 'Mapchip', 'Game']
 			}));
 		}
 		
 		// Map chip image soruce
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true, alpha: 1,
-			src: chip.src, mapchipData: {x: chip.x, y: chip.y}, label: ['Mapchip', 'Game']
+			src: chip.src, mapchip_data: {x: chip.x, y: chip.y},
+			label: ['Mapchip', 'Game']
 		}));
 	});
 }
 
 function init_opening(canvas, context){
-	// Openingデータを追加する予定
-	/*
+	// オープニングオブジェクトの追加
 	gui.push(new canvasEx({
-		canvas, context, type: txt, x: maximum - 100, y: 100, text: '', align: center
-		label: ['Opening', 'Text']
+		canvas, context, type: txt, x: center, y: center, size: 90, text: '下の方では地球の者たちが緊張気味に固まれり。', mode: 1, align: center,
+		label: ['Opening']
 	}));
-	*/
 }
 
 // Start main
 function main(){
-    //requestAnimationFrame(main); // loop method
-
-    if(_loadedImages === _maxImages){
-		if(!_animation.firstInterval){
+    //requestAnimationFrame(main); // FPSが不安定なためsetIntervalに変更
+    if(_loaded_images === _max_images){
+		if(!_animation.first_interval){
 			draw();
 			update();
 		} else {
-			_animation.firstInterval --;
+			_animation.first_interval --;
 		}
 	}
 	
 	// Pause control
-	if(!gameController.pause.interval && pressedKeys[80] && !_animation.title && !gameController.respawn){
-		gameController.pause.mode = !gameController.pause.mode;
-		gameController.pause.interval = 15;
+	if(!game_controller.pause.interval && pressed_keys[80] && !_animation.title && !game_controller.respawn){
+		game_controller.pause.mode = !game_controller.pause.mode;
+		game_controller.pause.interval = 15;
 		soundset[2].play(1);
 		
-		_c.log(`Switched pause mode : ${gameController.pause.mode}`);
+		_c.log(`Switched pause mode : ${game_controller.pause.mode}`);
 	}
 	
-	gameController.pause.interval -= (gameController.pause.interval > 0);
+	game_controller.pause.interval -= (game_controller.pause.interval > 0);
 }
 
 function update(){
-    if(_animation.bgmStart){
-		_animation.bgmStart = 0;
+    if(_animation.bgm_start){
+		_animation.bgm_start = 0;
 		soundset[0].volume(0);
         soundset[0].play(1);
     }
 
 	gui.map(function(e, i){
-		if(checkLabel(e.label, 'Setting')){
-			gui[i].alpha += (gameController.pause.mode - gui[i].alpha) / 4;
+		if(check_include_label(e.label, 'Setting')){
+			gui[i].alpha += (game_controller.pause.mode - gui[i].alpha) / 4;
 		}
 	});
 	
-	if(!gameController.pause.mode){
-		if(player.frame > player.frameSpeed){
+	if(!game_controller.pause.mode){
+		if(player.frame > player.frame_speed){
 			player.frame = 0;
 		}
 
-		keyEvents();
-		controlEffect();
+		key_events();
+		control_effects();
+		// controlAnime();
 
-		if(gameController.puzzle.mode){
+		if(game_controller.puzzle.mode){
 			puzzleEvent();
 		}
 
 		if(!_animation.title){
-			if(!gameController.respawn){
-				playerControl();
+			if(!game_controller.respawn){
+				player_control();
 			}
 
-			dragObjects();
+			drag_objects();
 			scrollMapchips();
 
 			debugmodeLabel();
@@ -464,38 +476,38 @@ function update(){
 
 	// Mask alpha
 	gui.forEach(function(e){
-		if(checkLabel(e.label, 'Mask')){
-			e.alpha += ((e.maxAlpha || 0.27) * gameController.puzzle.mode - e.alpha) / 4;
+		if(check_include_label(e.label, 'Mask')){
+			e.alpha += ((e.max_alpha || 0.27) * game_controller.puzzle.mode - e.alpha) / 4;
 		}
 	});
 
-	_animation.loadFinish -= (_animation.loadFinish > 0);
-	soundset[0].volume(abs(1 - (_animation.loadFinish / 30)));
+	_animation.load_finished -= (_animation.load_finished > 0);
+	soundset[0].volume(abs(1 - (_animation.load_finished / 30)));
 
 	switch(_animation.title){
 		case 0:
-			if(!gameController.respawn){
-				gui[_debug.feedIndex].alpha += (gameController.pause.mode * 0.7 - gui[_debug.feedIndex].alpha) / 6;
-				soundset[1].volume(abs(1 - gui[_debug.feedIndex].alpha));
+			if(!game_controller.respawn){
+				gui[_debug.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[_debug.feed_index].alpha) / 6;
+				soundset[1].volume(abs(1 - gui[_debug.feed_index].alpha));
 			}
 		break;
 
 		case 1:
-			gui[_debug.feedIndex].alpha = _animation.loadFinish / 30;
-			if(pressedKeys[32] && _animation.title && !_animation.loadFinish){
+			gui[_debug.feed_index].alpha = _animation.load_finished / 30;
+			if(pressed_keys[32] && _animation.title && !_animation.load_finished){
 				_animation.title = 2;
 			}
 		break;
 
 		case 2:
-			gui[_debug.feedIndex].alpha += (1 - gui[_debug.feedIndex].alpha) / 6;
-			soundset[0].volume(abs(1 - gui[_debug.feedIndex].alpha));
+			gui[_debug.feed_index].alpha += (1 - gui[_debug.feed_index].alpha) / 6;
+			soundset[0].volume(abs(1 - gui[_debug.feed_index].alpha));
 			if(soundset[0].audio.volume < 0.01){
-				gui[_debug.feedIndex].alpha = 1;
+				gui[_debug.feed_index].alpha = 1;
 				soundset[0].pause(1);
 				_animation.title = 3;
 				
-				_c.log(gui[_debug.feedIndex].alpha);
+				_c.log(gui[_debug.feed_index].alpha);
 			}
 		break;
 
@@ -505,10 +517,10 @@ function update(){
 
 			setTimeout(function(){
 				if(true){ // 此処から先には行かせない… 俺が食い止める…!
-					gameController.screenMode = 'Game';
+					game_controller.screen_mode = 'Game';
 					_animation.title = 0; // 終焉 - バッドエンド（オープニング的な意味で）
 				} else { // 今のうちに逃げろ…!
-					gameController.screenMode = 'Opening'; // 天空は轟き、雷槌は龍の様に地面を這う
+					game_controller.screen_mode = 'Opening'; // 天空は轟き、雷槌は龍の様に地面を這う
 					_animation.title = 4; // 誕生 - グッドエンド（オープニング的な意味で）
 				}
 			}, 400);
@@ -516,7 +528,7 @@ function update(){
 			
 		case 4:
 			// オープニングを付ける予定
-			gui[_debug.feedIndex].alpha += (0.3 - gui[_debug.feedIndex].alpha) / 16; // とりあえず画面明るくしておけ
+			gui[_debug.feed_index].alpha += (0.3 - gui[_debug.feed_index].alpha) / 16; // とりあえず画面明るくしておけ
 		break;
 	}
 }
@@ -524,38 +536,39 @@ function update(){
 function draw(){
 	clear();
 
-	let mode = gameController.screenMode;
+	let mode = game_controller.screen_mode;
 	
 	gui.map(function(e){
 		let label = e.label;
 		
 		switch(mode){
 			case 'Opening':
-				if(checkLabel(label, 'Opening')){
+				if(check_include_label(label, 'Opening')){
+					//e.draw(e.switch_frame.indexOf(e.frame) > -1 || e.switch_frame.inside(e.switchElement, 0.01) > -1);
 					e.draw();
 				}
 			break;
 				
 			case 'Title':
-				if(checkLabel(label, 'Title')){
+				if(check_include_label(label, 'Title')){
 					e.draw();
 				}
 			break;
 				
 			case 'Game':
-				if(checkLabel(label, 'Game')){
+				if(check_include_label(label, 'Game')){
 					e.draw();
 				}
 			break;
 		}
 		
-		if(checkLabel(label, 'All')){ //　全場面描画
+		if(check_include_label(label, 'All')){ //　全場面描画
 			e.draw();
 		}
 		
-		if(checkLabel(label, 'Player') && mode === 'Game'){ // 特殊条件発火
+		if(check_include_label(label, 'Player') && mode === 'Game'){ // 特殊条件発火
 			if(label === 'Player'){
-				e.draw(player.frame > player.frameSpeed);
+				e.draw(player.frame > player.frame_speed);
 			} else {
 				e.draw();
 			}
@@ -563,11 +576,11 @@ function draw(){
 
 	});
 
-	if(!gameController.pause.mode){
-		drawLastDragObject();
+	if(!game_controller.pause.mode){
+		draw_last_drag_object();
 
 		// assistant grid line
-		if(_debug.girdLine){
+		if(_debug.grid_line){
 			cont.beginPath();
 			cont.lineWidth = 3;
 			cont.strokeStyle = '#121212';
@@ -603,15 +616,15 @@ function event(){
 	});
 
     _d.addEventListener('keydown', function(e){
-		pressedKeys[e.keyCode] = 1;
+		pressed_keys[e.keyCode] = 1;
 	});
 
     _d.addEventListener('keyup', function(e){
-        pressedKeys[e.keyCode] = 0;
+        pressed_keys[e.keyCode] = 0;
     });
 
     _w.addEventListener('resize', function(){
-        requestAnimationFrame ? setSize() : requestAnimationFrame(setSize);
+        requestAnimationFrame ? set_size() : requestAnimationFrame(set_size);
     });
 }
 
@@ -619,14 +632,14 @@ function clear(){
     cont.clearRect(0, 0, width, height); // Refresh the screen
 }
 
-function setSize(){
+function set_size(){
 	canv.height = size.offsetHeight;
 	canv.width = size.offsetWidth;
 	height = canv.height;
 	width = canv.width;
 }
 
-function checkLabel(base, search){
+function check_include_label(base, search){
 	if(base === void(0)){
 		return false;
 	}
@@ -634,47 +647,47 @@ function checkLabel(base, search){
 	return (base === search || base.indexOf(search) > -1);
 }
 
-function keyEvents(){
-	if(pressedKeys[17] && pressedKeys[32] && !_debug.keyBuffer.main){ // ctrl + space switch debug mode
-		_debug.keyBuffer.main = 15; // 30(fps) * 15 = 1500ms (1.5s) = interval
+function key_events(){
+	if(pressed_keys[17] && pressed_keys[32] && !_debug.key_buffer.main){ // ctrl + space switch debug mode
+		_debug.key_buffer.main = 15; // 30(fps) * 15 = 1500ms (1.5s) = interval
 		_debug.screen = !_debug.screen;
 		_c.log(`User switched _debug.screen : ${_debug.screen}`);
 	}
 
 	if(_debug.screen){
-		if((pressedKeys[48] || pressedKeys[96]) && !_debug.keyBuffer.puzzle){
-			_debug.keyBuffer.puzzle = 15;
-			gameController.puzzle.mode = !gameController.puzzle.mode;
-			_c.log(`User switched gameController.puzzle.mode : ${gameController.puzzle.mode}`);
+		if((pressed_keys[48] || pressed_keys[96]) && !_debug.key_buffer.puzzle){
+			_debug.key_buffer.puzzle = 15;
+			game_controller.puzzle.mode = !game_controller.puzzle.mode;
+			_c.log(`User switched game_controller.puzzle.mode : ${game_controller.puzzle.mode}`);
 		}
 		
-		if(pressedKeys[49] || pressedKeys[97] && !_debug.keyBuffer.hitbox){
-			_debug.keyBuffer.hitbox = 10;
+		if(pressed_keys[49] || pressed_keys[97] && !_debug.key_buffer.hitbox){
+			_debug.key_buffer.hitbox = 10;
 			_debug.hitbox = !_debug.hitbox;
 			_c.log(`User switched _debug.hitbox : ${_debug.hitbox}`);
 		}
 	}
 
-	Object.keys(_debug.keyBuffer).map(function(e){
-		_debug.keyBuffer[e] -= (_debug.keyBuffer[e] > 0);
+	Object.keys(_debug.key_buffer).map(function(e){
+		_debug.key_buffer[e] -= (_debug.key_buffer[e] > 0);
 	});
 }
 
-function playerControl(){
-	let goCase = (_debug.screen || !gameController.puzzle.mode);
+function player_control(){
+	let clear_case = (_debug.screen || !game_controller.puzzle.mode);
 
 	// Deceleration according to law of inertia
-	player.accel.x += (pressedKeys[39] - pressedKeys[37]) * accelSpeed * goCase; // Rigth and Left arrow keys
-	//gameController.scroll.x += (pressedKeys[37] - pressedKeys[39]) * accelSpeed * goCase * 1.5; // scroll test
-	var prePlayerX = player.x;
-	var prePlayerY = player.y;
+	player.accel.x += (pressed_keys[39] - pressed_keys[37]) * accelSpeed * clear_case; // Rigth and Left arrow keys
+	//game_controller.scroll.x += (pressed_keys[37] - pressed_keys[39]) * accelSpeed * clear_case * 1.5; // scroll test
+	var pre_player_x = player.x;
+	var pre_player_y = player.y;
 	player.x = 0;
 	player.y = 0;
     
 	player.accel.x *= lowAccel;
 	player.x += player.accel.x;
 
-	//player.accel.y += (pressedKeys[40] - pressedKeys[38]) * accelSpeed; // Down and Up arrow keys
+	//player.accel.y += (pressed_keys[40] - pressed_keys[38]) * accelSpeed; // Down and Up arrow keys
 	//player.accel.y *= lowAccel;
 	//player.accel.y *= lowAccel;
 
@@ -685,13 +698,13 @@ function playerControl(){
 	gui[player.index].y = gui[player.hitbox].y = center + player.y;
 
 	// Set player's direction
-	if((pressedKeys[37] || pressedKeys[39]) && goCase){
-		player.reverse = pressedKeys[39] + 0;
+	if((pressed_keys[37] || pressed_keys[39]) && clear_case){
+		player.reverse = pressed_keys[39] + 0;
         	gui[player.index].reverse = player.reverse;
    	}
 
     	// Frame for Character animation
-	player.frame += (pressedKeys[37] || pressedKeys[39]) * player.standing * goCase;
+	player.frame += (pressed_keys[37] || pressed_keys[39]) * player.standing * clear_case;
 
 	// Your code here. (gravity, 当たり判定完成後)
 	player.accel.gravity += 0.5;
@@ -702,7 +715,7 @@ function playerControl(){
 	player.standing = false;
 	player.hit = false;
 
-	if(grounds.checkHit(gui[player.hitbox])){ // Done!!
+	if(grounds.check_hit(gui[player.hitbox])){ // Done!!
 		var count = 300;
 		var step = 0.1;
 		player.standing = true;
@@ -723,13 +736,13 @@ function playerControl(){
 			player.y += 5;
 			gui[player.hitbox].y = center + player.y;
 			gui[player.hitbox].draw();
-			player.standing = grounds.checkHit(gui[player.hitbox])
+			player.standing = grounds.check_hit(gui[player.hitbox])
 			player.accel.x = 0;
 		} else {
 			player.hit = false;
 			player.accel.y = 0;
 			player.accel.gravity = 0;
-			player.accel.y += (pressedKeys[38] * -jumpPower) * goCase; //ジャンプを有効化する
+			player.accel.y += (pressed_keys[38] * -jumpPower) * clear_case; //ジャンプを有効化する
 		}
 		player.x = result[0];
 		player.y = result[1];
@@ -740,41 +753,41 @@ function playerControl(){
 		gui[player.hitbox].y = center + player.y;
 	}
     
-	gameController.scroll.x -= player.x;
-	gameController.scroll.y -= player.y;
-	player.x = prePlayerX;
-	player.y = prePlayerY;
+	game_controller.scroll.x -= player.x;
+	game_controller.scroll.y -= player.y;
+	player.x = pre_player_x;
+	player.y = pre_player_y;
 	
 	gui[player.index].x = gui[player.hitbox].x = center + player.x;
 	gui[player.index].y = gui[player.hitbox].y = center + player.y;
 	//gui[player.hitbox].draw();
 
 	// if the player went void, set y to scratch.
-	if(height < 0 - gameController.scroll.y|| gameController.respawn){
+	if(height < 0 - game_controller.scroll.y|| game_controller.respawn){
 		//player.x = 0;
 		//player.y = 0;
 		//player.accel.gravity = 0;
-		//gameController.scroll.x = 0;
+		//game_controller.scroll.x = 0;
 		
-		if(!gameController.respawn){
-			gameController.respawn = true;
+		if(!game_controller.respawn){
+			game_controller.respawn = true;
 			gui[player.index].alpha = 0;
 			player.accel.gravity = 0;
 			player.accel.y = 0;
 			player.y = 0;
 			
 			let respawn = setInterval(function(){
-				gui[_debug.feedIndex].alpha += (1 - gui[_debug.feedIndex].alpha) / 6; // 画面を暗くする
-				gameController.scroll.x += (player.save.x - gameController.scroll.x) / 4; // save.x がリスポーンx座標 yも一応格納可能
-                		gameController.scroll.y += (player.save.y - gameController.scroll.y) / 4;
+				gui[_debug.feed_index].alpha += (1 - gui[_debug.feed_index].alpha) / 6; // 画面を暗くする
+				game_controller.scroll.x += (player.save.x - game_controller.scroll.x) / 4; // save.x がリスポーンx座標 yも一応格納可能
+                		game_controller.scroll.y += (player.save.y - game_controller.scroll.y) / 4;
 	
-				if(abs(player.save.x - gameController.scroll.x) + (1 - gui[_debug.feedIndex].alpha)< 0.1){
+				if(abs(player.save.x - game_controller.scroll.x) + (1 - gui[_debug.feed_index].alpha)< 0.1){
 					setTimeout(function(){
-						gameController.scroll.x = 0;
+						game_controller.scroll.x = 0;
 						gui[player.index].alpha = 1;
 						player.accel.gravity = 0;
 
-						gameController.respawn = false;
+						game_controller.respawn = false;
 						clearInterval(respawn);
 					}, 800);
 				}
@@ -798,7 +811,7 @@ function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 	gui[obj_1].draw();
 
 	for(var i = 0; i < count && isHit; i++){
-		isHit = grounds.checkHit(gui[player.hitbox]);
+		isHit = grounds.check_hit(gui[player.hitbox]);
 
 		tentativeX += step * changeX;
 		tentativeY += step * changeY;
@@ -820,12 +833,12 @@ function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 
 function scrollMapchips(){
 	mapchips.map(function(e){
-		gui[e.index].x = center + (gui[e.index].mapchipData.x + gameController.scroll.x);
-		gui[e.index].y = center + (gui[e.index].mapchipData.y + gameController.scroll.y);
+		gui[e.index].x = center + (gui[e.index].mapchip_data.x + game_controller.scroll.x);
+		gui[e.index].y = center + (gui[e.index].mapchip_data.y + game_controller.scroll.y);
 		
-		if(!checkLabel(e.label, 'Hitbox')){
-			let x = convertPosition(gui[e.index].x, 'x', canv);
-			let y = convertPosition(gui[e.index].y, 'y', canv);
+		if(!check_include_label(e.label, 'Hitbox')){
+			let x = convert_position(gui[e.index].x, 'x', canv);
+			let y = convert_position(gui[e.index].y, 'y', canv);
 			let alpha = distance(width / 2, height / 2, x, y);
 			alpha /= (width + height) / 2;
 			alpha = (1 - alpha * 1.1) < 0 ? 0 : 1 - alpha * 1.05;
@@ -836,10 +849,10 @@ function scrollMapchips(){
 }
 
 function debugmodeLabel(){
-	gui[_debug.labelIndex].alpha += (_debug.screen - gui[_debug.labelIndex].alpha) / 3;
+	gui[_debug.label_index].alpha += (_debug.screen - gui[_debug.label_index].alpha) / 3;
 }
 
-function dragObjects(){
+function drag_objects(){
 	let drag = mouse.drag;
 	let down = mouse.down;
 
@@ -852,7 +865,7 @@ function dragObjects(){
 			gui[drag].y = center + (mouse.y - height / 2);
 		}
 
-		if(checkLabel(gui[drag].label, 'Puzzle') && !gameController.puzzle.mode){
+		if(check_include_label(gui[drag].label, 'Puzzle') && !game_controller.puzzle.mode){
 			mouse.drag = -1;
 		}
 	}
@@ -864,15 +877,15 @@ function dragObjects(){
 			gui.map(function(e, i){
 				if(e.drag){
 
-					if(checkLabel(e.label, 'Puzzle') && !gameController.puzzle.mode){
+					if(check_include_label(e.label, 'Puzzle') && !game_controller.puzzle.mode){
 						return false;
 					} else {
 						if((distance(e.x, e.y, mouse.x, mouse.y, canv) < max) && drag === -1){
 							max = distance(e.x, e.y, mouse.x, mouse.y, canv);
 							mouse.drag = i;
 
-							if(checkLabel(e.label, 'Selector')){
-								mouse.lastdrag = mouse.drag;
+							if(check_include_label(e.label, 'Selector')){
+								mouse.last_drag_index = mouse.drag;
 							}
 						}
 					}
@@ -886,20 +899,20 @@ function dragObjects(){
 	}
 }
 
-function drawLastDragObject(){
-	if(mouse.lastdrag > -1 && gameController.puzzle.mode){
-		let obj = gui[mouse.lastdrag];
+function draw_last_drag_object(){
+	if(mouse.last_drag_index > -1 && game_controller.puzzle.mode){
+		let obj = gui[mouse.last_drag_index];
 		let h = obj.h || obj.height;
 		let w = obj.w || obj.width;
 		let x = obj.x;
 		let y = obj.y;
 
 		if(isNaN(x)){
-			x = convertPosition(x, 'x', canv);
+			x = convert_position(x, 'x', canv);
 		}
 
 		if(isNaN(y)){
-			y = convertPosition(y, 'y', canv);
+			y = convert_position(y, 'y', canv);
 		}
 
 		cont.beginPath();
@@ -928,25 +941,46 @@ function drawLastDragObject(){
 }
 
 function puzzleEvent(){
-	let rot = gui[gameController.puzzle.rotation.id];
-	let rev = gui[gameController.puzzle.reverse.id];
+	let rot = gui[game_controller.puzzle.rotation.id];
+	let rev = gui[game_controller.puzzle.reverse.id];
 
-	if(distance(convertPosition(rot.x, 'x', canv), convertPosition(rot.y, 'y', canv), mouse.x, mouse.y) < rot.w / 2 && mouse.down){
+	if(distance(convert_position(rot.x, 'x', canv), convert_position(rot.y, 'y', canv), mouse.x, mouse.y) < rot.w / 2 && mouse.down){
 
 	}
-	if(distance(convertPosition(rev.x, 'x', canv), convertPosition(rev.y, 'y', canv), mouse.x, mouse.y) < rev.w / 2 && mouse.down){
-		if(!gameController.puzzle.reverse.interval && mouse.lastdrag > -1){
-			gui[mouse.lastdrag].reverse = !gui[mouse.lastdrag].reverse;
-			gameController.puzzle.reverse.interval = 7;
+	if(distance(convert_position(rev.x, 'x', canv), convert_position(rev.y, 'y', canv), mouse.x, mouse.y) < rev.w / 2 && mouse.down){
+		if(!game_controller.puzzle.reverse.interval && mouse.last_drag_index > -1){
+			gui[mouse.last_drag_index].reverse = !gui[mouse.last_drag_index].reverse;
+			game_controller.puzzle.reverse.interval = 7;
 		}
 	}
 
-	gameController.puzzle.reverse.interval -= (gameController.puzzle.reverse.interval > 0);
+	game_controller.puzzle.reverse.interval -= (game_controller.puzzle.reverse.interval > 0);
 }
 
-function controlEffect(){
+function controlAnime(){
+	gui.map(function(e, i){
+		let label = e.label;
+		if(check_include_label(label, 'Animation')){
+			if(check_include_label(label, 'Animation')){
+				if(e.switch !== void(0)){
+					switchElement = e.switch.split(' ');
+					switch(switchElement[0]){
+						case 'Audio':
+							gui[i].switchElement = soundset[switchElement[1]].audio.currentTime;
+						break;
+					}
+				}
+				if(e.frame){
+					gui[i].frame = (gui[i].frame % gui[i].maxFrame) + 1;
+				}
+			}
+		}
+	});
+}
+
+function control_effects(){
 	gui.map(function(e_0, i_0){
-		if(checkLabel(e_0.label, 'Effect')){
+		if(check_include_label(e_0.label, 'Effect')){
 			e_0.pattern.map(function(e_1, i_1){
 				let parameter = e_1.parameter;
 				
@@ -993,35 +1027,37 @@ function controlEffect(){
 }
 
 function drawEffects(){
-	let mode = gameController.screenMode;
+	let mode = game_controller.screen_mode;
 	
 	effects.map(function(e, i){
 		let label = e.object.label;
 
 		switch(mode){
 			case 'Opening':
-				if(checkLabel(label, 'Opening')){
+				if(check_include_label(label, 'Opening')){
 					e.object.draw();
 				}
 			break;
 				
 			case 'Title':
-				if(checkLabel(label, 'Title')){
+				if(check_include_label(label, 'Title')){
 					e.object.draw();
 				}
 			break;
 				
 			case 'Game':
-				if(checkLabel(label, 'Game')){
+				if(check_include_label(label, 'Game')){
 					e.object.draw();
 				}
 			break;
 		}
 		
-		if(checkLabel(label, 'All')){ //　全場面描画
+		if(check_include_label(label, 'All')){ //　全場面描画
 			e.object.draw();
 		}
+		
 
+		// ここから描画
 		effects[i].object.x += e.dx;
 		effects[i].object.y += e.dy;
 		effects[i].object.direction += e.dDir;
