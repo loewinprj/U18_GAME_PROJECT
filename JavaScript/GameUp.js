@@ -9,8 +9,8 @@
 var _debug = {}; // null object
 var _animation = {}; // null object
 
-var _maxImages = 0; // will be load images
-var _loadedImages = 0; // check count of loaded images
+var _max_images = 0; // will be load images
+var _loaded_images = 0; // check count of loaded images
 
 var fontImg = new Image(); // to Use font
 var caseText = false; // check loaded text image
@@ -28,21 +28,41 @@ var stroke = 'stroke';
 var center = 'center'; // 中心
 var maximum = 'maximum'; // 最大値
 
+// array prototyp methods
+/*
+Array.prototype.inside = function(x, y){
+	let id = -1;
+	this.map(function(e, i){
+		if(Math.abs(e - x) < y){
+			id = i;
+		}
+	});
+	return id;
+};
+*/
+
 // canvas draw methods
 class canvasEx{
 	constructor(input){
 		Object.assign(this,input);
+		
+		if(this.switchFrame === void(0)){
+			this.switchFrame = [null];
+		}
+		if(this.frame === void(0)){
+			this.frame = -1;
+		}
 
 		var type = input.type;
 		if(type === pol || type === pth || type === img){
 			if(type === img){
-				_maxImages++;
+				_max_images++;
 				var _this = this;
 				this.img = new Image();
 				this.img.src = this.src;
 				this.img.onload = function(){
 					_this.setPosition(img);
-					_loadedImages++;
+					_loaded_images++;
 				};
 			}else{
 				this.setPosition(type);
@@ -54,7 +74,7 @@ class canvasEx{
 		}
 
 		if(this.animation !== void(0)){
-			_maxImages += this.animation.length;
+			_max_images += this.animation.length;
 			this.animeFrame = 0;
 			this.anime = true;
 
@@ -63,7 +83,7 @@ class canvasEx{
 				this.animation[i] = new Image();
 				this.animation[i].src = copySrc;
 				this.animation[i].onload = function(){
-					_loadedImages++;
+					_loaded_images++;
 				};
 			}
 		}
@@ -88,11 +108,11 @@ class canvasEx{
 		var y = this.y;
 
 		if(isNaN(x)){
-			x = convertPosition(x, 'x', canvas);
+			x = convert_position(x, 'x', canvas);
 			isCenter = true;
 		}
 		if(isNaN(y)){
-			y = convertPosition(y, 'y', canvas);
+			y = convert_position(y, 'y', canvas);
 			isCenter = true;
 		}
 		if(isCenter && (this.type === pol || this.type === pth)){
@@ -298,8 +318,8 @@ class canvasEx{
 			y = mode[2];
 		}
 
-		x = convertPosition(x, 'x', cv);
-		y = convertPosition(y, 'y', cv);
+		x = convert_position(x, 'x', cv);
+		y = convert_position(y, 'y', cv);
 
 		switch(mode[0]){
 			case pol:
@@ -486,7 +506,7 @@ class group{
 		this.height = abs(this.corners.topY - this.corners.lowY);
 	}
 	
-	checkHit(target, type){
+	check_hit(target, type){
 		if(type){
 			return target.label;
 		}
@@ -508,9 +528,9 @@ class group{
 					canvas: e.canvas, context: e.context, type: pth, bold: 1, color: '#000', pos
 				});
 				
-				if(checkHitObjects(target, fixObject)) return true;
+				if(check_hitObjects(target, fixObject)) return true;
 			} else {
-				if(checkHitObjects(target, e)){
+				if(check_hitObjects(target, e)){
 					return true;
 				}
 			}
@@ -593,17 +613,17 @@ function random(x, y){
 function distance(x_0, y_0, x_1, y_1, canvas){
 	
 	if(canvas !== void(0)){
-		x_0 = convertPosition(x_0, 'x', canvas);
-		x_1 = convertPosition(x_1, 'x', canvas);
+		x_0 = convert_position(x_0, 'x', canvas);
+		x_1 = convert_position(x_1, 'x', canvas);
 
-		y_0 = convertPosition(y_0, 'y', canvas);
-		y_1 = convertPosition(y_1, 'y', canvas);
+		y_0 = convert_position(y_0, 'y', canvas);
+		y_1 = convert_position(y_1, 'y', canvas);
 	}
 	
 	return sqrt(pow(x_0 - x_1, 2) + pow(y_0 - y_1, 2));
 }
 
-function checkHitObjects(obj_0, obj_1){
+function check_hitObjects(obj_0, obj_1){
 	var objPos_0 = obj_0.positions;
 	var objPos_1 = obj_1.positions;
 	var len_0 = objPos_0.length;
@@ -647,9 +667,9 @@ function checkHitObjects(obj_0, obj_1){
 
 	// Your code here
 	//obj_0が大きい時
-	if(checkObjectInObject(objPos_0,objPos_1)) return true;
+	if(check_touch_each_other(objPos_0,objPos_1)) return true;
 	//obj_1が大きい時
-	if(checkObjectInObject(objPos_1,objPos_0)) return true;
+	if(check_touch_each_other(objPos_1,objPos_0)) return true;
 
 	return false;
 }
@@ -678,7 +698,7 @@ function crossProductZ(a_1, a_2, b_1, b_2){
 	return a_1 * b_2 - b_1 * a_2
 }
 
-function checkObjectInObject(objPos_0, objPos_1){
+function check_touch_each_other(objPos_0, objPos_1){
 	var plus = 0;
 	var minus = 0;
 
@@ -700,7 +720,7 @@ function checkObjectInObject(objPos_0, objPos_1){
 	return plus == vertex || minus == vertex
 }
 
-function convertPosition(...input){
+function convert_position(...input){
 	var tex = input[0];
 	var mode = input[1];
 	var canvas = input[2];
@@ -710,7 +730,7 @@ function convertPosition(...input){
 		return tex;
 	}
 
-	var ary = tex.replace(/center|maximum/, convertReplace);
+	var ary = tex.replace(/center|maximum/, convert_replace);
 	ary = ary.split(/A|B/);
 
 	ary.map(function(e, i){
@@ -751,6 +771,17 @@ function convertPosition(...input){
 	return result;
 }
 
-function convertReplace(x){
+function convert_replace(x){
 	return x.substr(0, 3) + (x === 'center' ? 'A' : 'B');
+}
+
+function arrayInside(array, num, error_num){
+	let id = -1;
+	array.map(function(e, i){
+		if(Math.abs(e - num) < error_num){
+			id = i;
+		}
+	});
+	
+	return id;
 }
