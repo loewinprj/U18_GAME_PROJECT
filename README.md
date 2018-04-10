@@ -1,3 +1,5 @@
+# 【重要】<a href="https://github.com/loewinprj/U18_GAME_PROJECT/blob/master/markdown/Syntax%20Rule.md">命名規則</a>を更新しました
+
 **GameUp.js の<a href="https://github.com/loewinprj/U18_GAME_PROJECT/blob/master/markdown/How%20to%20use%20GameUp.md">説明書</a>です（未完成）**  
 
 # From gitlab
