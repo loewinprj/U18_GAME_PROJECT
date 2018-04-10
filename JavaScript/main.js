@@ -804,21 +804,29 @@ function player_control(){
 
 		var result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y, 0, -1);
 		if(result[2]){
-			player.y -= 5
-			count = 15;
-			step = 2;
-			result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, 1, 0);
-			result[1] += 15;
+            var result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y, 0, 1);
+            if(result[2]){
+                player.y -= 5
+                count = 15;
+                step = 2;
+                result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, 1, 0);
+                result[1] += 15;
 
-			if(result[2]){
-			    result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, -1, 0);
-			    result[1] += 15;
-			}
-			player.y += 5;
-			gui[player.hitbox].y = center + player.y;
-			gui[player.hitbox].draw();
-			player.standing = grounds.check_hit(gui[player.hitbox]);
-			player.accel.x = 0;
+                if(result[2]){
+                    result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, -1, 0);
+                    result[1] += 15;
+                }
+                player.y += 5;
+                gui[player.hitbox].y = center + player.y;
+                gui[player.hitbox].draw();
+                player.standing = grounds.check_hit(gui[player.hitbox]);
+                player.accel.x = 0;
+            }else{
+                player.standing = false;
+                player.hit = false;
+                player.accel.y = 0;
+			    player.accel.gravity = 0;
+            }
 		} else {
 			player.hit = false;
 			player.accel.y = 0;
