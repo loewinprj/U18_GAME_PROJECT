@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 body{
-	background-image: url("Image/Screen/domBackground.png");
+	background-image: url("Image/Screen/dom_background.png");
 	background-color: #0F0F0F;
 	overflow: hidden;
 	height: 100%;
