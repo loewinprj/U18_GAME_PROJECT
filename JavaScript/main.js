@@ -15,18 +15,66 @@ function init(){
     set_size();
     clear();
 
-    // Debug status
+    // debug status
     _debug = {
         hitbox: false,
 		screen: false,
+		talk: 0,
+		
 		key_buffer: {
 			main: 0,
+			talk: 0,
 			puzzle: 0,
 			hitbox : 0
 		},
+		
 		label_index: null,
 		grid_line: false
     };
+	
+	// controll object
+	game_controller = {
+		puzzle: {
+			mode: false,
+			
+			reverse: {
+				id: -1
+			},
+			
+			rotation: {
+				id: -1,
+				interval: 0
+			}
+		},
+		
+		scroll: {
+			x: 0,
+			y: 0
+		},
+		
+		pause: {
+			mode: false,
+			interval: 0
+		},
+		
+		talk: {
+			mode: false,
+			window: {
+				width: 200,
+				height: 200
+			}
+		},
+		
+		respawn: false,
+		screen_mode: 'Title',
+		
+		// now playing auido index
+		play_audio_index: 0,
+		
+		// feed mask & flash mask
+		feed_index: -1,
+		flash_index: -1
+	};
 
 	// reset mapchips array
 	mapchips = [];
@@ -68,7 +116,7 @@ function init(){
 	};
 
     gui = [];
-    const canvas = canv;
+	const canvas = canv;
     const context = cont;
 
     // Add the background image to use for game area
@@ -102,13 +150,13 @@ function init(){
 
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
-		src: 'Image/Screen/puzzleMask.png', max_alpha: 0.4,
+		src: 'Image/Screen/puzzle_mask.png', max_alpha: 0.4,
 		label: ['Mask', 'Game']
 	}));
 
 	gui.push(new canvasEx({ // center + -200 を maximum + -700 に変更
 		canvas, context, type: img, x: -75, y: maximum + -280, w: 500, h: 500, alpha: 0,
-		src: 'Image/Screen/debugLabel.png',
+		src: 'Image/Screen/debug_label.png',
 		label: ['Label', 'All']
 	}));
 
@@ -141,14 +189,14 @@ function init(){
 	// 回転ボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -300, y: center + 300, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/buttonRotation.png', max_alpha: 0.92, reverse: 0, direction: 0,
+		src: 'Image/Puzzle/button_rotation.png', max_alpha: 0.92, reverse: 0, direction: 0,
 		label: ['Puzzle', 'Mask', 'Rot', 'Game']
 	}));
 
 	// 反転ボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -300, y: center + 200, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/buttonReverse.png', max_alpha: 0.92, reverse: 0, direction: 0,
+		src: 'Image/Puzzle/button_reverse.png', max_alpha: 0.92, reverse: 0, direction: 0,
 		label: ['Puzzle', 'Mask', 'Rev', 'Game']
 	}));
 
@@ -162,7 +210,7 @@ function init(){
 	// スクロールボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: true,
-		src: 'Image/Puzzle/buttonScroll.png', max_alpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
+		src: 'Image/Puzzle/button_scroll.png', max_alpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
 		label: ['Mask', 'Game'],
 	}));
 	
@@ -224,8 +272,14 @@ function init(){
 	// 画面全体を覆うオブジェクトは最上層レイヤーで追加
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
-		src: 'Image/Screen/feedmask.png',
+		src: 'Image/Screen/feed_mask.png',
 		label: ['Feedmask', 'All']
+	}));
+	
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0,
+		src: 'Image/Screen/flash_mask.png',
+		label: ['Flashmask', 'All']
 	}));
 	
 	// Settings
@@ -239,7 +293,7 @@ function init(){
 
 	// Init sounds
 	const soundname = [
-		{src: 'Sound/Test/U18-6(1).mp3', volume: 1, loop: 1},
+		{src: 'Sound/Test/U18-13(1).mp3', volume: 1, loop: 1},
 		{src: 'Sound/Test/U18-8(1).mp3', volume: 1, loop: 1},
 		{src: 'Sound/Test/SE-7(1)_remix.mp3', volume: 0.6, loop: 0},
 	];
@@ -286,34 +340,12 @@ function init(){
 			_debug.label_index = i;
 		}
 		if(check_include_label(label, 'Feedmask')){
-			_debug.feed_index = i;
-
+			game_controller.feed_index = i;
+		}
+		if(check_include_label(label, 'Flashmask')){
+			game_controller.flash_index = i;
 		}
 	});
-
-	// controll object
-	game_controller = {
-		puzzle: {
-			mode: false,
-			reverse: {
-				id: -1
-			},
-			rotation: {
-				id: -1,
-				interval: 0
-			}
-		},
-		scroll: {
-			x: 0,
-			y: 0
-		},
-		pause: {
-			mode: false,
-			interval: 0
-		},
-		respawn: false,
-		screen_mode: 'Title' // 現在の画面状況
-	};
 
 	// setup index of somethings
 	gui.map(function(e, i){
@@ -449,12 +481,13 @@ function update(){
 		}
 	});
 	
-	if(!game_controller.pause.mode){
+	key_events();
+	
+	if(!game_controller.pause.mode && !game_controller.talk.mode){
 		if(player.frame > player.frame_speed){
 			player.frame = 0;
 		}
-
-		key_events();
+		
 		control_effects();
 		// controlAnime();
 
@@ -468,10 +501,10 @@ function update(){
 			}
 
 			drag_objects();
-			scrollMapchips();
-
-			debugmodeLabel();
+			scrollMapchips();		
 		}
+		
+		debugmodeLabel();
 	}
 
 	// Mask alpha
@@ -487,27 +520,28 @@ function update(){
 	switch(_animation.title){
 		case 0:
 			if(!game_controller.respawn){
-				gui[_debug.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[_debug.feed_index].alpha) / 6;
-				soundset[1].volume(abs(1 - gui[_debug.feed_index].alpha));
+				gui[game_controller.flash_index].alpha += (false * 1.0 - gui[game_controller.flash_index].alpha) / 4;
+				gui[game_controller.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[game_controller.feed_index].alpha) / 6;
+				soundset[1].volume(abs(1 - gui[game_controller.feed_index].alpha));
 			}
 		break;
 
 		case 1:
-			gui[_debug.feed_index].alpha = _animation.load_finished / 30;
+			gui[game_controller.feed_index].alpha = _animation.load_finished / 30;
 			if(pressed_keys[32] && _animation.title && !_animation.load_finished){
 				_animation.title = 2;
 			}
 		break;
 
 		case 2:
-			gui[_debug.feed_index].alpha += (1 - gui[_debug.feed_index].alpha) / 6;
-			soundset[0].volume(abs(1 - gui[_debug.feed_index].alpha));
+			gui[game_controller.feed_index].alpha += (1 - gui[game_controller.feed_index].alpha) / 6;
+			soundset[0].volume(abs(1 - gui[game_controller.feed_index].alpha));
 			if(soundset[0].audio.volume < 0.01){
-				gui[_debug.feed_index].alpha = 1;
+				gui[game_controller.feed_index].alpha = 1;
 				soundset[0].pause(1);
 				_animation.title = 3;
 				
-				_c.log(gui[_debug.feed_index].alpha);
+				_c.log(gui[game_controller.feed_index].alpha);
 			}
 		break;
 
@@ -528,7 +562,7 @@ function update(){
 			
 		case 4:
 			// オープニングを付ける予定
-			gui[_debug.feed_index].alpha += (0.3 - gui[_debug.feed_index].alpha) / 16; // とりあえず画面明るくしておけ
+			gui[game_controller.feed_index].alpha += (0.3 - gui[game_controller.feed_index].alpha) / 16; // とりあえず画面明るくしておけ
 		break;
 	}
 }
@@ -576,7 +610,7 @@ function draw(){
 
 	});
 
-	if(!game_controller.pause.mode){
+	if(!game_controller.pause.mode && !game_controller.talk.mode){
 		draw_last_drag_object();
 
 		// assistant grid line
@@ -596,7 +630,11 @@ function draw(){
 	}
 	
 	if(_animation.title){
-		drawEffects();
+		draw_effects();
+	}
+	
+	if(!game_controller.pause.mode){
+		draw_talk_window();
 	}
 }
 
@@ -648,23 +686,35 @@ function check_include_label(base, search){
 }
 
 function key_events(){
-	if(pressed_keys[17] && pressed_keys[32] && !_debug.key_buffer.main){ // ctrl + space switch debug mode
+	if(pressed_keys[16] && pressed_keys[68]/*pressed_keys[17] && pressed_keys[90]*/ && !_debug.key_buffer.main){ // ctrl + space switch debug mode
 		_debug.key_buffer.main = 15; // 30(fps) * 15 = 1500ms (1.5s) = interval
 		_debug.screen = !_debug.screen;
 		_c.log(`User switched _debug.screen : ${_debug.screen}`);
 	}
 
 	if(_debug.screen){
-		if((pressed_keys[48] || pressed_keys[96]) && !_debug.key_buffer.puzzle){
+		if(pressed_keys[48] || pressed_keys[96] && !_debug.key_buffer.puzzle){
 			_debug.key_buffer.puzzle = 15;
 			game_controller.puzzle.mode = !game_controller.puzzle.mode;
 			_c.log(`User switched game_controller.puzzle.mode : ${game_controller.puzzle.mode}`);
+			
+			pressed_keys[48] = pressed_keys[96] = 0; // キー入力をクリア
 		}
 		
 		if(pressed_keys[49] || pressed_keys[97] && !_debug.key_buffer.hitbox){
 			_debug.key_buffer.hitbox = 10;
 			_debug.hitbox = !_debug.hitbox;
 			_c.log(`User switched _debug.hitbox : ${_debug.hitbox}`);
+			
+			pressed_keys[49] = pressed_keys[97] = 0; // キー入力をクリア
+		}
+		
+		if(pressed_keys[50] || pressed_keys[98] && !_debug.key_buffer.talk){
+			_debug.key_buffer.talk = 10;
+			game_controller.talk.mode = !game_controller.talk.mode;
+			_c.log(`User switched game_controller.talk.mode : ${game_controller.talk.mode}`);
+			
+			pressed_keys[50] = pressed_keys[98] = 0; // キー入力をクリア
 		}
 	}
 
@@ -736,7 +786,7 @@ function player_control(){
 			player.y += 5;
 			gui[player.hitbox].y = center + player.y;
 			gui[player.hitbox].draw();
-			player.standing = grounds.check_hit(gui[player.hitbox])
+			player.standing = grounds.check_hit(gui[player.hitbox]);
 			player.accel.x = 0;
 		} else {
 			player.hit = false;
@@ -763,12 +813,7 @@ function player_control(){
 	//gui[player.hitbox].draw();
 
 	// if the player went void, set y to scratch.
-	if(height < 0 - game_controller.scroll.y|| game_controller.respawn){
-		//player.x = 0;
-		//player.y = 0;
-		//player.accel.gravity = 0;
-		//game_controller.scroll.x = 0;
-		
+	if(height < -game_controller.scroll.y || game_controller.respawn){		
 		if(!game_controller.respawn){
 			game_controller.respawn = true;
 			gui[player.index].alpha = 0;
@@ -777,11 +822,11 @@ function player_control(){
 			player.y = 0;
 			
 			let respawn = setInterval(function(){
-				gui[_debug.feed_index].alpha += (1 - gui[_debug.feed_index].alpha) / 6; // 画面を暗くする
-				game_controller.scroll.x += (player.save.x - game_controller.scroll.x) / 4; // save.x がリスポーンx座標 yも一応格納可能
-                		game_controller.scroll.y += (player.save.y - game_controller.scroll.y) / 4;
+				gui[game_controller.feed_index].alpha += (1 - gui[game_controller.feed_index].alpha) / 6; // フェードアウト
+				game_controller.scroll.x += (player.save.x - game_controller.scroll.x) / 4; // save.x が リスポーン x
+                game_controller.scroll.y += (player.save.y - game_controller.scroll.y) / 4; // save.y が リスポーン y
 	
-				if(abs(player.save.x - game_controller.scroll.x) + (1 - gui[_debug.feed_index].alpha)< 0.1){
+				if(abs(player.save.x - game_controller.scroll.x) + (1 - gui[game_controller.feed_index].alpha) < 0.1){
 					setTimeout(function(){
 						game_controller.scroll.x = 0;
 						gui[player.index].alpha = 1;
@@ -1026,7 +1071,7 @@ function control_effects(){
 	})
 }
 
-function drawEffects(){
+function draw_effects(){
 	let mode = game_controller.screen_mode;
 	
 	effects.map(function(e, i){
@@ -1070,4 +1115,8 @@ function drawEffects(){
 			effects[i].object.y = -random(10, 30);
 		}
 	});
+}
+
+function draw_talk_window(){
+	//game_controller.talk.mode
 }
