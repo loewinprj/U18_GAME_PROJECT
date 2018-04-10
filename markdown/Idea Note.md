@@ -1,3 +1,8 @@
+# Google Drive に移行しました  
+* ゲーム設定などの詳細な情報は <a href="https://docs.google.com/document/d/16QeThxJY__LD2GsYT9m88_kYFJXgstXfXzggITJrGc4/edit">こちら</a>
+* ストーリー（現代文）は <a href="https://docs.google.com/document/d/18lsGMZLTCKQX4F-M0K5P2G-oj6UoLbWSrp0mKdb9v-8/edit?https://docs.google.com/document/d/1kXvQn-_o24_wLuKRRGqmfwiLK7qC0sBOpkmjMmf-mF8/edit">こちら</a>  
+* ストーリー（古文）は <a href="https://docs.google.com/document/d/1vF_Ir6BL3zhbgCHRcumbvCNvusrwXjQhTAQ5rLXXO6E/edit">こちら</a>
+
 # ゲームアイデアノート  
 
 ゲームのアイデアを書き込む時は `## アイデア-番号` を付ける．  
