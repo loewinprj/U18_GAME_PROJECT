@@ -68,8 +68,15 @@ function init(){
 		respawn: false,
 		screen_mode: 'Title',
 		
-		// now playing auido index
-		play_audio_index: 0,
+		// now playing auido parameter
+		play_audio: {
+			change_speed: 30,
+			max_volume: 1,
+			volume: 0,
+			index: 0,
+			pause: 0,
+			play: 1
+		},
 		
 		// feed mask & flash mask
 		feed_index: -1,
@@ -469,12 +476,8 @@ function main(){
 }
 
 function update(){
-    if(_animation.bgm_start){
-		_animation.bgm_start = 0;
-		soundset[0].volume(0);
-        soundset[0].play(1);
-    }
-
+	audio_update();
+	
 	gui.map(function(e, i){
 		if(check_include_label(e.label, 'Setting')){
 			gui[i].alpha += (game_controller.pause.mode - gui[i].alpha) / 4;
@@ -515,30 +518,31 @@ function update(){
 	});
 
 	_animation.load_finished -= (_animation.load_finished > 0);
-	soundset[0].volume(abs(1 - (_animation.load_finished / 30)));
 
 	switch(_animation.title){
 		case 0:
 			if(!game_controller.respawn){
 				gui[game_controller.flash_index].alpha += (false * 1.0 - gui[game_controller.flash_index].alpha) / 4;
 				gui[game_controller.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[game_controller.feed_index].alpha) / 6;
-				soundset[1].volume(abs(1 - gui[game_controller.feed_index].alpha));
+				game_controller.play_audio.max_volume = abs(1 - gui[game_controller.feed_index].alpha);
+				game_controller.play_audio.change_speed = 3;
 			}
 		break;
 
 		case 1:
 			gui[game_controller.feed_index].alpha = _animation.load_finished / 30;
 			if(pressed_keys[32] && _animation.title && !_animation.load_finished){
+				game_controller.play_audio.change_speed = 6;
+				game_controller.play_audio.max_volume = 0;			
 				_animation.title = 2;
 			}
 		break;
 
 		case 2:
 			gui[game_controller.feed_index].alpha += (1 - gui[game_controller.feed_index].alpha) / 6;
-			soundset[0].volume(abs(1 - gui[game_controller.feed_index].alpha));
-			if(soundset[0].audio.volume < 0.01){
+			if(soundset[game_controller.play_audio.index].audio.volume < 0.01){
 				gui[game_controller.feed_index].alpha = 1;
-				soundset[0].pause(1);
+				game_controller.play_audio.pause = 1;
 				_animation.title = 3;
 				
 				_c.log(gui[game_controller.feed_index].alpha);
@@ -546,11 +550,14 @@ function update(){
 		break;
 
 		case 3:
-			soundset[1].volume(0);
-			soundset[1].play(1);
-
 			setTimeout(function(){
 				if(true){ // 此処から先には行かせない… 俺が食い止める…!
+					game_controller.play_audio.change_speed = 6;
+					game_controller.play_audio.max_volume = 1;
+					game_controller.play_audio.index = 1;
+					game_controller.play_audio.pause = 1;
+					game_controller.play_audio.play = 1;
+					
 					game_controller.screen_mode = 'Game';
 					_animation.title = 0; // 終焉 - バッドエンド（オープニング的な意味で）
 				} else { // 今のうちに逃げろ…!
@@ -565,6 +572,22 @@ function update(){
 			gui[game_controller.feed_index].alpha += (0.3 - gui[game_controller.feed_index].alpha) / 16; // とりあえず画面明るくしておけ
 		break;
 	}
+}
+
+function audio_update(){
+	let index = game_controller.play_audio.index;
+	
+	if(game_controller.play_audio.pause){
+		soundset[index].pause(1);
+		game_controller.play_audio.pause = 0;
+	}
+	if(game_controller.play_audio.play){
+		soundset[index].volume(game_controller.play_audio.volume);
+		soundset[index].play(1);
+		game_controller.play_audio.play = 0;
+	}
+
+	soundset[index].audio.volume += (game_controller.play_audio.max_volume - soundset[index].audio.volume) / game_controller.play_audio.change_speed;
 }
 
 function draw(){
@@ -815,6 +838,9 @@ function player_control(){
 	// if the player went void, set y to scratch.
 	if(height < -game_controller.scroll.y || game_controller.respawn){		
 		if(!game_controller.respawn){
+			game_controller.play_audio.change_speed = 6;
+			game_controller.play_audio.max_volume = 0;			
+			
 			game_controller.respawn = true;
 			gui[player.index].alpha = 0;
 			player.accel.gravity = 0;
