@@ -1,9 +1,8 @@
 # 【重要】<a href="https://github.com/loewinprj/U18_GAME_PROJECT/blob/master/markdown/Syntax%20Rule.md">命名規則</a>を更新しました
 
-**GameUp.js の<a href="https://github.com/loewinprj/U18_GAME_PROJECT/blob/master/markdown/How%20to%20use%20GameUp.md">説明書</a>です（未完成）**  
+### GameUp.js の<a href="https://github.com/loewinprj/U18_GAME_PROJECT/blob/master/markdown/How%20to%20use%20GameUp.md">説明書</a>です  
 
-# From gitlab
-
+# 本文
 https://loewinprj.github.io/U18_GAME_PROJECT/  
 
 <b>Ctrl + Space</b> で デバッグモードの切り替え
