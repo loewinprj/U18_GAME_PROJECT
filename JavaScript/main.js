@@ -80,7 +80,9 @@ function init(){
 		
 		// feed mask & flash mask
 		feed_index: -1,
-		flash_index: -1
+		flash_index: -1,
+		
+		map_id: 0
 	};
 
 	// reset mapchips array
@@ -429,7 +431,7 @@ function init_mapchip(canvas, context){
 			// Map chip hitbox source
 			gui.push(new canvasEx({
 				canvas, context, type: pth, x: center + hitbox.x, y: center + hitbox.y, bold: 2, color: '#07E',
-				pos: hitbox.pos, mapchip_data: {x: hitbox.x, y: hitbox.y},
+				pos: hitbox.pos, mapchip_data: {x: hitbox.x, y: hitbox.y}, map_id: data.map_id,
 				label: ['Ground', 'Hitbox', 'Mapchip', 'Game']
 			}));
 		}
@@ -437,7 +439,7 @@ function init_mapchip(canvas, context){
 		// Map chip image soruce
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true, alpha: 1,
-			src: chip.src, mapchip_data: {x: chip.x, y: chip.y},
+			src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id,
 			label: ['Mapchip', 'Game']
 		}));
 	});
@@ -504,10 +506,10 @@ function update(){
 			}
 
 			drag_objects();
-			scrollMapchips();		
+			scroll_mapchips();		
 		}
 		
-		debugmodeLabel();
+		draw_debug_label();
 	}
 
 	// Mask alpha
@@ -614,7 +616,13 @@ function draw(){
 				
 			case 'Game':
 				if(check_include_label(label, 'Game')){
-					e.draw();
+					if(check_include_label(label, 'Mapchip')){
+						if(e.map_id === game_controller.map_id){
+							e.draw();
+						}
+					} else {
+						e.draw();
+					}
 				}
 			break;
 		}
@@ -902,7 +910,7 @@ function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 	return [tentativeX, tentativeY, isHit];
 }
 
-function scrollMapchips(){
+function scroll_mapchips(){
 	mapchips.map(function(e){
 		gui[e.index].x = center + (gui[e.index].mapchip_data.x + game_controller.scroll.x);
 		gui[e.index].y = center + (gui[e.index].mapchip_data.y + game_controller.scroll.y);
@@ -919,7 +927,7 @@ function scrollMapchips(){
 	});
 }
 
-function debugmodeLabel(){
+function draw_debug_label(){
 	gui[_debug.label_index].alpha += (_debug.screen - gui[_debug.label_index].alpha) / 3;
 }
 
