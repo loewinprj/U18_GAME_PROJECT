@@ -434,12 +434,12 @@ class group{
 	}
 
 	addHitBox(canv,cont,...input){
-		var x,y;
+		var x, y;
 		var stack = [];
 		for(var i = 0, len = input.length; i < len; i += 2){
 			x = input[i];
 			y = input[i + 1];
-			stack.push({x,y});
+			stack.push({x, y});
 		}
 		
 		//_c.log(stack); // debugger
@@ -512,7 +512,7 @@ class group{
 		}
 		
 		const corners = this.corners;
-		for(var i in this.objects){
+		for(let i in this.objects){
 			const e = this.objects[i];
 			
 			if(e.label !== void(0) && e.label === 'Group hitbox'){
@@ -658,7 +658,7 @@ function check_hitObjects(obj_0, obj_1){
 			var pos_3 = objPos_1[(id + 1) % vertex];
 
 
-			var cross = checkCrossTwoLines(pos_0.x, pos_0.y, pos_1.x, pos_1.y, pos_2.x, pos_2.y, pos_3.x, pos_3.y);
+			var cross = check_cross_two_lines(pos_0.x, pos_0.y, pos_1.x, pos_1.y, pos_2.x, pos_2.y, pos_3.x, pos_3.y);
 			var dist = distance(obj_0.x, obj_0.y ,obj_1.x, obj_1.y);
 
 			if(cross || dist < obj_0.r || dist < obj_1.r) return true;
@@ -667,34 +667,34 @@ function check_hitObjects(obj_0, obj_1){
 
 	// Your code here
 	//obj_0が大きい時
-	if(check_touch_each_other(objPos_0,objPos_1)) return true;
+	if(check_touch_each_other(objPos_0, objPos_1)) return true;
 	//obj_1が大きい時
-	if(check_touch_each_other(objPos_1,objPos_0)) return true;
+	if(check_touch_each_other(objPos_1, objPos_0)) return true;
 
 	return false;
 }
 
-function checkOnLinePoint(x_0, y_0, x_1, y_1, x_2, y_2){
+function check_on_line_point(x_0, y_0, x_1, y_1, x_2, y_2){
 	var l_0 = (x_1 - x_0) * (x_1 - x_0) + (y_1 - y_0) * (y_1 - y_0);
 	var l_1 = (x_2 - x_0) * (x_2 - x_0) + (y_2 - y_0) * (y_2 - y_0);
 	var p = (x_1 - x_0) * (x_2 - x_0) + (y_1 - y_0) * (y_2 - y_0);
 	return p >= 0 && p * p == l_0 * l_1 && l_0 >= l_1;
 }
 
-function checkCrossTwoLines(x_0, y_0, x_1, y_1, x_2, y_2, x_3, y_3){
+function check_cross_two_lines(x_0, y_0, x_1, y_1, x_2, y_2, x_3, y_3){
 	var n_0 = (x_2 - x_3) * (y_0 - y_2) + (y_2 - y_3) * (x_2 - x_0);
 	var n_1 = (x_2 - x_3) * (y_1 - y_2) + (y_2 - y_3) * (x_2 - x_1);
 	var n_2 = (x_0 - x_1) * (y_2 - y_0) + (y_0 - y_1) * (x_0 - x_2);
 	var n_3 = (x_0 - x_1) * (y_3 - y_0) + (y_0 - y_1) * (x_0 - x_3);
 
 	return n_2 * n_3 < 0 && n_0 * n_1 < 0
-		|| checkOnLinePoint(x_0, y_0, x_1, y_1, x_2, y_2)
-		|| checkOnLinePoint(x_0, y_0, x_1, y_1, x_3, y_3)
-		|| checkOnLinePoint(x_2, y_2, x_3, y_3, x_0, y_0)
-		|| checkOnLinePoint(x_2, y_2, x_3, y_3, x_1, y_1);
+		|| check_on_line_point(x_0, y_0, x_1, y_1, x_2, y_2)
+		|| check_on_line_point(x_0, y_0, x_1, y_1, x_3, y_3)
+		|| check_on_line_point(x_2, y_2, x_3, y_3, x_0, y_0)
+		|| check_on_line_point(x_2, y_2, x_3, y_3, x_1, y_1);
 }
 
-function crossProductZ(a_1, a_2, b_1, b_2){
+function cross_product_z(a_1, a_2, b_1, b_2){
 	return a_1 * b_2 - b_1 * a_2
 }
 
@@ -703,21 +703,20 @@ function check_touch_each_other(objPos_0, objPos_1){
 	var minus = 0;
 
 	var vertex = objPos_0.length;
-	for(var i = 0; i < vertex; i++){
+	for(var i = 0; i < vertex; i++){		
 		var a_1 = objPos_1[i].x - objPos_0[i].x;
 		var a_2 = objPos_1[i].y - objPos_0[i].y;
 		var b_1 = objPos_0[(i + 1) % vertex].x - objPos_0[i].x;
 		var b_2 = objPos_0[(i + 1) % vertex].y - objPos_0[i].y;
 
-		if(crossProductZ(a_1,a_2,b_1,b_2) > 0){
+		if(cross_product_z(a_1, a_2, b_1, b_2) > 0){
 			plus++;
-		}
-		else{
+		} else {
 			minus++;
 		}
 	}
 
-	return plus == vertex || minus == vertex
+	return plus === vertex || minus === vertex;
 }
 
 function convert_position(...input){
@@ -775,7 +774,7 @@ function convert_replace(x){
 	return x.substr(0, 3) + (x === 'center' ? 'A' : 'B');
 }
 
-function arrayInside(array, num, error_num){
+function array_inside(array, num, error_num){
 	let id = -1;
 	array.map(function(e, i){
 		if(Math.abs(e - num) < error_num){
