@@ -60,8 +60,9 @@ function init(){
 		talk: {
 			mode: false,
 			window: {
-				width: 200,
-				height: 200
+				index: 0,
+				width: 800,
+				height: 500
 			}
 		},
 		
@@ -78,9 +79,10 @@ function init(){
 			play: 1
 		},
 		
-		// feed mask & flash mask
+		// feed mask & flash mask & talk_window's index
 		feed_index: -1,
 		flash_index: -1,
+		talk_window_index: -1,
 		
 		map_id: 0
 	};
@@ -156,6 +158,15 @@ function init(){
 	}));
 
 	//ここまで
+	
+	//talk_window
+	let talk_window_width = game_controller.talk.window.width;
+	let talk_window_height = game_controller.talk.window.height;
+	
+    gui.push(new canvasEx({
+		canvas, context, type: img, x: center, y: maximum + -talk_window_height / 4, w: talk_window_width, h: talk_window_height, alpha: 0, center: true,
+		src: 'Image/Screen/talk_window.png', label: ['Talkwindow', 'Game']
+	}));
 
     gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0, // 0.3 ~ 0.4
@@ -354,6 +365,9 @@ function init(){
 		if(check_include_label(label, 'Flashmask')){
 			game_controller.flash_index = i;
 		}
+		if(check_include_label(label, 'Talkwindow')){
+			game_controller.talk.window.index = i;
+		}
 	});
 
 	// setup index of somethings
@@ -430,7 +444,7 @@ function init_mapchip(canvas, context){
 		if(hitbox !== void(0)){
 			// Map chip hitbox source
 			gui.push(new canvasEx({
-				canvas, context, type: pth, x: center + hitbox.x, y: center + hitbox.y, bold: 2, color: '#07E',
+				canvas, context, type: pth, x: center + hitbox.x, y: center + hitbox.y, bold: 2, color: data.color || '#07E',
 				pos: hitbox.pos, mapchip_data: {x: hitbox.x, y: hitbox.y}, map_id: data.map_id,
 				label: ['Ground', 'Hitbox', 'Mapchip', 'Game']
 			}));
@@ -506,10 +520,17 @@ function update(){
 			}
 
 			drag_objects();
-			scroll_mapchips();		
+			scroll_mapchips();
 		}
 		
 		draw_debug_label();
+	}
+	
+	// Talk window
+	if(game_controller.screen_mode === 'Game'){
+		let index = game_controller.talk.window.index;
+		gui[index].alpha += (game_controller.talk.mode - gui[index].alpha) / 3;	
+
 	}
 
 	// Mask alpha
@@ -535,7 +556,7 @@ function update(){
 			gui[game_controller.feed_index].alpha = _animation.load_finished / 30;
 			if(pressed_keys[32] && _animation.title && !_animation.load_finished){
 				game_controller.play_audio.change_speed = 6;
-				game_controller.play_audio.max_volume = 0;			
+				game_controller.play_audio.max_volume = 0;
 				_animation.title = 2;
 			}
 		break;
@@ -553,7 +574,7 @@ function update(){
 
 		case 3:
 			setTimeout(function(){
-				if(true){ // 此処から先には行かせない… 俺が食い止める…!
+				if(false){ // 此処から先には行かせない… 俺が食い止める…!
 					game_controller.play_audio.change_speed = 6;
 					game_controller.play_audio.max_volume = 1;
 					game_controller.play_audio.index = 1;
@@ -572,6 +593,17 @@ function update(){
 		case 4:
 			// オープニングを付ける予定
 			gui[game_controller.feed_index].alpha += (0.3 - gui[game_controller.feed_index].alpha) / 16; // とりあえず画面明るくしておけ
+		
+			if(pressed_keys[32]){
+				game_controller.play_audio.change_speed = 6;
+				game_controller.play_audio.max_volume = 1;
+				game_controller.play_audio.index = 1;
+				game_controller.play_audio.pause = 1;
+				game_controller.play_audio.play = 1;
+					
+				game_controller.screen_mode = 'Game';
+				_animation.title = 0;
+			}
 		break;
 	}
 }
@@ -717,7 +749,7 @@ function check_include_label(base, search){
 }
 
 function key_events(){
-	if(pressed_keys[16] && pressed_keys[68]/*pressed_keys[17] && pressed_keys[90]*/ && !_debug.key_buffer.main){ // ctrl + space switch debug mode
+	if(pressed_keys[16] && pressed_keys[68] && !_debug.key_buffer.main){ // shift + D switch debug mode
 		_debug.key_buffer.main = 15; // 30(fps) * 15 = 1500ms (1.5s) = interval
 		_debug.screen = !_debug.screen;
 		_c.log(`User switched _debug.screen : ${_debug.screen}`);
@@ -759,7 +791,6 @@ function player_control(){
 
 	// Deceleration according to law of inertia
 	player.accel.x += (pressed_keys[39] - pressed_keys[37]) * accelSpeed * clear_case; // Rigth and Left arrow keys
-	//game_controller.scroll.x += (pressed_keys[37] - pressed_keys[39]) * accelSpeed * clear_case * 1.5; // scroll test
 	var pre_player_x = player.x;
 	var pre_player_y = player.y;
 	player.x = 0;
@@ -767,10 +798,6 @@ function player_control(){
     
 	player.accel.x *= lowAccel;
 	player.x += player.accel.x;
-
-	//player.accel.y += (pressed_keys[40] - pressed_keys[38]) * accelSpeed; // Down and Up arrow keys
-	//player.accel.y *= lowAccel;
-	//player.accel.y *= lowAccel;
 
 	player.y += player.accel.y + player.accel.gravity;
 
@@ -784,7 +811,7 @@ function player_control(){
         	gui[player.index].reverse = player.reverse;
    	}
 
-    	// Frame for Character animation
+	// Frame for Character animation
 	player.frame += (pressed_keys[37] || pressed_keys[39]) * player.standing * clear_case;
 
 	// Your code here. (gravity, 当たり判定完成後)
@@ -804,29 +831,29 @@ function player_control(){
 
 		var result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y, 0, -1);
 		if(result[2]){
-            var result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y, 0, 1);
-            if(result[2]){
-                player.y -= 5
-                count = 15;
-                step = 2;
-                result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, 1, 0);
-                result[1] += 15;
+			var result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y, 0, 1);
+			if(result[2]){
+				player.y -= 5
+				count = 15;
+				step = 2;
+				result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, 1, 0);
+				result[1] += 15;
 
-                if(result[2]){
-                    result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, -1, 0);
-                    result[1] += 15;
-                }
-                player.y += 5;
-                gui[player.hitbox].y = center + player.y;
-                gui[player.hitbox].draw();
-                player.standing = grounds.check_hit(gui[player.hitbox]);
-                player.accel.x = 0;
-            }else{
-                player.standing = false;
-                player.hit = false;
-                player.accel.y = 0;
-			    player.accel.gravity = 0;
-            }
+				if(result[2]){
+					result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, -1, 0);
+					result[1] += 15;
+				}
+				player.y += 5;
+				gui[player.hitbox].y = center + player.y;
+				gui[player.hitbox].draw();
+				player.standing = grounds.check_hit(gui[player.hitbox]);
+				player.accel.x = 0;
+			}else{
+				player.standing = false;
+				player.hit = false;
+				player.accel.y = 0;
+				player.accel.gravity = 0;
+			}
 		} else {
 			player.hit = false;
 			player.accel.y = 0;
@@ -849,7 +876,6 @@ function player_control(){
 	
 	gui[player.index].x = gui[player.hitbox].x = center + player.x;
 	gui[player.index].y = gui[player.hitbox].y = center + player.y;
-	//gui[player.hitbox].draw();
 
 	// if the player went void, set y to scratch.
 	if(height < -game_controller.scroll.y || game_controller.respawn){		
@@ -881,18 +907,13 @@ function player_control(){
 			}, fps);
 		}
 	}
-	//_c.log(player.standing)
-	//_c.log(player.hit)
 }
 
 function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 	var isHit = true;
 	var tentativeX = x;
 	var tentativeY = y;
-	/*
-	tentativeX -= step * changeX * 2;
-	tentativeY -= step * changeY * 2;
-	 */
+
 	gui[obj_1].x = center + tentativeX;
 	gui[obj_1].y = center + tentativeY;
 	gui[obj_1].draw();
@@ -926,11 +947,10 @@ function scroll_mapchips(){
 		if(!check_include_label(e.label, 'Hitbox')){
 			let x = convert_position(gui[e.index].x, 'x', canv);
 			let y = convert_position(gui[e.index].y, 'y', canv);
-			let alpha = distance(width / 2, height / 2, x, y);
-			alpha /= (width + height) / 2;
-			alpha = (1 - alpha * 1.1) < 0 ? 0 : 1 - alpha * 1.05;
+			
+			let alpha = distance(width / 2, height / 2, x, y) / ((width + height) / 2);
+			alpha = (1 - alpha * 1.1) < 0 ? 0 : 1 - alpha * 1.025;
 			gui[e.index].alpha = alpha;
-
 		}
 	});
 }
