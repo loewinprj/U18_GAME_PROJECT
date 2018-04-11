@@ -7,6 +7,7 @@ _w.onload = function(){
 	setInterval(main, fps); // start main loop of the game
 };
 
+// Init methods
 function init(){
     size = _d.getElementById('size');
     canv = _d.getElementById('drawArea');
@@ -32,7 +33,7 @@ function init(){
 		grid_line: false
     };
 	
-	// controll object
+	// controll somethings
 	game_controller = {
 		puzzle: {
 			mode: false,
@@ -66,6 +67,11 @@ function init(){
 			}
 		},
 		
+		opening: {
+			index: -1,
+			story_index: 0
+		},
+		
 		respawn: false,
 		screen_mode: 'Title',
 		
@@ -79,10 +85,9 @@ function init(){
 			play: 1
 		},
 		
-		// feed mask & flash mask & talk_window's index
+		// feed mask & flash mask & OP telop's index
 		feed_index: -1,
 		flash_index: -1,
-		talk_window_index: -1,
 		
 		map_id: 0
 	};
@@ -368,6 +373,9 @@ function init(){
 		if(check_include_label(label, 'Talkwindow')){
 			game_controller.talk.window.index = i;
 		}
+		if(check_include_label(label, 'Opening') && check_include_label(label, 'Telop')){
+			game_controller.opening.index = i;
+		}
 	});
 
 	// setup index of somethings
@@ -462,12 +470,12 @@ function init_mapchip(canvas, context){
 function init_opening(canvas, context){
 	// オープニングオブジェクトの追加
 	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center, size: 90, text: '下の方では地球の者たちが緊張気味に固まれり。', mode: 1, align: center,
-		label: ['Opening']
+		canvas, context, type: txt, x: center + -50, y: center, size: 90, text: '下の方では地球の者たちが緊張気味に固まれり。', mode: 1, align: center,
+		abs_x: -50, alpha: 0, label: ['Opening', 'Telop']
 	}));
 }
 
-// Start main
+// Main loop method
 function main(){
     //requestAnimationFrame(main); // FPSが不安定なためsetIntervalに変更
     if(_loaded_images === _max_images){
@@ -491,6 +499,7 @@ function main(){
 	game_controller.pause.interval -= (game_controller.pause.interval > 0);
 }
 
+// Update methods
 function update(){
 	audio_update();
 	
@@ -508,7 +517,7 @@ function update(){
 		}
 		
 		control_effects();
-		// controlAnime();
+		// control_anime();
 
 		if(game_controller.puzzle.mode){
 			puzzleEvent();
@@ -593,7 +602,24 @@ function update(){
 		case 4:
 			// オープニングを付ける予定
 			gui[game_controller.feed_index].alpha += (0.3 - gui[game_controller.feed_index].alpha) / 16; // とりあえず画面明るくしておけ
-		
+			
+			if(abs(0.3 - gui[game_controller.feed_index].alpha) < 0.1){
+				//abs_x
+				if(gui[game_controller.opening.index].abs_x < 50){
+					gui[game_controller.opening.index].abs_x += 0.5;
+					gui[game_controller.opening.index].x = center + gui[game_controller.opening.index].abs_x;
+					gui[game_controller.opening.index].alpha = 1 - abs(gui[game_controller.opening.index].abs_x / 50);
+				} else {
+					// テロップを次へ
+					game_controller.opening.story_index++;
+					gui[game_controller.opening.index].text = story[game_controller.opening.story_index];
+					// xとalphaをリセット
+					gui[game_controller.opening.index].x = center + -50;
+					gui[game_controller.opening.index].abs_x = -50;
+					gui[game_controller.opening.index].alpha = 0;
+				}
+			}
+
 			if(pressed_keys[32]){
 				game_controller.play_audio.change_speed = 6;
 				game_controller.play_audio.max_volume = 1;
@@ -624,6 +650,7 @@ function audio_update(){
 	soundset[index].audio.volume += (game_controller.play_audio.max_volume - soundset[index].audio.volume) / game_controller.play_audio.change_speed;
 }
 
+// Draw and clear methods
 function draw(){
 	clear();
 
@@ -701,8 +728,109 @@ function draw(){
 	}
 }
 
+function draw_last_drag_object(){
+	if(mouse.last_drag_index > -1 && game_controller.puzzle.mode){
+		let obj = gui[mouse.last_drag_index];
+		let h = obj.h || obj.height;
+		let w = obj.w || obj.width;
+		let x = obj.x;
+		let y = obj.y;
+
+		if(isNaN(x)){
+			x = convert_position(x, 'x', canv);
+		}
+
+		if(isNaN(y)){
+			y = convert_position(y, 'y', canv);
+		}
+
+		cont.beginPath();
+
+		if(_debug.screen){
+			let yScale = h / 2;
+			let xScale = w / 2;
+
+			cont.lineWidth = 2;
+			cont.strokeStyle = '#C00';
+
+			cont.moveTo(x - xScale, y - yScale);
+
+
+			cont.lineTo(x - xScale, y + yScale);
+			cont.lineTo(x + xScale, y + yScale);
+			cont.lineTo(x + xScale, y - yScale);
+			cont.lineTo(x - xScale, y - yScale);
+			cont.stroke();
+		} else {
+			cont.fillStyle = 'rgba(0, 0, 0, 0.5)';
+			cont.arc(x, y, 50, 0, PI * 2, false);
+			cont.fill();
+		}
+	}
+}
+
+function draw_debug_label(){
+	gui[_debug.label_index].alpha += (_debug.screen - gui[_debug.label_index].alpha) / 3;
+}
+
+function draw_effects(){
+	let mode = game_controller.screen_mode;
+	
+	effects.map(function(e, i){
+		let label = e.object.label;
+
+		switch(mode){
+			case 'Opening':
+				if(check_include_label(label, 'Opening')){
+					e.object.draw();
+				}
+			break;
+				
+			case 'Title':
+				if(check_include_label(label, 'Title')){
+					e.object.draw();
+				}
+			break;
+				
+			case 'Game':
+				if(check_include_label(label, 'Game')){
+					e.object.draw();
+				}
+			break;
+		}
+		
+		if(check_include_label(label, 'All')){ //　全場面描画
+			e.object.draw();
+		}
+		
+
+		// ここから描画
+		effects[i].object.x += e.dx;
+		effects[i].object.y += e.dy;
+		effects[i].object.direction += e.dDir;
+		effects[i].object.alpha = abs(sin(e.frame * PI / 180) - (1 - e.mAlp));
+
+		effects[i].frame += e.sAlp;
+		
+		if(width < e.object.x || height < e.object.y){
+			effects[i].object.x = random(-width / 4, width);
+			effects[i].object.y = -random(10, 30);
+		}
+	});
+}
+
+function draw_talk_window(){
+	//game_controller.talk.mode
+}
+
+function clear(){
+    cont.clearRect(0, 0, width, height); // Refresh the screen
+}
+
+// User event methods
 function event(){
 	_d.addEventListener('mousemove', function(e){
+		// Mouse positions
 		let rect = e.target.getBoundingClientRect();
 		mouse.x = e.clientX - rect.left;
 		mouse.y = e.clientY - rect.top;
@@ -727,25 +855,6 @@ function event(){
     _w.addEventListener('resize', function(){
         requestAnimationFrame ? set_size() : requestAnimationFrame(set_size);
     });
-}
-
-function clear(){
-    cont.clearRect(0, 0, width, height); // Refresh the screen
-}
-
-function set_size(){
-	canv.height = size.offsetHeight;
-	canv.width = size.offsetWidth;
-	height = canv.height;
-	width = canv.width;
-}
-
-function check_include_label(base, search){
-	if(base === void(0)){
-		return false;
-	}
-
-	return (base === search || base.indexOf(search) > -1);
 }
 
 function key_events(){
@@ -784,6 +893,22 @@ function key_events(){
 	Object.keys(_debug.key_buffer).map(function(e){
 		_debug.key_buffer[e] -= (_debug.key_buffer[e] > 0);
 	});
+}
+
+// Other methods
+function set_size(){
+	canv.height = size.offsetHeight;
+	canv.width = size.offsetWidth;
+	height = canv.height;
+	width = canv.width;
+}
+
+function check_include_label(base, search){
+	if(base === void(0)){
+		return false;
+	}
+
+	return (base === search || base.indexOf(search) > -1);
 }
 
 function player_control(){
@@ -955,10 +1080,6 @@ function scroll_mapchips(){
 	});
 }
 
-function draw_debug_label(){
-	gui[_debug.label_index].alpha += (_debug.screen - gui[_debug.label_index].alpha) / 3;
-}
-
 function drag_objects(){
 	let drag = mouse.drag;
 	let down = mouse.down;
@@ -1006,47 +1127,6 @@ function drag_objects(){
 	}
 }
 
-function draw_last_drag_object(){
-	if(mouse.last_drag_index > -1 && game_controller.puzzle.mode){
-		let obj = gui[mouse.last_drag_index];
-		let h = obj.h || obj.height;
-		let w = obj.w || obj.width;
-		let x = obj.x;
-		let y = obj.y;
-
-		if(isNaN(x)){
-			x = convert_position(x, 'x', canv);
-		}
-
-		if(isNaN(y)){
-			y = convert_position(y, 'y', canv);
-		}
-
-		cont.beginPath();
-
-		if(_debug.screen){
-			let yScale = h / 2;
-			let xScale = w / 2;
-
-			cont.lineWidth = 2;
-			cont.strokeStyle = '#C00';
-
-			cont.moveTo(x - xScale, y - yScale);
-
-
-			cont.lineTo(x - xScale, y + yScale);
-			cont.lineTo(x + xScale, y + yScale);
-			cont.lineTo(x + xScale, y - yScale);
-			cont.lineTo(x - xScale, y - yScale);
-			cont.stroke();
-		} else {
-			cont.fillStyle = 'rgba(0, 0, 0, 0.5)';
-			cont.arc(x, y, 50, 0, PI * 2, false);
-			cont.fill();
-		}
-	}
-}
-
 function puzzleEvent(){
 	let rot = gui[game_controller.puzzle.rotation.id];
 	let rev = gui[game_controller.puzzle.reverse.id];
@@ -1064,7 +1144,7 @@ function puzzleEvent(){
 	game_controller.puzzle.reverse.interval -= (game_controller.puzzle.reverse.interval > 0);
 }
 
-function controlAnime(){
+function control_anime(){
 	gui.map(function(e, i){
 		let label = e.label;
 		if(check_include_label(label, 'Animation')){
@@ -1131,54 +1211,4 @@ function control_effects(){
 			});
 		}
 	})
-}
-
-function draw_effects(){
-	let mode = game_controller.screen_mode;
-	
-	effects.map(function(e, i){
-		let label = e.object.label;
-
-		switch(mode){
-			case 'Opening':
-				if(check_include_label(label, 'Opening')){
-					e.object.draw();
-				}
-			break;
-				
-			case 'Title':
-				if(check_include_label(label, 'Title')){
-					e.object.draw();
-				}
-			break;
-				
-			case 'Game':
-				if(check_include_label(label, 'Game')){
-					e.object.draw();
-				}
-			break;
-		}
-		
-		if(check_include_label(label, 'All')){ //　全場面描画
-			e.object.draw();
-		}
-		
-
-		// ここから描画
-		effects[i].object.x += e.dx;
-		effects[i].object.y += e.dy;
-		effects[i].object.direction += e.dDir;
-		effects[i].object.alpha = abs(sin(e.frame * PI / 180) - (1 - e.mAlp));
-
-		effects[i].frame += e.sAlp;
-		
-		if(width < e.object.x || height < e.object.y){
-			effects[i].object.x = random(-width / 4, width);
-			effects[i].object.y = -random(10, 30);
-		}
-	});
-}
-
-function draw_talk_window(){
-	//game_controller.talk.mode
 }
