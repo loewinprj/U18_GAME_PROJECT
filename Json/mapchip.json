@@ -30,8 +30,8 @@ var json_mapchip = {
 	"01_0" : {
 		"map_id": 0,
 		"chip": {
-			"x" : 0,
-			"y" : 135,
+			"x" : 5,
+			"y" : 138,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_01.png",
@@ -307,7 +307,7 @@ var json_mapchip = {
 	"02_6" : {
 		"map_id": 0,
 		"chip": {
-			"x" : 1140,
+			"x" : 1150,
 			"y" : 243,
 			"w" : 200,
 			"h" : 200,
@@ -316,7 +316,7 @@ var json_mapchip = {
 			"center" : 1
 		},
 		"hitbox": {
-			"x" : 1140,
+			"x" : 1150,
 			"y" : 273,
 			"pos" : [
 				{
