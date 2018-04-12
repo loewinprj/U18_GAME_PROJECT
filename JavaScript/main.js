@@ -170,7 +170,8 @@ function init(){
 	
     gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: maximum + -talk_window_height / 4, w: talk_window_width, h: talk_window_height, alpha: 0, center: true,
-		src: 'Image/Screen/talk_window.png', label: ['Talkwindow', 'Game']
+		src: 'Image/Screen/talk_window.png',
+		label: ['Talkwindow', 'Game']
 	}));
 
     gui.push(new canvasEx({
@@ -242,11 +243,11 @@ function init(){
 	// for an object (Prototype)
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center + 100, w: 200, h: 200, center: true, alpha: 0, direction: 0,
-		src: 'Image/Screen/Effect/leaf.png', switch: 'Audio 0',switch_frame: [7.1, 21.4, 41.4, 64.2],
-	    animation: [
-            'Image/Screen/Effect/leaf.png',
-            'Image/Character/mouse_0_0.png'
-        ],
+		src: 'Image/Screen/Effect/leaf.png', switch: 'Audio 0', switch_frame: [7.1, 21.4, 41.4, 64.2],
+		animation: [
+			'Image/Screen/Effect/leaf.png',
+			'Image/Screen/Effect/sakura.png'
+		],
 		label: ['Animation', 'Effect', 'Title'],
 		pattern: [
 			{
@@ -420,7 +421,8 @@ function init(){
 		effects[i] = {
 			object: new canvasEx({
 				canvas, context, type: img, x: random(-width / 4, width), y: -random(20, 120), w: size, h: size, alpha: rand() * 0.5 + 0.5,
-				center: true, direction: random(0, 360), src: 'Image/Screen/Effect/leaf.png', label: ['Effect', 'Title']
+				center: true, direction: random(0, 360), src: `Image/Screen/Effect/${['leaf', 'konoha', 'sakura'][~~(Math.random() * 3)]}.png`,
+				label: ['Effect', 'Title']
 			}),
 			dx: rand() * (size / 40),
 			dy: rand() * (size / 40),
