@@ -89,6 +89,9 @@ function init(){
 		feed_index: -1,
 		flash_index: -1,
 		
+		// title logo text's index
+		title_logo_index: [],
+		
 		map_id: 0
 	};
 
@@ -147,10 +150,19 @@ function init(){
 
 	// タイトルテストここから
 
+    /*
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center, y: center + -200, size: 200, text: '七変化風林火山', align: center, reverse: 1,
 		label: ['Title']
 	}));
+    */
+    
+    for(let i = 7; i--;){
+        gui.push(new canvasEx({
+            canvas, context, type: txt, x: center + (-240 + (7 - i) * 60), y: center + -200, size: 80, text: '七変化風林火山'[i],
+			align: center, alpha: 0, label: ['Title', 'Logo']
+        }));
+    }
 
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center, y: center + -150, size: 110, text: '鳳凰物語', align: center, reverse: 1,
@@ -362,6 +374,7 @@ function init(){
 		if(check_include_label(label, 'Ground')){
 			grounds.add(e);
 		}
+		
 		if(check_include_label(label, 'Label')){
 			_debug.label_index = i;
 		}
@@ -371,6 +384,11 @@ function init(){
 		if(check_include_label(label, 'Flashmask')){
 			game_controller.flash_index = i;
 		}
+
+		if(check_include_label(label, 'Title') && check_include_label(label, 'Logo')){
+			game_controller.title_logo_index.push(i);
+		}
+		
 		if(check_include_label(label, 'Talkwindow')){
 			game_controller.talk.window.index = i;
 		}
@@ -678,6 +696,11 @@ function update(){
 	}
 	
 	gui[game_controller.flash_index].alpha += -gui[game_controller.flash_index].alpha / 5;
+	
+	game_controller.title_logo_index.map(function(e){
+		gui[e].alpha += (1 - gui[e].alpha) / (e + (e * 1.1));
+		gui[e].size += (200 - gui[e].size) / (e / 1.3);
+	});
 }
 
 function audio_update(){
@@ -880,6 +903,8 @@ function event(){
 		let rect = e.target.getBoundingClientRect();
 		mouse.x = e.clientX - rect.left;
 		mouse.y = e.clientY - rect.top;
+		
+		//_c.log(mouse.x - width / 2);
 	});
 
 	_d.addEventListener('mousedown', function(e){
