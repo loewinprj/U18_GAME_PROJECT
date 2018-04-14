@@ -344,7 +344,7 @@ function init(){
 	// Init sounds
 	const soundname = [
 		{src: 'Sound/Test/U18-13(1).mp3', volume: 1, loop: 1},
-		{src: 'Sound/Test/U18-8(1).mp3', volume: 1, loop: 1},
+		{src: 'Sound/Test/U18-14(1).mp3', volume: 1, loop: 1},
 		{src: 'Sound/Test/SE-7(1)_remix.mp3', volume: 0.6, loop: 0},
 	];
 
