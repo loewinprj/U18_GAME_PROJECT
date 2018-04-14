@@ -66,7 +66,6 @@ function init(){
 				height: 500
 			}
 		},
-		
 		opening: {
 			index: -1,
 			story_index: 0
@@ -90,7 +89,10 @@ function init(){
 		flash_index: -1,
 		
 		// title logo text's index
-		title_logo_index: [],
+		title_logo: {
+			main_index: [],
+			sub_index: []
+		},
 		
 		map_id: 0
 	};
@@ -160,14 +162,23 @@ function init(){
     for(let i = 7; i--;){
         gui.push(new canvasEx({
             canvas, context, type: txt, x: center + (-240 + (7 - i) * 60), y: center + -200, size: 80, text: '七変化風林火山'[i],
-			align: center, alpha: 0, label: ['Title', 'Logo']
+			align: center, alpha: 0, label: ['Title', 'Logo', 'Main']
         }));
     }
 
+	/*
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center, y: center + -150, size: 110, text: '鳳凰物語', align: center, reverse: 1,
 		label: ['Title']
 	}));
+	*/
+	
+	for(let i = 4; i--;){
+        gui.push(new canvasEx({
+            canvas, context, type: txt, x: center + (-99 + (4 - i) * 33), y: center + -150, size: 20, text: '鳳凰物語'[i],
+			align: center, alpha: 0, label: ['Title', 'Logo', 'Sub']
+        }));
+	}
 
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center, y: center + 180, size: 90, text: 'スペースキーで開始', align: center,
@@ -386,7 +397,8 @@ function init(){
 		}
 
 		if(check_include_label(label, 'Title') && check_include_label(label, 'Logo')){
-			game_controller.title_logo_index.push(i);
+			let type = check_include_label(label, 'Main') ? 'main' : 'sub';
+			game_controller.title_logo[type + '_index'].push(i);
 		}
 		
 		if(check_include_label(label, 'Talkwindow')){
@@ -697,9 +709,17 @@ function update(){
 	
 	gui[game_controller.flash_index].alpha += -gui[game_controller.flash_index].alpha / 5;
 	
-	game_controller.title_logo_index.map(function(e){
+	game_controller.title_logo.main_index.map(function(e){
 		gui[e].alpha += (1 - gui[e].alpha) / (e + (e * 1.1));
 		gui[e].size += (200 - gui[e].size) / (e / 1.3);
+	});
+	
+	let sub = game_controller.title_logo.sub_index;
+	
+	sub.reverse();
+	sub.map(function(e){
+		gui[e].alpha += (1 - gui[e].alpha) / (e * 1.1);
+		gui[e].size += (110 - gui[e].size) / (e / 1.3);
 	});
 }
 
