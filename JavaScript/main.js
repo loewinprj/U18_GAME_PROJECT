@@ -1317,10 +1317,9 @@ function control_effects(){
 }
 
 function create_talk_window(px, talk, time){
-	let x = -340;
-	let y = -170;
+	let x = -345;
+	let y = -180;
 	let size = px / 3;
-	let max_len = ~~(px / 10);
 	
 	let canvas = canv;
 	let context = cont;
@@ -1328,17 +1327,19 @@ function create_talk_window(px, talk, time){
 	
 	game_controller.talk.text = [];
 	talk.split('').map(function(e, i){
-		game_controller.talk.text.push({
-			time: i * interval,
-			object: new canvasEx({
-					canvas, context, type: txt, x: center + x, y: maximum + y, size: px, text: e,
-					align: center, alpha: 0, label: 'Game'
-				})
-		});
+		if(e !== '\n'){
+			game_controller.talk.text.push({
+				time: (i + 1) * interval,
+					object: new canvasEx({
+						canvas, context, type: txt, x: center + x, y: maximum + y, size: px, text: e,
+						align: center, alpha: 0, label: 'Game'
+					})
+			});
+		}
 		
 		x += size;
-		if(i && ((i + 1) % max_len === 0)){
-			x = -340;
+		if(340 < x || e === '\n'){
+			x = -345;
 			y += size;
 		}
 	});
