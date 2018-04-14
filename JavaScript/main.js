@@ -59,6 +59,7 @@ function init(){
 		},
 		
 		talk: {
+			text: [],
 			mode: false,
 			window: {
 				index: 0,
@@ -910,6 +911,12 @@ function draw_effects(){
 
 function draw_talk_window(){
 	//game_controller.talk.mode
+	if(game_controller.talk.mode && game_controller.talk.text !== ''){
+		game_controller.talk.text.map(function(e){
+			e.object.draw();
+			e.object.alpha += (1 - e.object.alpha) / e.time;
+		});
+	}
 }
 
 function clear(){
@@ -1045,18 +1052,18 @@ function player_control(){
 		player.standing = true;
 		player.hit = true;
 
-		var result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y, 0, -1);
+		var result = move_until_not_hit(player.hitbox, 3, count, step, player.x, player.y, 0, -1);
 		if(result[2]){
-			var result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y, 0, 1);
+			var result = move_until_not_hit(player.hitbox, 3, count, step, player.x, player.y, 0, 1);
 			if(result[2]){
 				player.y -= 5
 				count = 15;
 				step = 2;
-				result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, 1, 0);
+				result = move_until_not_hit(player.hitbox, 3, count, step, player.x, player.y - 15, 1, 0);
 				result[1] += 15;
 
 				if(result[2]){
-					result = moveUntilNotHit(player.hitbox, 3, count, step, player.x, player.y - 15, -1, 0);
+					result = move_until_not_hit(player.hitbox, 3, count, step, player.x, player.y - 15, -1, 0);
 					result[1] += 15;
 				}
 				player.y += 5;
@@ -1125,7 +1132,7 @@ function player_control(){
 	}
 }
 
-function moveUntilNotHit(obj_1, obj_2, count, step, x, y, changeX, changeY){
+function move_until_not_hit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 	var isHit = true;
 	var tentativeX = x;
 	var tentativeY = y;
@@ -1306,5 +1313,33 @@ function control_effects(){
 				}
 			});
 		}
-	})
+	});
+}
+
+function create_talk_window(px, talk, time){
+	let x = -340;
+	let y = -170;
+	let size = px / 3;
+	let max_len = ~~(px / 10);
+	
+	let canvas = canv;
+	let context = cont;
+	let interval = time || 0;
+	
+	game_controller.talk.text = [];
+	talk.split('').map(function(e, i){
+		game_controller.talk.text.push({
+			time: i * interval,
+			object: new canvasEx({
+					canvas, context, type: txt, x: center + x, y: maximum + y, size: px, text: e,
+					align: center, alpha: 0, label: 'Game'
+				})
+		});
+		
+		x += size;
+		if(i && ((i + 1) % max_len === 0)){
+			x = -340;
+			y += size;
+		}
+	});
 }
