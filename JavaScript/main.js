@@ -1,4 +1,6 @@
-_w.onload = function(){
+console.log('%cDEBUG MODE\n%cSWITCH KEY : %cL-Shift + D\n%c 0 : %cswitch puzzle mode\n%c 1 : %cswitch show hitboxes\n%c 2 : %cswitch talk window', 'color: #0DF; font-weight: bold; font-size: 41.5px', 'font-weight: bold; font-size: 17px', 'color: #FC0; font-weight: bold; font-size: 17px', 'font-size: 15px', 'color: #F70; font-size: 15px', 'font-size: 15px', 'color: #F70; font-size: 15px', 'font-size: 15px', 'color: #F70; font-size: 15px');
+
+_w.onload = function(){	
 	init();
 	main();
 	event();
