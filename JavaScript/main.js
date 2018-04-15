@@ -279,6 +279,9 @@ function init(){
 		}));
 	}
 	
+/*
+	// もしかしたらここ要らない
+
 	// 回転ボタン
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -300, y: maximum + -300, w: 130, h: 130, alpha: 0, center: true,
@@ -304,6 +307,21 @@ function init(){
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: true,
 		src: 'Image/Puzzle/button_scroll.png', max_alpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
+		label: ['Mask', 'Game'],
+	}));
+*/
+	
+	// 右回転
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: maximum + -250, y: maximum + -250, alpha: 0, center: true,
+		src: 'Image/Puzzle/right_rotation.png', max_alpha: 0.92,
+		label: ['Mask', 'Game'],
+	}));
+	
+	// 左回転
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: -250, y: maximum + -250, alpha: 0, center: true,
+		src: 'Image/Puzzle/left_rotation.png', max_alpha: 0.92,
 		label: ['Mask', 'Game'],
 	}));
 
@@ -1226,6 +1244,7 @@ function puzzleEvent(){
 		e.rev = ~~gui[e.index].reverse;
 	});
 	
+/*
 	let rot = gui[game_controller.puzzle.rotation.id];
 	let rev = gui[game_controller.puzzle.reverse.id];
 
@@ -1238,6 +1257,7 @@ function puzzleEvent(){
 			game_controller.puzzle.reverse.interval = 7;
 		}
 	}
+*/
 
 	game_controller.puzzle.reverse.interval -= (game_controller.puzzle.reverse.interval > 0);
 }
