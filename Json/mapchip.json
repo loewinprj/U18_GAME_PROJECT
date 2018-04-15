@@ -26,7 +26,7 @@
 
 var json_mapchip = {
 	
-	// chip 01 - cliff
+	// chip 01 - Cliff
 	"01_0" : {
 		"map_id": 0,
 		"chip": {
@@ -66,7 +66,7 @@ var json_mapchip = {
 		}
 	},
 	
-	// chip 02 - flat
+	// chip 02 - Flat
 	
 	"02_0" : {
 		"map_id": 0,
@@ -662,6 +662,92 @@ var json_mapchip = {
 			"src" : "Image/Screen/Mapchip/chip_07.png",
 			"dir" : 0,
 			"center" : 1
+		}
+	},
+	
+	"07_2" : {
+		"direction": 10,
+		"map_id": 0,
+		"chip": {
+			"x" : 1650,
+			"y" : 140,
+			"w" : 110,
+			"h" : 110,
+			"src" : "Image/Screen/Mapchip/chip_07.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	
+	// chip 08 - Wall
+	
+	"08_0" : {
+		"map_id": 0,
+		"chip": {
+			"x" : -80,
+			"y" : 300,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox": {
+			"x" : -80,
+			"y" : 300,
+			"pos" : [
+                {
+					"x" : 0,
+					"y" : -100
+				},
+				{
+					"x" : 50,
+					"y" : -100
+				},
+				{
+					"x" : 50,
+					"y" : 100
+				},
+				{
+					"x" : 0,
+					"y" : 100
+				}
+			]
+		}
+	},
+	
+	"08_1" : {
+		"map_id": 0,
+		"chip": {
+			"x" : -80,
+			"y" : 500,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox": {
+			"x" : -80,
+			"y" : 500,
+			"pos" : [
+                {
+					"x" : 0,
+					"y" : -100
+				},
+				{
+					"x" : 50,
+					"y" : -100
+				},
+				{
+					"x" : 50,
+					"y" : 100
+				},
+				{
+					"x" : 0,
+					"y" : 100
+				}
+			]
 		}
 	},
 }
