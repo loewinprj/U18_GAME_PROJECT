@@ -528,7 +528,9 @@ class group{
 					canvas: e.canvas, context: e.context, type: pth, bold: 1, color: '#000', pos
 				});
 				
-				if(check_hitObjects(target, fixObject)) return true;
+				if(check_hitObjects(target, fixObject)){
+					return true;
+				}
 			} else {
 				if(check_hitObjects(target, e)){
 					return true;
