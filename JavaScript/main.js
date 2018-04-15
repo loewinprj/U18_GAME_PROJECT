@@ -38,16 +38,7 @@ function init(){
 	// controll somethings
 	game_controller = {
 		puzzle: {
-			mode: false,
-			
-			reverse: {
-				id: -1
-			},
-			
-			rotation: {
-				id: -1,
-				interval: 0
-			}
+			mode: false
 		},
 		
 		scroll: {
@@ -279,38 +270,6 @@ function init(){
 		}));
 	}
 	
-/*
-	// もしかしたらここ要らない
-
-	// 回転ボタン
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -300, y: maximum + -300, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/button_rotation.png', max_alpha: 0.92, reverse: 0, direction: 0,
-		label: ['Puzzle', 'Mask', 'Rot', 'Game']
-	}));
-	
-	// 反転ボタン
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -300, y: maximum + -400, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/button_reverse.png', max_alpha: 0.92, reverse: 0, direction: 0,
-		label: ['Puzzle', 'Mask', 'Rev', 'Game']
-	}));
-	
-	// スクロールバー
-	gui.push(new canvasEx({
-		canvas, context, type: pth, x: center + -100, y: center + 300, bold: 2, color: '#222', mode: stroke, alpha: 0,
-		pos: [{x: -100, y: 0}, {x: 100, y:0}], max_alpha: 0.92,
-		label: ['Mask', 'Game']
-	}));
-
-	// スクロールボタン
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: true,
-		src: 'Image/Puzzle/button_scroll.png', max_alpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
-		label: ['Mask', 'Game'],
-	}));
-*/
-	
 	// 右回転
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: maximum + -250, y: maximum + -250, alpha: 0, center: true,
@@ -416,6 +375,7 @@ function init(){
 		}
 	});
 
+/*
 	// setup index of somethings
 	gui.map(function(e, i){
 		let label = e.label;
@@ -426,7 +386,8 @@ function init(){
 				game_controller.puzzle.reverse.id = i;
 			}
 		}
-	});
+	});	
+*/
 	
 	// setup effects
 	gui.map(function(e_0, i_0){
@@ -1244,22 +1205,13 @@ function puzzleEvent(){
 		e.rev = ~~gui[e.index].reverse;
 	});
 	
-/*
-	let rot = gui[game_controller.puzzle.rotation.id];
-	let rev = gui[game_controller.puzzle.reverse.id];
-
-	if(distance(convert_position(rot.x, 'x', canv), convert_position(rot.y, 'y', canv), mouse.x, mouse.y) < rot.w / 2 && mouse.down){
-
+	if(mouse.down && distance(mouse.x, mouse.y, convert_position(maximum, 'x', canv), convert_position(maximum, 'y', canv)) < 250){
+		console.log('RIGHT TURN');
 	}
-	if(distance(convert_position(rev.x, 'x', canv), convert_position(rev.y, 'y', canv), mouse.x, mouse.y) < rev.w / 2 && mouse.down){
-		if(!game_controller.puzzle.reverse.interval && mouse.last_drag_index > -1){
-			gui[mouse.last_drag_index].reverse = !gui[mouse.last_drag_index].reverse;
-			game_controller.puzzle.reverse.interval = 7;
-		}
+	
+	if(mouse.down && distance(mouse.x, mouse.y, 0, convert_position(maximum, 'y', canv)) < 250){
+		console.log('LEFT TURN');
 	}
-*/
-
-	game_controller.puzzle.reverse.interval -= (game_controller.puzzle.reverse.interval > 0);
 }
 
 function control_anime(){
