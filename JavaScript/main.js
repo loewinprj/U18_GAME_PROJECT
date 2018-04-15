@@ -164,7 +164,7 @@ function init(){
     
     for(let i = 7; i--;){
         gui.push(new canvasEx({
-            canvas, context, type: txt, x: center + (-240 + (7 - i) * 60), y: center + -200, size: 80, text: '七変化風林火山'[i],
+            canvas, context, type: txt, x: center + (-240 + (7 - i) * 60), y: center + -200, size: 540/*80*/, text: '七変化風林火山'[i],
 			align: center, alpha: 0, label: ['Title', 'Logo', 'Main']
         }));
     }
@@ -178,7 +178,7 @@ function init(){
 	
 	for(let i = 4; i--;){
         gui.push(new canvasEx({
-            canvas, context, type: txt, x: center + (-99 + (4 - i) * 33), y: center + -150, size: 20, text: '鳳凰物語'[i],
+            canvas, context, type: txt, x: center + (-99 + (4 - i) * 33), y: center + -150, size: 0, text: '鳳凰物語'[i],
 			align: center, alpha: 0, label: ['Title', 'Logo', 'Sub']
         }));
 	}
@@ -816,9 +816,7 @@ function draw(){
 		draw_effects();
 	}
 	
-	if(!game_controller.pause.mode){
-		draw_talk_window();
-	}
+	draw_talk_window();
 }
 
 function draw_last_drag_object(){
@@ -917,10 +915,12 @@ function draw_talk_window(){
 	if(game_controller.talk.mode && game_controller.talk.text !== ''){
 		game_controller.talk.text.map(function(e){
 			e.object.draw();
-			e.object.alpha += (1 - e.object.alpha) / e.time;
+			if(!game_controller.pause.mode){
+				e.object.alpha += (1 - e.object.alpha) / e.time;
+			}
 		});
 		
-		if(pressed_keys[32]){
+		if(pressed_keys[32] && !game_controller.pause.mode){
 			game_controller.talk.mode = false;
 			game_controller.talk.text = [];
 			pressed_keys[32] = 0;
