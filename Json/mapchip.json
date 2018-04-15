@@ -594,6 +594,20 @@ var json_mapchip = {
 		}
 	},
 	
+	"05_1" : {
+		"reverse": 1,
+		"map_id": 0,
+		"chip": {
+			"x" : 1200,
+			"y" : -25,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_05.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	
 	// chip 06 - Head
 	
 	"06_0" : {
@@ -601,6 +615,20 @@ var json_mapchip = {
 		"chip": {
 			"x" : 250,
 			"y" : -212,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_06.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	
+	"06_1" : {
+		"reverse": 1,
+		"map_id": 0,
+		"chip": {
+			"x" : 1200,
+			"y" : -205,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_06.png",
