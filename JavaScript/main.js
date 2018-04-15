@@ -1,6 +1,6 @@
 console.log('%cDEBUG MODE\n%cSWITCH KEY : %cL-Shift + D\n%c 0 : %cswitch puzzle mode\n%c 1 : %cswitch show hitboxes\n%c 2 : %cswitch talk window', 'color: #0DF; font-weight: bold; font-size: 41.5px', 'font-weight: bold; font-size: 17px', 'color: #FC0; font-weight: bold; font-size: 17px', 'font-size: 15px', 'color: #F70; font-size: 15px', 'font-size: 15px', 'color: #F70; font-size: 15px', 'font-size: 15px', 'color: #F70; font-size: 15px');
 
-_w.onload = function(){	
+_w.onload = function(){
 	init();
 	main();
 	event();
@@ -154,27 +154,13 @@ function init(){
 	init_mapchip(canvas, context);
 
 	// タイトルテストここから
-
-    /*
-	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center + -200, size: 200, text: '七変化風林火山', align: center, reverse: 1,
-		label: ['Title']
-	}));
-    */
     
     for(let i = 7; i--;){
         gui.push(new canvasEx({
-            canvas, context, type: txt, x: center + (-240 + (7 - i) * 60), y: center + -200, size: 540/*80*/, text: '七変化風林火山'[i],
+            canvas, context, type: txt, x: center + (-240 + (7 - i) * 60), y: center + -200, size: width * 6, text: '七変化風林火山'[i],
 			align: center, alpha: 0, label: ['Title', 'Logo', 'Main']
         }));
     }
-
-	/*
-	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center + -150, size: 110, text: '鳳凰物語', align: center, reverse: 1,
-		label: ['Title']
-	}));
-	*/
 	
 	for(let i = 4; i--;){
         gui.push(new canvasEx({
@@ -292,21 +278,21 @@ function init(){
 			label: ['Puzzle', 'Mask', 'Selector', 'Game', 'Boards']
 		}));
 	}
-
+	
 	// 回転ボタン
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -300, y: center + 300, w: 130, h: 130, alpha: 0, center: true,
+		canvas, context, type: img, x: center + -300, y: maximum + -300, w: 130, h: 130, alpha: 0, center: true,
 		src: 'Image/Puzzle/button_rotation.png', max_alpha: 0.92, reverse: 0, direction: 0,
 		label: ['Puzzle', 'Mask', 'Rot', 'Game']
 	}));
-
+	
 	// 反転ボタン
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -300, y: center + 200, w: 130, h: 130, alpha: 0, center: true,
+		canvas, context, type: img, x: center + -300, y: maximum + -400, w: 130, h: 130, alpha: 0, center: true,
 		src: 'Image/Puzzle/button_reverse.png', max_alpha: 0.92, reverse: 0, direction: 0,
 		label: ['Puzzle', 'Mask', 'Rev', 'Game']
 	}));
-
+	
 	// スクロールバー
 	gui.push(new canvasEx({
 		canvas, context, type: pth, x: center + -100, y: center + 300, bold: 2, color: '#222', mode: stroke, alpha: 0,
@@ -320,20 +306,20 @@ function init(){
 		src: 'Image/Puzzle/button_scroll.png', max_alpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
 		label: ['Mask', 'Game'],
 	}));
-	
+
 	// 画面全体を覆うオブジェクトは最上層レイヤーで追加
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
 		src: 'Image/Screen/feed_mask.png',
 		label: ['Feedmask', 'All']
 	}));
-	
+
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0,
 		src: 'Image/Screen/flash_mask.png',
 		label: ['Flashmask', 'All']
 	}));
-	
+
 	// Settings
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center, y: center + -180, size: 200, text: 'ポーズ', align: center, alpha: 0,
@@ -715,7 +701,7 @@ function update(){
 	
 	game_controller.title_logo.main_index.map(function(e){
 		gui[e].alpha += (1 - gui[e].alpha) / (e + (e * 1.1));
-		gui[e].size += (200 - gui[e].size) / (e / 1.3);
+		gui[e].size += (200 - gui[e].size) / 18;
 	});
 	
 	let sub = game_controller.title_logo.sub_index;
@@ -723,7 +709,7 @@ function update(){
 	sub.reverse();
 	sub.map(function(e){
 		gui[e].alpha += (1 - gui[e].alpha) / (e * 1.1);
-		gui[e].size += (110 - gui[e].size) / (e / 1.3);
+		gui[e].size += (110 - gui[e].size) / 26;
 	});
 }
 
