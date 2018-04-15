@@ -1340,7 +1340,7 @@ function create_talk_window(px, talk, time){
 		}
 		
 		x += size;
-		if(340 < x || e === '\n'){
+		if(400 - (size + 10) < x || e === '\n'){
 			x = -345;
 			y += size;
 		}
