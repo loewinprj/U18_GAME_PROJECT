@@ -211,60 +211,6 @@ function init(){
 		src: 'Image/Screen/debug_label.png',
 		label: ['Label', 'All']
 	}));
-
-	// パズルピース
-	let puzzle_positions = [
-		{x: 397, y: 353}, // 0
-		{x: 469, y: 334}, // 1
-		{x: 398, y: 258}, // 2
-		{x: 433, y: 334}, // 3
-		{x: 453, y: 240}, // 4
-		{x: 469, y: 278}, // 5
-		{x: 416, y: 314}, // 6
-	];
-
-	let dx = -430;
-	let dy = -300;
-	puzzle_positions.forEach(function(e){
-		e.x += dx;
-		e.y += dy;
-	});
-
-	for(var i = 0; i < 7; i ++){
-		gui.push(new canvasEx({
-			canvas, context, type: img, x: center + puzzle_positions[i].x, y: center + puzzle_positions[i].y, w: 150, h: 150, alpha: 0, center: true,
-			src: `Image/Puzzle/board_0${i + 1}.png`, drag: 1, max_alpha: 1, reverse: 0, direction: 0,
-			label: ['Puzzle', 'Mask', 'Selector', 'Game', 'Boards']
-		}));
-	}
-
-	// 回転ボタン
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -300, y: center + 300, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/button_rotation.png', max_alpha: 0.92, reverse: 0, direction: 0,
-		label: ['Puzzle', 'Mask', 'Rot', 'Game']
-	}));
-
-	// 反転ボタン
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -300, y: center + 200, w: 130, h: 130, alpha: 0, center: true,
-		src: 'Image/Puzzle/button_reverse.png', max_alpha: 0.92, reverse: 0, direction: 0,
-		label: ['Puzzle', 'Mask', 'Rev', 'Game']
-	}));
-
-	// スクロールバー
-	gui.push(new canvasEx({
-		canvas, context, type: pth, x: center + -100, y: center + 300, bold: 2, color: '#222', mode: stroke, alpha: 0,
-		pos: [{x: -100, y: 0}, {x: 100, y:0}], max_alpha: 0.92,
-		label: ['Mask', 'Game']
-	}));
-
-	// スクロールボタン
-	gui.push(new canvasEx({
-		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: true,
-		src: 'Image/Puzzle/button_scroll.png', max_alpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
-		label: ['Mask', 'Game'],
-	}));
 	
 	// for an object (Prototype)
 	gui.push(new canvasEx({
@@ -319,7 +265,61 @@ function init(){
 			{x: -35, y: 13}, {x: 35, y: 13}, {x: 35, y: -15}, {x: -35, y: -15}
 		],
 		label: ['Player', 'Hitbox']
-	}));	
+	}));
+	
+	// パズルピース
+	let puzzle_positions = [
+		{x: 397, y: 353}, // 0
+		{x: 469, y: 334}, // 1
+		{x: 398, y: 258}, // 2
+		{x: 433, y: 334}, // 3
+		{x: 453, y: 240}, // 4
+		{x: 469, y: 278}, // 5
+		{x: 416, y: 314}, // 6
+	];
+
+	let dx = -430;
+	let dy = -300;
+	puzzle_positions.forEach(function(e){
+		e.x += dx;
+		e.y += dy;
+	});
+
+	for(var i = 0; i < 7; i ++){
+		gui.push(new canvasEx({
+			canvas, context, type: img, x: center + puzzle_positions[i].x, y: center + puzzle_positions[i].y, w: 150, h: 150, alpha: 0, center: true,
+			src: `Image/Puzzle/board_0${i + 1}.png`, drag: 1, max_alpha: 1, reverse: 0, direction: 0,
+			label: ['Puzzle', 'Mask', 'Selector', 'Game', 'Boards']
+		}));
+	}
+
+	// 回転ボタン
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center + -300, y: center + 300, w: 130, h: 130, alpha: 0, center: true,
+		src: 'Image/Puzzle/button_rotation.png', max_alpha: 0.92, reverse: 0, direction: 0,
+		label: ['Puzzle', 'Mask', 'Rot', 'Game']
+	}));
+
+	// 反転ボタン
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center + -300, y: center + 200, w: 130, h: 130, alpha: 0, center: true,
+		src: 'Image/Puzzle/button_reverse.png', max_alpha: 0.92, reverse: 0, direction: 0,
+		label: ['Puzzle', 'Mask', 'Rev', 'Game']
+	}));
+
+	// スクロールバー
+	gui.push(new canvasEx({
+		canvas, context, type: pth, x: center + -100, y: center + 300, bold: 2, color: '#222', mode: stroke, alpha: 0,
+		pos: [{x: -100, y: 0}, {x: 100, y:0}], max_alpha: 0.92,
+		label: ['Mask', 'Game']
+	}));
+
+	// スクロールボタン
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center + -200, y: center + 300, w: 30, h: 30, alpha: 0, center: true,
+		src: 'Image/Puzzle/button_scroll.png', max_alpha: 0.92, reverse: 0, direction: 0, pinY: true, drag: true,
+		label: ['Mask', 'Game'],
+	}));
 	
 	// 画面全体を覆うオブジェクトは最上層レイヤーで追加
 	gui.push(new canvasEx({
@@ -498,7 +498,8 @@ function init_mapchip(canvas, context){
 		// Map chip image soruce
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true, alpha: 1,
-			src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id, reverse: data.reverse || 0,
+			src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id, 
+			reverse: data.reverse || 0, direction: data.direction || 0,
 			label: ['Mapchip', 'Game']
 		}));
 	});
