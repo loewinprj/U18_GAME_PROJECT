@@ -1,3 +1,5 @@
+// console.log('%cDEBUG MANUAL\n%cON/OFF : %cSHIFT + D\n%c', 'color:#0FF; font-weight: bold', '', 'color: #FA0', '');
+
 _w.onload = function(){
 	init();
 	main();
@@ -312,9 +314,9 @@ function init(){
 	
 	// Add the hitbox of player
 	gui.push(new canvasEx({
-		canvas, context, type: pth, x: center, y: center, bold: 2, color: '#D00', mode: stroke,
+		canvas, context, type: pth, x: center, y: center, bold: 1, color: '#D00', mode: stroke,
 		pos: [
-			{x: -35, y: 15}, {x: 35, y: 15}, {x: 35, y: -15}, {x: -35, y: -15}
+			{x: -35, y: 13}, {x: 35, y: 13}, {x: 35, y: -15}, {x: -35, y: -15}
 		],
 		label: ['Player', 'Hitbox']
 	}));	
@@ -496,7 +498,7 @@ function init_mapchip(canvas, context){
 		// Map chip image soruce
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true, alpha: 1,
-			src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id,
+			src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id, reverse: data.reverse || 0,
 			label: ['Mapchip', 'Game']
 		}));
 	});
