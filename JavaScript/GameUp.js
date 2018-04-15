@@ -28,19 +28,6 @@ var stroke = 'stroke';
 var center = 'center'; // 中心
 var maximum = 'maximum'; // 最大値
 
-// array prototyp methods
-/*
-Array.prototype.inside = function(x, y){
-	let id = -1;
-	this.map(function(e, i){
-		if(Math.abs(e - x) < y){
-			id = i;
-		}
-	});
-	return id;
-};
-*/
-
 // canvas draw methods
 class canvasEx{
 	constructor(input){
