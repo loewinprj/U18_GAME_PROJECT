@@ -1,5 +1,3 @@
-// console.log('%cDEBUG MANUAL\n%cON/OFF : %cSHIFT + D\n%c', 'color:#0FF; font-weight: bold', '', 'color: #FA0', '');
-
 _w.onload = function(){
 	init();
 	main();
@@ -918,6 +916,12 @@ function draw_talk_window(){
 			e.object.draw();
 			e.object.alpha += (1 - e.object.alpha) / e.time;
 		});
+		
+		if(pressed_keys[32]){
+			game_controller.talk.mode = false;
+			game_controller.talk.text = [];
+			pressed_keys[32] = 0;
+		}
 	}
 }
 
@@ -1345,4 +1349,8 @@ function create_talk_window(px, talk, time){
 			y += size;
 		}
 	});
+	
+	if(game_controller.talk.text !== ''){
+		game_controller.talk.mode = true;
+	}
 }
