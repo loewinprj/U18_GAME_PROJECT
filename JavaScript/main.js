@@ -91,9 +91,6 @@ function init(){
 		map_id: 0
 	};
 
-	// reset mapchips array
-	mapchips = [];
-
     // Player's detailed information
     player = {
         x: 0,
@@ -339,15 +336,22 @@ function init(){
 
 	pressed_keys = []; // Reset the array for stack pressed keys
 	pressed_keys[37] = pressed_keys[38] = pressed_keys[39] = pressed_keys[40] = 0; // Measures against NaN
-
-    // Make group with add objects
-	grounds = new group();
-
-	// create new gui
+	
+	// New grounds system
+	mapchips = new Array(2).fill(null);
+	grounds = new Array(2).fill(null);
+	
+	for(let i = 0; i < 2; i++){
+		grounds[i] = new group();
+		mapchips[i] = [];
+	}
+	
 	gui.map(function(e, i){
 		let label = e.label;
+		let index = e.map_id || 0;
+		
 		if(check_include_label(label, 'Mapchip')){
-			mapchips.push(
+			mapchips[index].push(
 				{
 					x: e.mapchip_data.x,
 					y: e.mapchip_data.y,
@@ -355,16 +359,19 @@ function init(){
 				}
 			);
 		}
+		
 		if(check_include_label(label, 'Ground')){
-			grounds.add(e);
+			grounds[index].add(e);
 		}
 		
 		if(check_include_label(label, 'Label')){
 			_debug.label_index = i;
 		}
+		
 		if(check_include_label(label, 'Feedmask')){
 			game_controller.feed_index = i;
 		}
+		
 		if(check_include_label(label, 'Flashmask')){
 			game_controller.flash_index = i;
 		}
@@ -377,24 +384,11 @@ function init(){
 		if(check_include_label(label, 'Talkwindow')){
 			game_controller.talk.window.index = i;
 		}
+		
 		if(check_include_label(label, 'Opening') && check_include_label(label, 'Telop')){
 			game_controller.opening.index = i;
 		}
 	});
-
-/*
-	// setup index of somethings
-	gui.map(function(e, i){
-		let label = e.label;
-		if(check_include_label(label, 'Puzzle') && (check_include_label(label, 'Rot') || check_include_label(label, 'Rev'))){
-			if(check_include_label(label, 'Rot')){
-				game_controller.puzzle.rotation.id = i;
-			} else {
-				game_controller.puzzle.reverse.id = i;
-			}
-		}
-	});	
-*/
 	
 	// setup effects
 	gui.map(function(e_0, i_0){
@@ -462,7 +456,7 @@ function init_mapchip(canvas, context){
 			// Map chip hitbox source
 			gui.push(new canvasEx({
 				canvas, context, type: pth, x: center + hitbox.x, y: center + hitbox.y, bold: 2, color: data.color || '#07E',
-				pos: hitbox.pos, mapchip_data: {x: hitbox.x, y: hitbox.y}, map_id: data.map_id,
+				pos: hitbox.pos, mapchip_data: {x: hitbox.x, y: hitbox.y}, map_id: data.map_id || 0,
 				label: ['Ground', 'Hitbox', 'Mapchip', 'Game']
 			}));
 		}
@@ -470,7 +464,7 @@ function init_mapchip(canvas, context){
 		// Map chip image soruce
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true, alpha: 1,
-			src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id, 
+			src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id || 0, 
 			reverse: data.reverse || 0, direction: data.direction || 0,
 			label: ['Mapchip', 'Game']
 		}));
@@ -1027,7 +1021,7 @@ function player_control(){
 	player.standing = false;
 	player.hit = false;
 
-	if(grounds.check_hit(gui[player.hitbox])){ // Done!!
+	if(grounds[game_controller.map_id].check_hit(gui[player.hitbox])){ // Done!!
 		var count = 300;
 		var step = 0.1;
 		player.standing = true;
@@ -1050,7 +1044,7 @@ function player_control(){
 				player.y += 5;
 				gui[player.hitbox].y = center + player.y;
 				gui[player.hitbox].draw();
-				player.standing = grounds.check_hit(gui[player.hitbox]);
+				player.standing = grounds[game_controller.map_id].check_hit(gui[player.hitbox]);
 				player.accel.x = 0;
 			}else{
 				player.standing = false;
@@ -1123,7 +1117,7 @@ function move_until_not_hit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 	gui[obj_1].draw();
 
 	for(var i = 0; i < count && isHit; i++){
-		isHit = grounds.check_hit(gui[player.hitbox]);
+		isHit = grounds[game_controller.map_id].check_hit(gui[player.hitbox]);
 
 		tentativeX += step * changeX;
 		tentativeY += step * changeY;
@@ -1144,7 +1138,7 @@ function move_until_not_hit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 }
 
 function scroll_mapchips(){
-	mapchips.map(function(e){
+	mapchips[game_controller.map_id].map(function(e){
 		gui[e.index].x = center + (gui[e.index].mapchip_data.x + game_controller.scroll.x);
 		gui[e.index].y = center + (gui[e.index].mapchip_data.y + game_controller.scroll.y);
 		
