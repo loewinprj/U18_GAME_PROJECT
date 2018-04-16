@@ -272,15 +272,22 @@ function init(){
 	
 	// 右回転
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: maximum + -250, y: maximum + -250, alpha: 0, center: true,
-		src: 'Image/Puzzle/right_rotation.png', max_alpha: 0.92,
+		canvas, context, type: img, x: maximum + -275, y: maximum + -275, alpha: 0, center: true,
+		src: 'Image/Puzzle/right_rotation.png', max_alpha: 0.5,
 		label: ['Mask', 'Game'],
 	}));
 	
 	// 左回転
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: -250, y: maximum + -250, alpha: 0, center: true,
-		src: 'Image/Puzzle/left_rotation.png', max_alpha: 0.92,
+		canvas, context, type: img, x: -275, y: maximum + -275, alpha: 0, center: true,
+		src: 'Image/Puzzle/left_rotation.png', max_alpha: 0.5,
+		label: ['Mask', 'Game'],
+	}));
+	
+	// 反転
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center + -275, y: maximum + -200, alpha: 0, center: true,
+		src: 'Image/Puzzle/reverse.png', max_alpha: 0.5,
 		label: ['Mask', 'Game'],
 	}));
 
@@ -1205,11 +1212,11 @@ function puzzleEvent(){
 		e.rev = ~~gui[e.index].reverse;
 	});
 	
-	if(mouse.down && distance(mouse.x, mouse.y, convert_position(maximum, 'x', canv), convert_position(maximum, 'y', canv)) < 250){
+	if(mouse.down && distance(mouse.x, mouse.y, convert_position(maximum, 'x', canv), convert_position(maximum, 'y', canv)) < 275){
 		console.log('RIGHT TURN');
 	}
 	
-	if(mouse.down && distance(mouse.x, mouse.y, 0, convert_position(maximum, 'y', canv)) < 250){
+	if(mouse.down && distance(mouse.x, mouse.y, 0, convert_position(maximum, 'y', canv)) < 275){
 		console.log('LEFT TURN');
 	}
 }
