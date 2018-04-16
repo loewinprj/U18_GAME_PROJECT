@@ -48,7 +48,8 @@ function init(){
 		
 		pause: {
 			mode: false,
-			interval: 0
+			interval: 0,
+			se_index: -1
 		},
 		
 		talk: {
@@ -88,7 +89,12 @@ function init(){
 			sub_index: []
 		},
 		
-		map_id: 0
+		environmental_se: {
+			water: -1,
+			bird: -1
+		},
+		
+		map_id: 1 // ちょいテスト
 	};
 
     // Player's detailed information
@@ -313,7 +319,8 @@ function init(){
 	// Init sounds
 	const soundname = [
 		{src: 'Sound/Test/U18-13(1).mp3', volume: 1, loop: 1},
-		{src: 'Sound/Test/U18-14(1).mp3', volume: 1, loop: 1},
+		{src: 'Sound/Test/U18-14(1)-music.mp3', volume: 0.0, loop: 1},
+		{src: 'Sound/Test/U18-14(1)-water.mp3', volume: 0.8, loop: 1},
 		{src: 'Sound/Test/SE-7(1)_remix.mp3', volume: 0.6, loop: 0},
 	];
 
@@ -321,9 +328,18 @@ function init(){
 
 	soundset.forEach(function(e, i){
 		let _this = soundname[i];
-		soundset[i] = new sound({src: _this.src});
+		let src = _this.src;
+		soundset[i] = new sound({src: src});
 		soundset[i].volume(_this.volume);
 		soundset[i].loop(_this.loop);
+		
+		if(src === 'Sound/Test/SE-7(1)_remix.mp3'){
+			game_controller.pause.se_index = i;
+		}
+		
+		if(src === 'Sound/Test/U18-14(1)-water.mp3'){
+			game_controller.environmental_se.water = i;
+		}
 	});
 
 	// setup _animation object
@@ -535,8 +551,8 @@ function main(){
 	if(!game_controller.pause.interval && pressed_keys[80] && !_animation.title && !game_controller.respawn){
 		game_controller.pause.mode = !game_controller.pause.mode;
 		game_controller.pause.interval = 15;
-		soundset[2].play(1);
 		
+		soundset[game_controller.pause.se_index].play(1);
 		_c.log(`Switched pause mode : ${game_controller.pause.mode}`);
 	}
 	
@@ -600,7 +616,7 @@ function update(){
 			if(!game_controller.respawn){
 				gui[game_controller.flash_index].alpha += (false * 1.0 - gui[game_controller.flash_index].alpha) / 4;
 				gui[game_controller.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[game_controller.feed_index].alpha) / 6;
-				game_controller.play_audio.max_volume = abs(1 - gui[game_controller.feed_index].alpha);
+				//abs(1 - gui[game_controller.feed_index].alpha);
 				game_controller.play_audio.change_speed = 3;
 			}
 		break;
@@ -666,13 +682,17 @@ function update(){
 
 			if(pressed_keys[32]){
 				game_controller.play_audio.change_speed = 6;
-				game_controller.play_audio.max_volume = 1;
+				game_controller.play_audio.max_volume = 0.6;
 				game_controller.play_audio.index = 1;
 				game_controller.play_audio.pause = 1;
 				game_controller.play_audio.play = 1;
 					
 				game_controller.screen_mode = 'Game';
 				_animation.title = 0;
+				
+				setTimeout(function(){
+					soundset[game_controller.environmental_se.water].play();
+				}, 300);
 			}
 		break;
 	}
