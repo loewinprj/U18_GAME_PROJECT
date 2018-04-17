@@ -62,7 +62,7 @@ class canvasEx{
 
 		if(this.animation !== void(0)){
 			_max_images += this.animation.length;
-			this.animeFrame = 0;
+			this.anime_frame = 0;
 			this.anime = true;
 
 			for(var i in this.animation){
@@ -237,7 +237,7 @@ class canvasEx{
 				var fh = img.height / 2 * isCenter;
 
 				if(this.anime){
-					imgSrc = this.animation[this.animeFrame];
+					imgSrc = this.animation[this.anime_frame];
 				}
 
 				if(isNaN(fw)){
@@ -279,7 +279,7 @@ class canvasEx{
 				}
 
 				if(this.anime && status){
-					this.animeFrame = (this.animeFrame + 1) % this.animation.length;
+					this.anime_frame = (this.anime_frame + 1) % this.animation.length;
 				}
 			break;
 		}
@@ -499,6 +499,7 @@ class group{
 		}
 		
 		const corners = this.corners;
+		
 		for(let i in this.objects){
 			const e = this.objects[i];
 			
