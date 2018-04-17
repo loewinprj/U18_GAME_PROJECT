@@ -94,7 +94,7 @@ function init(){
 			bird: -1
 		},
 		
-		map_id: 1 // ちょいテスト
+		map_id: 0
 	};
 
     // Player's detailed information
@@ -230,10 +230,13 @@ function init(){
 	// Add the character of player
 	gui.push(new canvasEx({
 	    canvas, context, type: img, x: center, y: center, w: 90, h: 90, center: true, reverse: 0, direction: 0,
-	    src: 'Image/Character/mouse_0_0.png',
+	    src: 'Image/Character/ninja_0_0.png',
 	    animation: [
-            'Image/Character/mouse_0_0.png',
-            'Image/Character/mouse_0_1.png'
+			'Image/Character/ninja_0_0.png',
+            'Image/Character/ninja_1_0.png',
+            'Image/Character/ninja_1_1.png',
+			'Image/Character/ninja_1_2.png',
+			'Image/Character/ninja_1_1.png'
         ],
         label: 'Player'
 	}));
@@ -242,7 +245,8 @@ function init(){
 	gui.push(new canvasEx({
 		canvas, context, type: pth, x: center, y: center, bold: 1, color: '#D00', mode: stroke,
 		pos: [
-			{x: -35, y: 13}, {x: 35, y: 13}, {x: 35, y: -15}, {x: -35, y: -15}
+			//{x: -35, y: 13}, {x: 35, y: 13}, {x: 35, y: -15}, {x: -35, y: -15} // mouse
+			{x: -10, y: 40}, {x: 10, y: 40}, {x: 10, y: -40}, {x: -10, y: -40}, // ninja
 		],
 		label: ['Player', 'Hitbox']
 	}));
@@ -593,6 +597,7 @@ function update(){
 		}
 		
 		draw_debug_label();
+		control_player_animation();
 	}
 	
 	// Talk window
@@ -770,11 +775,14 @@ function draw(){
 		}
 		
 		if(check_include_label(label, 'Player') && mode === 'Game'){ // 特殊条件発火
+			e.draw();			
+			/*
 			if(label === 'Player'){
 				e.draw(player.frame > player.frame_speed);
 			} else {
 				e.draw();
 			}
+			*/
 		}
 
 	});
@@ -1114,6 +1122,7 @@ function player_control(){
 	
 				if(abs(player.save.x - game_controller.scroll.x) + (1 - gui[game_controller.feed_index].alpha) < 0.1){
 					setTimeout(function(){
+						game_controller.play_audio.max_volume = 0.6;
 						game_controller.scroll.x = 0;
 						gui[player.index].alpha = 1;
 						player.accel.gravity = 0;
@@ -1334,5 +1343,14 @@ function create_talk_window(px, talk, time){
 	
 	if(game_controller.talk.text !== ''){
 		game_controller.talk.mode = true;
+	}
+}
+
+function control_player_animation(){
+	let index = player.index;
+	let frame = gui[index].anime_frame;
+	
+	if(player.standing && (pressed_keys[37] || pressed_keys[39])){
+		// todo 4/18 実装
 	}
 }
