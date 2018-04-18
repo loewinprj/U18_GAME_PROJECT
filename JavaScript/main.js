@@ -254,20 +254,20 @@ function init(){
 		canvas, context, type: pth, x: center, y: center, bold: 1, color: '#D00', mode: stroke,
 		pos: [
 			//{x: -35, y: 13}, {x: 35, y: 13}, {x: 35, y: -15}, {x: -35, y: -15} // mouse
-			{x: -10, y: 40}, {x: 10, y: 40}, {x: 10, y: -40}, {x: -10, y: -40}, // ninja
+			{x: -10, y: 40}, {x: 10, y: 40}, {x: 10, y: -45}, {x: -10, y: -45}, // ninja
 		],
 		label: ['Player', 'Hitbox']
 	}));
 	
 	// パズルピース
 	let puzzle_positions = [
-		{x: 397, y: 353}, // 0
-		{x: 469, y: 334}, // 1
-		{x: 398, y: 258}, // 2
-		{x: 433, y: 334}, // 3
-		{x: 453, y: 240}, // 4
-		{x: 469, y: 278}, // 5
-		{x: 416, y: 314}, // 6
+		{x: 397, y: 353},
+		{x: 469, y: 334},
+		{x: 398, y: 258},
+		{x: 433, y: 334},
+		{x: 453, y: 240},
+		{x: 469, y: 278},
+		{x: 416, y: 314},
 	];
 
 	let dx = -430;
@@ -589,7 +589,6 @@ function update(){
 		}
 		
 		control_effects();
-		// control_anime();
 
 		if(game_controller.puzzle.mode){
 			puzzleEvent();
@@ -656,7 +655,7 @@ function update(){
 
 		case 3:
 			setTimeout(function(){
-				if(false){ // 此処から先には行かせない… 俺が食い止める…!
+				if(false){
 					game_controller.play_audio.change_speed = 6;
 					game_controller.play_audio.max_volume = 1;
 					game_controller.play_audio.index = 1;
@@ -664,10 +663,10 @@ function update(){
 					game_controller.play_audio.play = 1;
 					
 					game_controller.screen_mode = 'Game';
-					_animation.title = 0; // 終焉 - バッドエンド（オープニング的な意味で）
-				} else { // 今のうちに逃げろ…!
-					game_controller.screen_mode = 'Opening'; // 天空は轟き、雷槌は龍の様に地面を這う
-					_animation.title = 4; // 誕生 - グッドエンド（オープニング的な意味で）
+					_animation.title = 0;
+				} else {
+					game_controller.screen_mode = 'Opening';
+					_animation.title = 4;
 				}
 			}, 400);
 		break;
@@ -754,7 +753,6 @@ function draw(){
 		switch(mode){
 			case 'Opening':
 				if(check_include_label(label, 'Opening')){
-					//e.draw(e.switch_frame.indexOf(e.frame) > -1 || e.switch_frame.inside(e.switchElement, 0.01) > -1);
 					e.draw();
 				}
 			break;
@@ -783,14 +781,7 @@ function draw(){
 		}
 		
 		if(check_include_label(label, 'Player') && mode === 'Game'){ // 特殊条件発火
-			e.draw();			
-			/*
-			if(label === 'Player'){
-				e.draw(player.frame > player.frame_speed);
-			} else {
-				e.draw();
-			}
-			*/
+			e.draw();
 		}
 
 	});
@@ -895,7 +886,6 @@ function draw_effects(){
 		if(check_include_label(label, 'All')){ //　全場面描画
 			e.object.draw();
 		}
-		
 
 		// ここから描画
 		effects[i].object.x += e.dx;
@@ -1112,7 +1102,7 @@ function player_control(){
 	gui[player.index].y = gui[player.hitbox].y = center + player.y;
 
 	// if the player went to void, set y to save.y
-	if(height < -game_controller.scroll.y || game_controller.respawn){
+	if(height * 2 < -game_controller.scroll.y || game_controller.respawn){
 		if(!game_controller.respawn){
 			game_controller.play_audio.change_speed = 6;
 			game_controller.play_audio.max_volume = 0;
@@ -1253,27 +1243,6 @@ function puzzleEvent(){
 	}
 }
 
-function control_anime(){
-	gui.map(function(e, i){
-		let label = e.label;
-		if(check_include_label(label, 'Animation')){
-			if(check_include_label(label, 'Animation')){
-				if(e.switch !== void(0)){
-					switchElement = e.switch.split(' ');
-					switch(switchElement[0]){
-						case 'Audio':
-							gui[i].switchElement = soundset[switchElement[1]].audio.currentTime;
-						break;
-					}
-				}
-				if(e.frame){
-					gui[i].frame = (gui[i].frame % gui[i].maxFrame) + 1;
-				}
-			}
-		}
-	});
-}
-
 function control_effects(){
 	gui.map(function(e_0, i_0){
 		if(check_include_label(e_0.label, 'Effect')){
@@ -1360,9 +1329,9 @@ function control_player_animation(){
 	let frame = gui[index].anime_frame;
 	
 	if(player.standing){
-		if(frame === 12){
+		if(frame === 12 && !(pressed_keys[37] || pressed_keys[39])){
 			// 着地
-			frame = 0;
+			frame = 2;
 		}
 		
 		if(pressed_keys[37] || pressed_keys[39]){
