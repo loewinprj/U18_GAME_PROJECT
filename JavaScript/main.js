@@ -623,9 +623,9 @@ function update(){
 	switch(_animation.title){
 		case 0:
 			if(!game_controller.respawn){
-				gui[game_controller.flash_index].alpha += (false * 1.0 - gui[game_controller.flash_index].alpha) / 4;
+				soundset[game_controller.environmental_se.water].audio.volume += (0.8 - soundset[game_controller.environmental_se.water].audio.volume) / 6;
 				gui[game_controller.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[game_controller.feed_index].alpha) / 6;
-				//abs(1 - gui[game_controller.feed_index].alpha);
+				gui[game_controller.flash_index].alpha += (false * 1.0 - gui[game_controller.flash_index].alpha) / 4;
 				game_controller.play_audio.change_speed = 3;
 			}
 		break;
@@ -1107,11 +1107,11 @@ function player_control(){
 	gui[player.index].x = gui[player.hitbox].x = center + player.x;
 	gui[player.index].y = gui[player.hitbox].y = center + player.y;
 
-	// if the player went void, set y to scratch.
-	if(height < -game_controller.scroll.y || game_controller.respawn){		
+	// if the player went to void, set y to save.y
+	if(height < -game_controller.scroll.y || game_controller.respawn){
 		if(!game_controller.respawn){
 			game_controller.play_audio.change_speed = 6;
-			game_controller.play_audio.max_volume = 0;			
+			game_controller.play_audio.max_volume = 0;
 			
 			game_controller.respawn = true;
 			gui[player.index].alpha = 0;
@@ -1120,6 +1120,7 @@ function player_control(){
 			player.y = 0;
 			
 			let respawn = setInterval(function(){
+				soundset[game_controller.environmental_se.water].audio.volume += -soundset[game_controller.environmental_se.water].audio.volume / 6;
 				gui[game_controller.feed_index].alpha += (1 - gui[game_controller.feed_index].alpha) / 6; // フェードアウト
 				game_controller.scroll.x += (player.save.x - game_controller.scroll.x) / 4; // save.x が リスポーン x
                 game_controller.scroll.y += (player.save.y - game_controller.scroll.y) / 4; // save.y が リスポーン y
