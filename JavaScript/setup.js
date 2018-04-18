@@ -18,9 +18,12 @@ var gui; // stack gui objects
 var pressed_keys; // user input keys
 var player; // player object
 
+var puzzle_datas; // puzzle stage datas
+var board_datas; // puzzle boards
+
 // constant
-const accelSpeed = 2.3; // Change rate of acceleration
-const jumpPower = 7; // Jump pwoer of player
+const accelSpeed = 4.5; // Change rate of acceleration
+const jumpPower = 6.3; // Jump pwoer of player
 const lowAccel = 0.7; // The force of inertia
 
 const fps = 1000 / 30; // for setinterval
