@@ -236,11 +236,15 @@ function init(){
 			'Image/Character/ninja_0_1.png',
 			'Image/Character/ninja_0_2.png',
 			'Image/Character/ninja_0_3.png',
-            'Image/Character/ninja_1_0.png',
-            'Image/Character/ninja_1_1.png',
+			'Image/Character/ninja_1_0.png',
+			'Image/Character/ninja_1_1.png',
+			'Image/Character/ninja_1_2.png',
+			'Image/Character/ninja_1_3.png',
+			'Image/Character/ninja_1_4.png',
+			'Image/Character/ninja_1_3.png',
 			'Image/Character/ninja_1_2.png',
 			'Image/Character/ninja_1_1.png',
-			'Image/Character/ninja_2_0.png',
+			'Image/Character/ninja_2_0.png'
         ],
         label: 'Player'
 	}));
@@ -1356,7 +1360,7 @@ function control_player_animation(){
 	let frame = gui[index].anime_frame;
 	
 	if(player.standing){
-		if(frame === 8){
+		if(frame === 12){
 			// 着地
 			frame = 0;
 		}
@@ -1364,7 +1368,7 @@ function control_player_animation(){
 		if(pressed_keys[37] || pressed_keys[39]){
 			// 走る
 			frame++;
-			if(frame > 7){
+			if(frame > 11){
 				frame = 4;
 			}
 		} else {
@@ -1376,12 +1380,12 @@ function control_player_animation(){
 		}
 	} else {
 		// 飛ぶ
-		frame = 8;
+		frame = 12;
 	}
 	
 	gui[index].anime_frame = frame;
 }
-
+  
 /*
 // メモ
 
@@ -1391,6 +1395,10 @@ function control_player_animation(){
 'Image/Character/ninja_0_3.png',
 'Image/Character/ninja_1_0.png',
 'Image/Character/ninja_1_1.png',
+'Image/Character/ninja_1_2.png',
+'Image/Character/ninja_1_3.png',
+'Image/Character/ninja_1_4.png',
+'Image/Character/ninja_1_3.png',
 'Image/Character/ninja_1_2.png',
 'Image/Character/ninja_1_1.png',
 'Image/Character/ninja_2_0.png'
