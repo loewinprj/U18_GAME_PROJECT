@@ -48,7 +48,7 @@ function init(){
 		
 		pause: {
 			mode: false,
-			interval: 0,
+			buffer: 0,
 			se_index: -1
 		},
 		
@@ -366,7 +366,7 @@ function init(){
 	_animation = {
 		bgm_start: 1,
 		load_finished: 30,
-		first_interval: 10,
+		first_buffer: 10,
 		title: 1
 	}
 
@@ -559,24 +559,24 @@ function init_puzzle_data(canvas, context){
 function main(){
     //requestAnimationFrame(main); // FPSが不安定なためsetIntervalに変更
     if(_loaded_images === _max_images){
-		if(!_animation.first_interval){
+		if(!_animation.first_buffer){
 			draw();
 			update();
 		} else {
-			_animation.first_interval --;
+			_animation.first_buffer --;
 		}
 	}
 	
 	// Pause control
-	if(!game_controller.pause.interval && pressed_keys[80] && !_animation.title && !game_controller.respawn){
+	if(!game_controller.pause.buffer && pressed_keys[80] && !_animation.title && !game_controller.respawn){
 		game_controller.pause.mode = !game_controller.pause.mode;
-		game_controller.pause.interval = 15;
+		game_controller.pause.buffer = 15;
 		
 		soundset[game_controller.pause.se_index].play(1);
 		_c.log(`Switched pause mode : ${game_controller.pause.mode}`);
 	}
 	
-	game_controller.pause.interval -= (game_controller.pause.interval > 0);
+	game_controller.pause.buffer -= (game_controller.pause.buffer > 0);
 }
 
 // Update methods
