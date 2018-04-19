@@ -22,7 +22,7 @@ var puzzle_datas; // puzzle stage datas
 var board_datas; // puzzle boards
 
 // constant
-const accelSpeed = 4.5; // Change rate of acceleration
+const accelSpeed = 4.1; // Change rate of acceleration
 const jumpPower = 6.3; // Jump pwoer of player
 const lowAccel = 0.7; // The force of inertia
 
