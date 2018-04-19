@@ -150,6 +150,9 @@ function init(){
 		label: ['Background', 'All']
 	}));
 
+	// 当たり判定のデータ(複数)の読み込み
+	init_hitboxes();
+	
 	// mapchip.json からマップチップデータを読み込む
 	init_mapchip(canvas, context);
 
@@ -364,9 +367,9 @@ function init(){
 
 	// setup _animation object
 	_animation = {
-		bgm_start: 1,
 		load_finished: 30,
 		first_buffer: 10,
+		bgm_start: 1,
 		title: 1
 	}
 
@@ -476,9 +479,6 @@ function init(){
 	});
 	
 	init_puzzle_data(canvas, context);
-	
-	// test
-	//_debug.hitbox = true;
 }
 
 function init_mapchip(canvas, context){
@@ -513,6 +513,13 @@ function init_opening(canvas, context){
 		canvas, context, type: txt, x: center + -50, y: center, size: 90, text: '下の方では地球の者たちが緊張気味に固まれり。', mode: 1, align: center,
 		abs_x: -50, alpha: 0, label: ['Opening', 'Telop']
 	}));
+}
+
+function init_hitboxes(){
+	hitbox_datas = [
+		[{x: -10, y: 40}, {x: 10, y: 40}, {x: 10, y: -45}, {x: -10, y: -45}],
+		[{x: -30, y: 40}, {x: 35, y: 40}, {x: 35, y: -45}, {x: -30, y: -45}]
+	];
 }
 
 function init_puzzle_data(canvas, context){
@@ -596,6 +603,7 @@ function update(){
 			player.frame = 0;
 		}
 		
+		control_hitbox();
 		control_effects();
 
 		if(game_controller.puzzle.mode){
@@ -639,7 +647,7 @@ function update(){
 				gui[game_controller.flash_index].alpha += (false * 1.0 - gui[game_controller.flash_index].alpha) / 4;
 				game_controller.play_audio.change_speed = 3;
 			}
-		break;
+			break;
 
 		case 1:
 			gui[game_controller.feed_index].alpha = _animation.load_finished / 30;
@@ -648,7 +656,7 @@ function update(){
 				game_controller.play_audio.max_volume = 0;
 				_animation.title = 2;
 			}
-		break;
+			break;
 
 		case 2:
 			gui[game_controller.feed_index].alpha += (1 - gui[game_controller.feed_index].alpha) / 6;
@@ -659,7 +667,7 @@ function update(){
 				
 				_c.log(gui[game_controller.feed_index].alpha);
 			}
-		break;
+			break;
 
 		case 3:
 			setTimeout(function(){
@@ -677,7 +685,7 @@ function update(){
 					_animation.title = 4;
 				}
 			}, 400);
-		break;
+			break;
 			
 		case 4:
 			// オープニングを付ける予定
@@ -714,7 +722,7 @@ function update(){
 					soundset[game_controller.environmental_se.water].play();
 				}, 300);
 			}
-		break;
+			break;
 	}
 	
 	gui[game_controller.flash_index].alpha += -gui[game_controller.flash_index].alpha / 5;
@@ -763,13 +771,13 @@ function draw(){
 				if(check_include_label(label, 'Opening')){
 					e.draw();
 				}
-			break;
+				break;
 				
 			case 'Title':
 				if(check_include_label(label, 'Title')){
 					e.draw();
 				}
-			break;
+				break;
 				
 			case 'Game':
 				if(check_include_label(label, 'Game')){
@@ -781,7 +789,7 @@ function draw(){
 						e.draw();
 					}
 				}
-			break;
+				break;
 		}
 		
 		if(check_include_label(label, 'All')){ //　全場面描画
@@ -878,19 +886,19 @@ function draw_effects(){
 				if(check_include_label(label, 'Opening')){
 					e.object.draw();
 				}
-			break;
+				break;
 				
 			case 'Title':
 				if(check_include_label(label, 'Title')){
 					e.object.draw();
 				}
-			break;
+				break;
 				
 			case 'Game':
 				if(check_include_label(label, 'Game')){
 					e.object.draw();
 				}
-			break;
+				break;
 		}
 		
 		if(check_include_label(label, 'All')){ //　全場面描画
@@ -1287,7 +1295,7 @@ function control_effects(){
 					switch(e_1.type){
 						case 'Feedin':
 							gui[i_0].alpha = (1 / parameter.time) * value;
-						break;
+							break;
 
 						case 'moveX':
 							if(parameter.time === Infinity){
@@ -1296,7 +1304,7 @@ function control_effects(){
 							} else {
 								gui[i_0].x = parameter.center + (parameter.start + (abs(parameter.start - parameter.end) / parameter.time) * value);
 							}
-						break;
+							break;
 							
 						case 'moveY':
 							if(parameter.time === Infinity){
@@ -1305,7 +1313,7 @@ function control_effects(){
 							} else {
 								gui[i_0].y = parameter.center + (parameter.start + (abs(parameter.start - parameter.end) / parameter.time) * value);
 							}
-						break;
+							break;
 							
 						case 'rotation':
 							if(parameter.time === Infinity){
@@ -1314,7 +1322,7 @@ function control_effects(){
 								let maxDirection = parameter.start || 0;
 								gui[i_0].direction = maxDirection + (abs(maxDirection - parameter.end) / parameter.time) * value;
 							}
-						break;
+							break;
 					}
 				}
 			});
@@ -1383,4 +1391,14 @@ function control_player_animation(){
 	}
 	
 	gui[index].anime_frame = frame;
+}
+
+function control_hitbox(){
+	let frame = gui[player.index].anime_frame;
+	
+	if(frame === 14){
+		gui[player.hitbox].pos = hitbox_datas[1];
+	} else {
+		gui[player.hitbox].pos = hitbox_datas[0];
+	}
 }
