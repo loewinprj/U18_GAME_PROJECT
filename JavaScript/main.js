@@ -256,7 +256,7 @@ function init(){
 		canvas, context, type: pth, x: center, y: center, bold: 1, color: '#D00', mode: stroke,
 		pos: [
 			//{x: -35, y: 13}, {x: 35, y: 13}, {x: 35, y: -15}, {x: -35, y: -15} // mouse
-			{x: -10, y: 40}, {x: 10, y: 40}, {x: 10, y: -45}, {x: -10, y: -45}, // ninja
+			{x: -30, y: 40}, {x: 35, y: 40}, {x: 35, y: -45}, {x: -30, y: -45}, // ninja
 		],
 		label: ['Player', 'Hitbox']
 	}));
