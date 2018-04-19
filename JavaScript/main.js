@@ -240,10 +240,8 @@ function init(){
 			'Image/Character/ninja_1_1.png',
 			'Image/Character/ninja_1_2.png',
 			'Image/Character/ninja_1_3.png',
-			
 			'Image/Character/ninja_1_4.png',
 			'Image/Character/ninja_1_3.png',
-			
 			'Image/Character/ninja_1_4.png',
 			'Image/Character/ninja_1_3.png',
 			'Image/Character/ninja_1_2.png',
