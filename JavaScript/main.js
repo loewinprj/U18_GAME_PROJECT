@@ -854,8 +854,10 @@ function draw_last_drag_object(){
 			cont.lineTo(x - xScale, y - yScale);
 			cont.stroke();
 		} else {
-			cont.fillStyle = 'rgba(0, 0, 0, 0.5)';
-			cont.arc(x, y, 50, 0, PI * 2, false);
+			cont.fillStyle = 'rgba(255, 255, 255, 0.1)';
+			for(let i = 5; i--;){
+				cont.arc(x, y, 60 - (5 - i * 1.3), 0, PI * 2, false);
+			}
 			cont.fill();
 		}
 	}
@@ -1359,24 +1361,24 @@ function control_player_animation(){
 	
 	if(player.standing){
 		if(frame === 14 && !(pressed_keys[37] || pressed_keys[39])){
-			frame = 4;
+			frame = 3;
 		}
 		
 		if(pressed_keys[37] || pressed_keys[39]){
-			// 走る
+			// run
 			frame++;
 			if(frame > 13){
 				frame = 4;
 			}
 		} else {
-			// 止まる
+			// stop
 			frame--;
 			if(frame < 0){
 				frame = 0;
 			}
 		}
 	} else {
-		// 飛ぶ
+		// jump
 		frame = 14;
 	}
 	
