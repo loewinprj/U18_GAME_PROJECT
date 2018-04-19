@@ -7,6 +7,7 @@ var game_controller; // main controller of somethings (important)
 
 var width, height; // canvas width and height
 
+var hitbox_datas; // stack hitboxes of costumes
 var soundset; // BGM and SE stacks
 var mapchips; // to use ground hit
 var grounds; // grounds stacks
