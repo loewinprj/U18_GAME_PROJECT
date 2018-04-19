@@ -130,7 +130,13 @@ function init(){
 		y: 0,
 		drag: -1,
 		down: false,
-		last_drag_index: -1
+		last_drag_index: -1,
+		
+		buffer: {
+			left: 0,
+			right: 0,
+			reverse: 0
+		}
 	};
 
     gui = [];
@@ -593,7 +599,7 @@ function update(){
 		control_effects();
 
 		if(game_controller.puzzle.mode){
-			puzzleEvent();
+			puzzle_events();
 		}
 
 		if(!_animation.title){
@@ -1230,19 +1236,40 @@ function drag_objects(){
 	}
 }
 
-function puzzleEvent(){
+function puzzle_events(){
 	board_datas.map(function(e){
 		e.dir = ~~gui[e.index].direction;
 		e.rev = ~~gui[e.index].reverse;
 	});
 	
-	if(mouse.down && distance(mouse.x, mouse.y, convert_position(maximum, 'x', canv), convert_position(maximum, 'y', canv)) < 275){
-		console.log('RIGHT TURN');
+	if(mouse.down){
+		let index = mouse.last_drag_index;
+		
+		if(!mouse.buffer.reverse && distance(mouse.x, mouse.y, convert_position(center, 'x', canv), convert_position(maximum, 'y', canv)) < 275){
+			gui[index].reverse = !gui[index].reverse;
+			console.log('REVERSE');
+			
+			mouse.buffer.reverse = 10;
+		}
+
+		if(!mouse.buffer.right && distance(mouse.x, mouse.y, convert_position(maximum, 'x', canv), convert_position(maximum, 'y', canv)) < 275){
+			gui[index].direction += 5;
+			console.log('RIGHT TURN');
+			
+			mouse.buffer.right = 3;
+		}
+
+		if(!mouse.buffer.left && distance(mouse.x, mouse.y, 0, convert_position(maximum, 'y', canv)) < 275){
+			gui[index].direction -= 5;
+			console.log('LEFT TURN');
+			
+			mouse.buffer.left = 3;
+		}
 	}
 	
-	if(mouse.down && distance(mouse.x, mouse.y, 0, convert_position(maximum, 'y', canv)) < 275){
-		console.log('LEFT TURN');
-	}
+	Object.keys(mouse.buffer).map(function(e){
+		mouse.buffer[e] -= mouse.buffer[e] > 0;
+	});
 }
 
 function control_effects(){
