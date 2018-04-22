@@ -499,9 +499,9 @@ function init_mapchip(canvas, context){
 		
 		// Map chip image soruce
 		gui.push(new canvasEx({
-			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: true, alpha: 1,
+			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: chip.center, alpha: 1,
 			src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id || 0, 
-			reverse: data.reverse || 0, direction: data.direction || 0,
+			reverse: data.reverse || 0, direction: chip.dir || 0,
 			label: ['Mapchip', 'Game']
 		}));
 	});
