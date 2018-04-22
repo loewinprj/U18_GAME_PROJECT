@@ -1250,6 +1250,8 @@ function puzzle_events(){
 	board_datas.map(function(e){
 		e.dir = ~~gui[e.index].direction;
 		e.rev = ~~gui[e.index].reverse;
+		e.x = gui[e.index].x;
+		e.y = gui[e.index].y;
 	});
 	
 	if(mouse.down){
