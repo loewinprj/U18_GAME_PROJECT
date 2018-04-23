@@ -1407,8 +1407,8 @@ function control_hitbox(){
 
 function relative_position(datas){
     for(var obj of datas){
-        obj.ap_x = obj.x.match(/-?\d+/g).map(Number)[0];
-        obj.ap_y = obj.y.match(/-?\d+/g).map(Number)[0];
+        obj.ap_x = ~~obj.x.match(/-?\d+/)[0];
+        obj.ap_y = ~~obj.y.match(/-?\d+/)[0];
         obj.rp_x = obj.ap_x - datas[0].ap_x;
         obj.rp_y = obj.ap_y - datas[0].ap_y;
         console.log(obj);
