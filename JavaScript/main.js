@@ -728,7 +728,7 @@ function update(){
 	gui[game_controller.flash_index].alpha += -gui[game_controller.flash_index].alpha / 5;
 	
 	game_controller.title_logo.main_index.map(function(e){
-		gui[e].alpha += (1 - gui[e].alpha) / (e + (e * 1.1));
+		gui[e].alpha += (1 - gui[e].alpha) / 46;
 		gui[e].size += (200 - gui[e].size) / 18;
 	});
 	
@@ -1398,7 +1398,7 @@ function control_player_animation(){
 function control_hitbox(){
 	let frame = gui[player.index].anime_frame;
 	
-	if(frame === 14){
+	if(frame > 3){
 		gui[player.hitbox].pos = hitbox_datas[1];
 	} else {
 		gui[player.hitbox].pos = hitbox_datas[0];
