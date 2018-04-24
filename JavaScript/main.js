@@ -511,7 +511,7 @@ function init_mapchip(canvas, context){
 function init_opening(canvas, context){
 	// オープニングオブジェクトの追加
 	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center + -50, y: center, size: 90, text: '下の方では地球の者たちが緊張気味に固まれり。', mode: 1, align: center,
+		canvas, context, type: txt, x: center + -50, y: center, size: 90, text: story[0], mode: 1, align: center,
 		abs_x: -50, alpha: 0, label: ['Opening', 'Telop']
 	}));
 }
@@ -695,7 +695,7 @@ function update(){
 			if(abs(0.3 - gui[game_controller.feed_index].alpha) < 0.1){
 				//abs_x
 				if(gui[game_controller.opening.index].abs_x < 50){
-					gui[game_controller.opening.index].abs_x += 0.5;
+					gui[game_controller.opening.index].abs_x += 0.7; // オープニング速度
 					gui[game_controller.opening.index].x = center + gui[game_controller.opening.index].abs_x;
 					gui[game_controller.opening.index].alpha = 1 - abs(gui[game_controller.opening.index].abs_x / 50);
 				} else {
