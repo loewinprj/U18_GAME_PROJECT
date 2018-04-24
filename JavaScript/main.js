@@ -120,7 +120,8 @@ function init(){
 		
 		save: {
 			x: 0,
-			y: 0
+			y: 0,
+			index: 0
 		}
 	};
 
@@ -1413,4 +1414,12 @@ function relative_position(datas){
         obj.rp_y = obj.ap_y - datas[0].ap_y;
         console.log(obj);
     }
+}
+
+function save_method(){
+	switch(player.save.index){
+		case 0:
+			// todo set position of player's respawn pos
+			break;
+	}
 }
