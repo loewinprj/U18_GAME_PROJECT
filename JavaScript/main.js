@@ -509,11 +509,36 @@ function init_mapchip(canvas, context){
 }
 
 function init_opening(canvas, context){
-	// オープニングオブジェクトの追加
+	
+	// Opening文字
 	gui.push(new canvasEx({
 		canvas, context, type: txt, x: center + -50, y: center, size: 90, text: story[0], mode: 1, align: center,
 		abs_x: -50, alpha: 0, label: ['Opening', 'Telop']
 	}));
+	
+	// Opening背景オブジェクト
+	image_set = [
+		{
+			src: 'moon',
+			x: 300,
+			y: -300,
+			w: 60,
+			h: 60
+		},
+		{
+			src: 'ground',
+			x: -150,
+			y: 110
+		}
+	];
+	
+	image_set.map(function(e){
+		let src = `Image/Screen/Opening/${e.src}.png`;
+		gui.push(new canvasEx({
+			canvas, context, type: img, x: center + e.x, y: center + e.y, w: e.w || 200, h: e.h || 200, center: true,
+			src, label: ['Opening']
+		}));
+	});
 }
 
 function init_hitboxes(){
