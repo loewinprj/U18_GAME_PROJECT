@@ -523,12 +523,20 @@ function init_opening(canvas, context){
 			x: 300,
 			y: -300,
 			w: 60,
-			h: 60
+			h: 60,
+			id: 0
 		},
 		{
-			src: 'ground',
+			src: 'ground_0',
 			x: -150,
-			y: 110
+			y: 110,
+			id: 0
+		},
+		{
+			src: 'ground_1',
+			x: 40,
+			y: 175,
+			id: 0
 		}
 	];
 	
@@ -720,9 +728,11 @@ function update(){
 			if(abs(0.3 - gui[game_controller.feed_index].alpha) < 0.1){
 				//abs_x
 				if(gui[game_controller.opening.index].abs_x < 50){
-					gui[game_controller.opening.index].abs_x += 0.7; // オープニング速度
+					gui[game_controller.opening.index].abs_x += 0.6; // オープニング速度
 					gui[game_controller.opening.index].x = center + gui[game_controller.opening.index].abs_x;
-					gui[game_controller.opening.index].alpha = 1 - abs(gui[game_controller.opening.index].abs_x / 50);
+					
+					let alpha = 1 - abs(gui[game_controller.opening.index].abs_x / 50);
+					gui[game_controller.opening.index].alpha = alpha > 0 ? alpha : 0;
 				} else {
 					// テロップを次へ
 					game_controller.opening.story_index++;
