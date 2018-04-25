@@ -517,7 +517,7 @@ function init_opening(canvas, context){
 	}));
 	
 	// Opening背景オブジェクト
-	image_set = [
+	op_image_set = [
 		{
 			src: 'moon',
 			x: maximum + -750,
@@ -550,15 +550,20 @@ function init_opening(canvas, context){
 			src: 'band',
 			x: center,
 			y: center,
+			px: 0,
+			py: 0,
+			dx: 0,
+			dy: 0.6,
 			id: 1
 		}
 	];
 	
-	image_set.map(function(e){
+	op_image_set.map(function(e, i){
 		let src = `Image/Screen/Opening/${e.src}.png`;
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: e.x, y: e.y, w: e.w || 200, h: e.h || 200, center: true, alpha: 0,
-			src, id: e.id || 0, label: ['Opening', 'Background']
+			src, id: e.id || 0, label: ['Opening', 'Background'],
+			image_set_id: i
 		}));
 	});
 }
@@ -831,7 +836,20 @@ function draw(){
 		switch(mode){
 			case 'Opening':
 				if(check_include_label(label, 'Opening')){
-					e.draw();
+					
+					if(check_include_label(label, 'Background')){
+						let data = op_image_set[e.image_set_id];
+						
+						if(data.px !== void 0 && data.py !== void 0 && e.id === game_controller.opening.story_index){						
+							data.px += data.dx || 0;
+							data.py += data.dy || 0;
+
+							e.x = data.x + data.px;
+							e.y = data.y + data.py;
+						}
+					}
+					
+					e.draw()
 				}
 				break;
 				
