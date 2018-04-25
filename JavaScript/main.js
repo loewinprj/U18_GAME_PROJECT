@@ -5,8 +5,8 @@ _w.onload = function(){
 	main();
 	event();
 	
-	// prototype
-	setInterval(main, fps); // start main loop of the game
+	// This is a global variable
+	game_loop = setInterval(main, fps); // start main loop of the game
 };
 
 // Init methods
@@ -545,6 +545,12 @@ function init_opening(canvas, context){
 			x: center + -60,
 			y: center + 175,
 			id: 0
+		},
+		{
+			src: 'band',
+			x: center,
+			y: center,
+			id: 1
 		}
 	];
 	
@@ -606,7 +612,6 @@ function init_puzzle_data(canvas, context){
 
 // Main loop method
 function main(){
-    //requestAnimationFrame(main); // FPSが不安定なためsetIntervalに変更
     if(_loaded_images === _max_images){
 		if(!_animation.first_buffer){
 			draw();
