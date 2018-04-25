@@ -520,22 +520,30 @@ function init_opening(canvas, context){
 	image_set = [
 		{
 			src: 'moon',
-			x: 300,
-			y: -300,
+			x: maximum + -750,
+			y: 150,
 			w: 60,
 			h: 60,
 			id: 0
 		},
 		{
+			src: 'ship',
+			x: maximum + -800,
+			y: 230,
+			w: 120,
+			h: 120,
+			id: 0
+		},
+		{
 			src: 'ground_0',
-			x: -150,
-			y: 110,
+			x: center + -250,
+			y: center + 110,
 			id: 0
 		},
 		{
 			src: 'ground_1',
-			x: 40,
-			y: 175,
+			x: center + -60,
+			y: center + 175,
 			id: 0
 		}
 	];
@@ -543,8 +551,8 @@ function init_opening(canvas, context){
 	image_set.map(function(e){
 		let src = `Image/Screen/Opening/${e.src}.png`;
 		gui.push(new canvasEx({
-			canvas, context, type: img, x: center + e.x, y: center + e.y, w: e.w || 200, h: e.h || 200, center: true, alpha: 0,
-			src, id: e.id, label: ['Opening', 'Background']
+			canvas, context, type: img, x: e.x, y: e.y, w: e.w || 200, h: e.h || 200, center: true, alpha: 0,
+			src, id: e.id || 0, label: ['Opening', 'Background']
 		}));
 	});
 }
