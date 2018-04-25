@@ -543,8 +543,8 @@ function init_opening(canvas, context){
 	image_set.map(function(e){
 		let src = `Image/Screen/Opening/${e.src}.png`;
 		gui.push(new canvasEx({
-			canvas, context, type: img, x: center + e.x, y: center + e.y, w: e.w || 200, h: e.h || 200, center: true,
-			src, label: ['Opening']
+			canvas, context, type: img, x: center + e.x, y: center + e.y, w: e.w || 200, h: e.h || 200, center: true, alpha: 0,
+			src, id: e.id, label: ['Opening', 'Background']
 		}));
 	});
 }
@@ -732,7 +732,20 @@ function update(){
 					gui[game_controller.opening.index].x = center + gui[game_controller.opening.index].abs_x;
 					
 					let alpha = 1 - abs(gui[game_controller.opening.index].abs_x / 50);
-					gui[game_controller.opening.index].alpha = alpha > 0 ? alpha : 0;
+					alpha = alpha > 0 ? alpha : 0;
+					
+					gui[game_controller.opening.index].alpha = alpha;
+					
+					gui.map(function(obj){
+						let label = obj.label;
+						if(check_include_label(label, 'Opening') && check_include_label(label, 'Background')){
+							if(obj.id === game_controller.opening.story_index){
+								obj.alpha = alpha;
+							} else {
+								obj.alpha = 0;
+							}
+						}
+					});
 				} else {
 					// テロップを次へ
 					game_controller.opening.story_index++;
