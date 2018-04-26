@@ -333,7 +333,7 @@ function init(){
 
 	// settings of pause screen
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center, y: center + -180, w: 300, h: 300, center: true, alpha: 0,
+		canvas, context, type: img, x: center, y: center + -250, w: 370, h: 370, center: true, alpha: 0,
 		src: 'Image/Screen/Pause/pause_text.png',
 		label: ['Setting', 'All']
 	}));
