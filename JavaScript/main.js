@@ -363,6 +363,21 @@ function init(){
 		label: ['Setting', 'All']
 	}));
 	
+	// ポージングMaster音量の数字
+	var img_src = [];
+	for(var i = 0; i < 11; i++){
+		img_src.push(`Image/Screen/Pause/volume_${i}.png`);
+	}
+	
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center, y: center, w: 250, h: 250, center: true, alpha: 0,
+		src: 'Image/Screen/Pause/volume_0.png',
+		label: ['Setting', 'All'],
+		animation: img_src
+	}));
+	
+	gui[gui.length - 1].anime_frame = 10;
+	
 	// オープニングデータのリセット
 	init_opening(canvas, context);
 
