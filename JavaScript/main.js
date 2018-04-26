@@ -331,9 +331,10 @@ function init(){
 		label: ['Flashmask', 'All']
 	}));
 
-	// Settings
+	// settings of pause screen
 	gui.push(new canvasEx({
-		canvas, context, type: txt, x: center, y: center + -180, size: 200, text: 'ポーズ', align: center, alpha: 0,
+		canvas, context, type: img, x: center, y: center + -180, w: 300, h: 300, center: true, alpha: 0,
+		src: 'Image/Screen/Pause/pause_text.png',
 		label: ['Setting', 'All']
 	}));
 
@@ -642,12 +643,7 @@ function main(){
 function update(){
 	audio_update();
 	
-	gui.map(function(e, i){
-		if(check_include_label(e.label, 'Setting')){
-			gui[i].alpha += (game_controller.pause.mode - gui[i].alpha) / 4;
-		}
-	});
-	
+	pause_control();	
 	key_events();
 	
 	if(!game_controller.pause.mode && !game_controller.talk.mode){
@@ -1500,5 +1496,19 @@ function save_method(){
 		case 0:
 			// todo set position of player's respawn pos
 			break;
+	}
+}
+
+function pause_control(){
+	let mode = game_controller.pause.mode;
+	
+	gui.map(function(e, i){
+		if(check_include_label(e.label, 'Setting')){
+			gui[i].alpha += (mode - gui[i].alpha) / 4;
+		}
+	});
+	
+	if(mode){
+		// todo something
 	}
 }
