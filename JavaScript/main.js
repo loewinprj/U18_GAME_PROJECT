@@ -95,7 +95,7 @@ function init(){
 		},
 		
 		map_id: 0,
-		volume: 1 // master volume
+		master_volume: 1 // master volume
 	};
 
     // Player's detailed information
@@ -348,6 +348,18 @@ function init(){
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center + -100, w: 260, h: 260, center: true, alpha: 0,
 		src: 'Image/Screen/Pause/volume.png',
+		label: ['Setting', 'All']
+	}));
+	
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center + -100, y: center, w: 180, h: 180, center: true, alpha: 0,
+		src: 'Image/Screen/Pause/button.png',
+		label: ['Setting', 'All']
+	}));
+	
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center + 100, y: center, w: 180, h: 180, center: true, alpha: 0, reverse: true,
+		src: 'Image/Screen/Pause/button.png',
 		label: ['Setting', 'All']
 	}));
 	
@@ -656,7 +668,6 @@ function main(){
 function update(){
 	audio_update();
 	
-	pause_control();	
 	key_events();
 	
 	if(!game_controller.pause.mode && !game_controller.talk.mode){
@@ -683,6 +694,8 @@ function update(){
 		draw_debug_label();
 		control_player_animation();
 	}
+	
+	pause_control();
 	
 	// Talk window
 	if(game_controller.screen_mode === 'Game'){
@@ -1513,6 +1526,10 @@ function save_method(){
 }
 
 function pause_control(){
+	if(game_controller.screen_mode !== 'Game' || game_controller.respawn){
+		return false;
+	}
+	
 	let mode = game_controller.pause.mode;
 	
 	gui.map(function(e, i){
@@ -1523,5 +1540,10 @@ function pause_control(){
 	
 	if(mode){
 		// todo something
+		soundset[game_controller.environmental_se.water].audio.volume = 0.1 * game_controller.master_volume;
+		game_controller.play_audio.max_volume = 0.3 * game_controller.master_volume;
+	} else {
+		soundset[game_controller.environmental_se.water].audio.volume = 0.8 * game_controller.master_volume;
+		game_controller.play_audio.max_volume = 1 * game_controller.master_volume;
 	}
 }
