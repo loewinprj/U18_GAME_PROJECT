@@ -94,7 +94,8 @@ function init(){
 			bird: -1
 		},
 		
-		map_id: 0
+		map_id: 0,
+		volume: 1 // master volume
 	};
 
     // Player's detailed information
@@ -333,11 +334,23 @@ function init(){
 
 	// settings of pause screen
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: center, y: center + -250, w: 370, h: 370, center: true, alpha: 0,
+		canvas, context, type: img, x: center, y: center + -270, w: 380, h: 380, center: true, alpha: 0,
 		src: 'Image/Screen/Pause/pause_text.png',
 		label: ['Setting', 'All']
 	}));
 
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center, y: center + -210, w: 300, h: 300, center: true, alpha: 0,
+		src: 'Image/Screen/Pause/line.png',
+		label: ['Setting', 'All']
+	}));
+	
+	gui.push(new canvasEx({
+		canvas, context, type: img, x: center, y: center + -100, w: 260, h: 260, center: true, alpha: 0,
+		src: 'Image/Screen/Pause/volume.png',
+		label: ['Setting', 'All']
+	}));
+	
 	// オープニングデータのリセット
 	init_opening(canvas, context);
 
