@@ -49,7 +49,10 @@ function init(){
 		pause: {
 			mode: false,
 			buffer: 0,
-			se_index: -1
+			se_index: -1,
+			left_interval: 0,
+			right_interval: 0,
+			volume_index: 0
 		},
 		
 		talk: {
@@ -289,7 +292,7 @@ function init(){
 		e.x += dx;
 		e.y += dy;
 	});
-
+	
 	for(var i = 0; i < 7; i ++){
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + puzzle_positions[i].x, y: center + puzzle_positions[i].y, w: 150, h: 150, alpha: 0, center: true,
@@ -318,27 +321,27 @@ function init(){
 		src: 'Image/Puzzle/reverse.png', max_alpha: 0.5,
 		label: ['Mask', 'Game'],
 	}));
-
+	
 	// 画面全体を覆うオブジェクトは最上層レイヤーで追加
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
 		src: 'Image/Screen/feed_mask.png',
 		label: ['Feedmask', 'All']
 	}));
-
+	
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0,
 		src: 'Image/Screen/flash_mask.png',
 		label: ['Flashmask', 'All']
 	}));
-
+	
 	// settings of pause screen
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center + -270, w: 380, h: 380, center: true, alpha: 0,
 		src: 'Image/Screen/Pause/pause_text.png',
 		label: ['Setting', 'All']
 	}));
-
+	
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center + -210, w: 300, h: 300, center: true, alpha: 0,
 		src: 'Image/Screen/Pause/line.png',
@@ -372,7 +375,7 @@ function init(){
 	gui.push(new canvasEx({
 		canvas, context, type: img, x: center, y: center, w: 250, h: 250, center: true, alpha: 0,
 		src: 'Image/Screen/Pause/volume_0.png',
-		label: ['Setting', 'All'],
+		label: ['Setting', 'All', 'Volume'],
 		animation: img_src
 	}));
 	
@@ -390,7 +393,6 @@ function init(){
 	];
 
 	soundset = new Array(soundname.length).fill(0);
-
 	soundset.forEach(function(e, i){
 		let _this = soundname[i];
 		let src = _this.src;
@@ -468,6 +470,10 @@ function init(){
 		
 		if(check_include_label(label, 'Opening') && check_include_label(label, 'Telop')){
 			game_controller.opening.index = i;
+		}
+		
+		if(check_include_label(label, 'Setting') && check_include_label(label, 'Volume')){
+			game_controller.pause.volume_index = i;
 		}
 	});
 	
@@ -737,7 +743,7 @@ function update(){
 				game_controller.play_audio.change_speed = 3;
 			}
 			break;
-
+		
 		case 1:
 			gui[game_controller.feed_index].alpha = _animation.load_finished / 30;
 			if(pressed_keys[32] && _animation.title && !_animation.load_finished){
@@ -746,7 +752,7 @@ function update(){
 				_animation.title = 2;
 			}
 			break;
-
+		
 		case 2:
 			gui[game_controller.feed_index].alpha += (1 - gui[game_controller.feed_index].alpha) / 6;
 			if(soundset[game_controller.play_audio.index].audio.volume < 0.01){
@@ -757,7 +763,7 @@ function update(){
 				_c.log(gui[game_controller.feed_index].alpha);
 			}
 			break;
-
+		
 		case 3:
 			setTimeout(function(){
 				if(false){
@@ -1066,8 +1072,6 @@ function event(){
 		let rect = e.target.getBoundingClientRect();
 		mouse.x = e.clientX - rect.left;
 		mouse.y = e.clientY - rect.top;
-		
-		//_c.log(mouse.x - width / 2);
 	});
 
 	_d.addEventListener('mousedown', function(e){
@@ -1546,17 +1550,40 @@ function pause_control(){
 	}
 	
 	let mode = game_controller.pause.mode;
-	
 	gui.map(function(e, i){
 		if(check_include_label(e.label, 'Setting')){
 			gui[i].alpha += (mode - gui[i].alpha) / 4;
 		}
 	});
 	
+	game_controller.pause.left_interval -= 0 < game_controller.pause.left_interval;
+	game_controller.pause.right_interval -= 0 < game_controller.pause.right_interval;
+	
 	if(mode){
 		// todo something
 		soundset[game_controller.environmental_se.water].audio.volume = 0.1 * game_controller.master_volume;
 		game_controller.play_audio.max_volume = 0.3 * game_controller.master_volume;
+		
+		if(mouse.down){
+			let left_dist = distance(mouse.x, mouse.y, convert_position(center + -100, 'x', canv), height / 2) < 30;
+			let right_dist = distance(mouse.x, mouse.y, convert_position(center + 100, 'x', canv), height / 2) < 30;
+			
+			if(left_dist && !game_controller.pause.left_interval){
+				_c.log('VOLUME DOWN');
+				game_controller.pause.left_interval = 8;
+				game_controller.master_volume -= (0 < game_controller.master_volume) * 0.1;
+			}
+			
+			if(right_dist && !game_controller.pause.right_interval){
+				_c.log('VOLUME UP');
+				game_controller.pause.right_interval = 8;
+				game_controller.master_volume += (1 > game_controller.master_volume) * 0.1;
+			}
+			
+			game_controller.master_volume = round(game_controller.master_volume * 10) / 10;
+			// 音量調整ポージング
+			gui[game_controller.pause.volume_index].anime_frame = game_controller.master_volume * 10;
+		}
 	} else {
 		soundset[game_controller.environmental_se.water].audio.volume = 0.8 * game_controller.master_volume;
 		game_controller.play_audio.max_volume = 1 * game_controller.master_volume;
