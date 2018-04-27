@@ -656,6 +656,8 @@ function init_puzzle_data(canvas, context){
 	// パズルの完成データ
 	puzzle_datas = [
 		[ // 雁
+            /*
+            旧データ
 			{dir: 0}, // 三角形 - 小
 			{dir: 0}, // 三角形 - 中
 			{dir: 180}, // 三角形 - 中
@@ -664,6 +666,18 @@ function init_puzzle_data(canvas, context){
 			{dir: 135, rev: 1}, // 四角形 - 平行四辺形
 			{dir: 45, rev: 1}, // 四角形 - 台形
 			{dir: 225}, // 四角形 - 等脚台形
+            */
+            /*重要！！！：0,1,2,3,6 のrevは0になるように模範解答を作成すること
+            3（正方形）はdirが0から89に収まるように
+            4（平行四辺形）はdirが0から179に収まるように
+            */
+            {index: 31, dir: 135, rev: 0, x: "center-243.5", y: "center-23"},
+            {index: 32, dir: 315, rev: 0, x: "center-120.5", y: "center-12"},
+            {index: 33, dir: 135, rev: 0, x: "center-229.5", y: "center-9"},
+            {index: 34, dir: 0, rev: 0, x: "center-54.5", y: "center60"},
+            {index: 35, dir: 135, rev: 1, x: "center-69.5", y: "center16"},
+            {index: 36, dir: 225, rev: 0, x: "center-164.5", y: "center26"},
+            {index: 37, dir: 225, rev: 0, x: "center-151.5", y: "center39"},
 		],
 		[ // 富士山
 			{dir: 45}, // 三角形 - 小
@@ -675,6 +689,7 @@ function init_puzzle_data(canvas, context){
 			{dir: 225, rev: 1}, // 四角形 - 台形
 			{dir: 45}, // 四角形 - 等脚台形
 		],
+        
 	];
 }
 
@@ -1406,6 +1421,7 @@ function puzzle_events(){
 			console.log('RIGHT TURN');
 			
 			mouse.buffer.right = 3;
+            gui[index].direction = gui[index].direction % 360
 		}
 
 		if(!mouse.buffer.left && distance(mouse.x, mouse.y, 0, convert_position(maximum, 'y', canv)) < 275){
@@ -1413,7 +1429,9 @@ function puzzle_events(){
 			console.log('LEFT TURN');
 			
 			mouse.buffer.left = 3;
+            gui[index].direction = (gui[index].direction + 360) % 360
 		}
+        //gui[index].direction = gui[index].direction % 360
 	}
 	
 	Object.keys(mouse.buffer).map(function(e){
@@ -1608,8 +1626,33 @@ function relative_position(datas){
         obj.ap_y = ~~obj.y.match(/-?\d+/)[0];
         obj.rp_x = obj.ap_x - datas[0].ap_x;
         obj.rp_y = obj.ap_y - datas[0].ap_y;
-        console.log(obj);
     }
+}
+
+function judge_puzzle(board,answer,confuse = true){
+    relative_position(board);
+    relative_position(answer);
+    allowed_error_pos = 15;
+    allowed_error_dir = 10;
+    for(var i = 0; i < board.length; i++){
+        var dir = board[i].dir;
+        var rev = board[i].rev;
+        if(rev == 1){
+            if(i == 1 || i == 2 || i == 6) dir += 90;
+        }
+        if(i == 3) dir = (dir + 360) % 90;
+        if(i == 4) dir = (dir + 360) % 180;
+        if(Math.abs(answer[i].rp_x - board[i].rp_x) > allowed_error_pos
+           || Math.abs(answer[i].rp_y - board[i].rp_y) > allowed_error_pos
+           || Math.abs(answer[i].dir - dir) > allowed_error_dir){
+            if(confuse){
+                return judge_puzzle(board,answer,false)
+            }else{
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 function save_method(){
