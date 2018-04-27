@@ -126,7 +126,9 @@ function init(){
 			x: 0,
 			y: 0,
 			index: 0
-		}
+		},
+		
+		animal: 'human'
 	};
 
 	// Mouse positions
@@ -602,6 +604,12 @@ function init_opening(canvas, context){
 			dx: 0,
 			dy: 0.6,
 			id: 1
+		},
+		{
+			src: 'phoenix',
+			x: center + 300,
+			y: center + -100,
+			id: 3
 		}
 	];
 	
@@ -1490,39 +1498,93 @@ function control_player_animation(){
 	let index = player.index;
 	let frame = gui[index].anime_frame;
 	
-	if(player.standing){
-		if(frame === 14 && !(pressed_keys[37] || pressed_keys[39])){
-			frame = 3;
-		}
-		
-		if(pressed_keys[37] || pressed_keys[39]){
-			// run
-			frame++;
-			if(frame > 13){
-				frame = 4;
+	switch(player.animal){
+		case 'human':
+			if(player.standing){
+				if(frame === 14 && !(pressed_keys[37] || pressed_keys[39])){
+					frame = 3;
+				}
+
+				if(pressed_keys[37] || pressed_keys[39]){
+					// run
+					frame++;
+					if(frame > 13){
+						frame = 4;
+					}
+				} else {
+					// stop
+					frame--;
+					if(frame < 0){
+						frame = 0;
+					}
+				}
+			} else {
+				// jump
+				frame = 14;
 			}
-		} else {
-			// stop
-			frame--;
-			if(frame < 0){
-				frame = 0;
-			}
-		}
-	} else {
-		// jump
-		frame = 14;
+			
+			break;
+			
+		case 'mouse':
+			// ねずみ
+			break;
+			
+		case 'cat':
+			// ねこ
+			break;
+			
+		case 'hawk':
+			// たか
+			break;
 	}
 	
 	gui[index].anime_frame = frame;
 }
 
+function switch_animal(name){
+	player.animal = name;
+	switch(name){
+		case 'human':
+			gui[index].anime_frame = 0; // にんげん
+			break;
+			
+		case 'mouse':
+			// ねずみ
+			break;
+			
+		case 'cat':
+			// ねこ
+			break;
+			
+		case 'hawk':
+			// たか
+			break;
+	}
+}
+
 function control_hitbox(){
 	let frame = gui[player.index].anime_frame;
 	
-	if(frame > 3){
-		gui[player.hitbox].pos = hitbox_datas[1];
-	} else {
-		gui[player.hitbox].pos = hitbox_datas[0];
+	switch(player.animal){
+		case 'human':
+			if(frame > 3){
+				gui[player.hitbox].pos = hitbox_datas[1];
+			} else {
+				gui[player.hitbox].pos = hitbox_datas[0];
+			}
+			break;
+			
+		case 'mouse':
+			// ねずみ
+			break;
+			
+		case 'cat':
+			// ねこ
+			break;
+			
+		case 'hawk':
+			// たか
+			break;
 	}
 }
 
