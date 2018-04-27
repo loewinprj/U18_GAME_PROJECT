@@ -1552,7 +1552,7 @@ function control_player_animation(){
 			
 		case 'mouse':
 			// ねずみ
-			if(pressed_keys[37] || pressed_keys[39]){
+			if((pressed_keys[37] || pressed_keys[39]) && player.standing){
 				frame = frame === 15 ? 16 : 15;
 			}
 			break;
@@ -1621,10 +1621,10 @@ function control_hitbox(){
 
 function relative_position(datas){
     for(var obj of datas){
-        obj.ap_x = ~~obj.x.match(/-?\d+/)[0];
-        obj.ap_y = ~~obj.y.match(/-?\d+/)[0];
-        obj.rp_x = obj.ap_x - datas[0].ap_x;
-        obj.rp_y = obj.ap_y - datas[0].ap_y;
+		obj.ap_x = ~~obj.x.match(/-?\d+/)[0];
+		obj.ap_y = ~~obj.y.match(/-?\d+/)[0];
+		obj.rp_x = obj.ap_x - datas[0].ap_x;
+		obj.rp_y = obj.ap_y - datas[0].ap_y;
     }
 }
 
@@ -1650,7 +1650,7 @@ function judge_puzzle(board, answer, confuse = true){
 		   || Math.abs(answer[i].rp_y - board[i].rp_y) > allowed_error_pos
 		   || Math.abs(answer[i].dir - dir) > allowed_error_dir){
 			if(confuse){
-				return judge_puzzle(board,answer, false)
+				return judge_puzzle(board,answer, false);
 			}else{
 				return false;
 			}
