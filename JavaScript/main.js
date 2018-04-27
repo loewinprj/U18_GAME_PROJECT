@@ -1570,18 +1570,17 @@ function pause_control(){
 			
 			if(left_dist && !game_controller.pause.left_interval){
 				_c.log('VOLUME DOWN');
-				game_controller.pause.left_interval = 8;
+				game_controller.pause.left_interval = 11;
 				game_controller.master_volume -= (0 < game_controller.master_volume) * 0.1;
 			}
 			
 			if(right_dist && !game_controller.pause.right_interval){
 				_c.log('VOLUME UP');
-				game_controller.pause.right_interval = 8;
+				game_controller.pause.right_interval = 11;
 				game_controller.master_volume += (1 > game_controller.master_volume) * 0.1;
 			}
 			
 			game_controller.master_volume = round(game_controller.master_volume * 10) / 10;
-			// 音量調整ポージング
 			gui[game_controller.pause.volume_index].anime_frame = game_controller.master_volume * 10;
 		}
 	} else {
