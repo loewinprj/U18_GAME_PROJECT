@@ -248,6 +248,7 @@ function init(){
 	    canvas, context, type: img, x: center, y: center, w: 90, h: 90, center: true, reverse: 0, direction: 0,
 	    src: 'Image/Character/ninja_0_0.png',
 	    animation: [
+			// 忍者
 			'Image/Character/ninja_0_0.png',
 			'Image/Character/ninja_0_1.png',
 			'Image/Character/ninja_0_2.png',
@@ -262,7 +263,10 @@ function init(){
 			'Image/Character/ninja_1_3.png',
 			'Image/Character/ninja_1_2.png',
 			'Image/Character/ninja_1_1.png',
-			'Image/Character/ninja_2_0.png'
+			'Image/Character/ninja_2_0.png',
+			// ネズミ
+			'Image/Character/mouse_0_0.png',
+			'Image/Character/mouse_0_1.png',
         ],
         label: 'Player'
 	}));
@@ -625,8 +629,12 @@ function init_opening(canvas, context){
 
 function init_hitboxes(){
 	hitbox_datas = [
+		// 忍者
 		[{x: -10, y: 40}, {x: 10, y: 40}, {x: 10, y: -45}, {x: -10, y: -45}],
-		[{x: -30, y: 40}, {x: 35, y: 40}, {x: 35, y: -45}, {x: -30, y: -45}]
+		[{x: -30, y: 40}, {x: 35, y: 40}, {x: 35, y: -45}, {x: -30, y: -45}],
+		
+		// ネズミ
+		[{x: -35, y: 15}, {x: 35, y: 15}, {x: 35, y: -15}, {x: -35, y: -15}]
 	];
 }
 
@@ -1527,6 +1535,9 @@ function control_player_animation(){
 			
 		case 'mouse':
 			// ねずみ
+			if(pressed_keys[37] || pressed_keys[39]){
+				frame = frame === 15 ? 16 : 15;
+			}
 			break;
 			
 		case 'cat':
@@ -1542,6 +1553,7 @@ function control_player_animation(){
 }
 
 function switch_animal(name){
+	let index = player.index;
 	player.animal = name;
 	switch(name){
 		case 'human':
@@ -1550,6 +1562,7 @@ function switch_animal(name){
 			
 		case 'mouse':
 			// ねずみ
+			gui[index].anime_frame = 15;
 			break;
 			
 		case 'cat':
@@ -1576,6 +1589,7 @@ function control_hitbox(){
 			
 		case 'mouse':
 			// ねずみ
+			gui[player.hitbox].pos = hitbox_datas[2];
 			break;
 			
 		case 'cat':
