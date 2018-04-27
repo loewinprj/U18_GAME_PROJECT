@@ -34,41 +34,6 @@ var json_mapchip = {
 			]
 		}
 	},
-	"08_1" : {
-		"reverse" : 1,
-		"map_id" : 0,
-		"chip" : {
-			"x" : -50,
-			"y" : -200,
-			"w" : 200,
-			"h" : 200,
-			"src" : "Image/Screen/Mapchip/chip_08.png",
-			"dir" : 0,
-			"center" : 1
-		},
-		"hitbox" : {
-			"x" : -50,
-			"y" : -200,
-			"pos" : [
-				{
-					"x" : 0,
-					"y" : -100,
-				},
-				{
-					"x" : 0,
-					"y" : 100,
-				},
-				{
-					"x" : -30,
-					"y" : 100,
-				},
-				{
-					"x" : -30,
-					"y" : -100,
-				},
-			]
-		}
-	},
 	"09_0" : {
 		"reverse" : 0,
 		"map_id" : 0,
@@ -174,185 +139,88 @@ var json_mapchip = {
 			]
 		}
 	},
+	"08_1" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : -50,
+			"y" : -100,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_2" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : -50,
+			"y" : -200,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
 	"02_0" : {
 		"reverse" : 0,
 		"map_id" : 0,
 		"chip" : {
 			"x" : 50,
-			"y" : 100,
+			"y" : -300,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_02.png",
 			"dir" : 0,
 			"center" : 1
-		},
-		"hitbox" : {
-			"x" : 50,
-			"y" : 130,
-			"pos" : [
-				{
-					"x" : -100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : 100,
-				},
-				{
-					"x" : -100,
-					"y" : 100,
-				},
-			]
 		}
 	},
 	"02_1" : {
 		"reverse" : 0,
 		"map_id" : 0,
 		"chip" : {
-			"x" : 250,
-			"y" : 100,
+			"x" : 150,
+			"y" : -300,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_02.png",
 			"dir" : 0,
 			"center" : 1
-		},
-		"hitbox" : {
-			"x" : 250,
-			"y" : 130,
-			"pos" : [
-				{
-					"x" : -100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : 100,
-				},
-				{
-					"x" : -100,
-					"y" : 100,
-				},
-			]
 		}
 	},
 	"02_2" : {
 		"reverse" : 0,
 		"map_id" : 0,
 		"chip" : {
-			"x" : 450,
-			"y" : 100,
+			"x" : 250,
+			"y" : -300,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_02.png",
 			"dir" : 0,
 			"center" : 1
-		},
-		"hitbox" : {
-			"x" : 450,
-			"y" : 130,
-			"pos" : [
-				{
-					"x" : -100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : 100,
-				},
-				{
-					"x" : -100,
-					"y" : 100,
-				},
-			]
 		}
 	},
 	"02_3" : {
 		"reverse" : 0,
 		"map_id" : 0,
 		"chip" : {
-			"x" : 50,
+			"x" : 350,
 			"y" : -300,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_02.png",
 			"dir" : 0,
 			"center" : 1
-		},
-		"hitbox" : {
-			"x" : 50,
-			"y" : -270,
-			"pos" : [
-				{
-					"x" : -100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : 100,
-				},
-				{
-					"x" : -100,
-					"y" : 100,
-				},
-			]
 		}
 	},
 	"02_4" : {
 		"reverse" : 0,
 		"map_id" : 0,
 		"chip" : {
-			"x" : 250,
-			"y" : -300,
-			"w" : 200,
-			"h" : 200,
-			"src" : "Image/Screen/Mapchip/chip_02.png",
-			"dir" : 0,
-			"center" : 1
-		},
-		"hitbox" : {
-			"x" : 250,
-			"y" : -270,
-			"pos" : [
-				{
-					"x" : -100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : 100,
-				},
-				{
-					"x" : -100,
-					"y" : 100,
-				},
-			]
-		}
-	},
-	"02_5" : {
-		"reverse" : 0,
-		"map_id" : 0,
-		"chip" : {
 			"x" : 450,
 			"y" : -300,
 			"w" : 200,
@@ -360,101 +228,9 @@ var json_mapchip = {
 			"src" : "Image/Screen/Mapchip/chip_02.png",
 			"dir" : 0,
 			"center" : 1
-		},
-		"hitbox" : {
-			"x" : 450,
-			"y" : -270,
-			"pos" : [
-				{
-					"x" : -100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : 100,
-				},
-				{
-					"x" : -100,
-					"y" : 100,
-				},
-			]
 		}
 	},
-	"02_6" : {
-		"reverse" : 1,
-		"map_id" : 0,
-		"chip" : {
-			"x" : 350,
-			"y" : -300,
-			"w" : 200,
-			"h" : 200,
-			"src" : "Image/Screen/Mapchip/chip_02.png",
-			"dir" : 0,
-			"center" : 1
-		},
-		"hitbox" : {
-			"x" : 350,
-			"y" : -270,
-			"pos" : [
-				{
-					"x" : -100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : 100,
-				},
-				{
-					"x" : -100,
-					"y" : 100,
-				},
-			]
-		}
-	},
-	"02_7" : {
-		"reverse" : 1,
-		"map_id" : 0,
-		"chip" : {
-			"x" : 150,
-			"y" : -300,
-			"w" : 200,
-			"h" : 200,
-			"src" : "Image/Screen/Mapchip/chip_02.png",
-			"dir" : 0,
-			"center" : 1
-		},
-		"hitbox" : {
-			"x" : 150,
-			"y" : -270,
-			"pos" : [
-				{
-					"x" : -100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : -30,
-				},
-				{
-					"x" : 100,
-					"y" : 100,
-				},
-				{
-					"x" : -100,
-					"y" : 100,
-				},
-			]
-		}
-	},
-	"08_2" : {
+	"08_3" : {
 		"reverse" : 0,
 		"map_id" : 0,
 		"chip" : {
@@ -467,17 +243,335 @@ var json_mapchip = {
 			"center" : 1
 		}
 	},
-	"08_3" : {
-		"reverse" : 1,
+	"08_4" : {
+		"reverse" : 0,
 		"map_id" : 0,
 		"chip" : {
 			"x" : 350,
-			"y" : -20,
+			"y" : -100,
 			"w" : 200,
 			"h" : 200,
 			"src" : "Image/Screen/Mapchip/chip_08.png",
 			"dir" : 0,
 			"center" : 1
+		}
+	},
+	"08_5" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 350,
+			"y" : 0,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_6" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 550,
+			"y" : 0,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_7" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 550,
+			"y" : -100,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_8" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 550,
+			"y" : -200,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"03_0" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 650,
+			"y" : -280,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_03.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"03_1" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 650,
+			"y" : 100,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_03.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox" : {
+			"x" : 650,
+			"y" : 113,
+			"pos" : [
+				{
+					"x" : -100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : 7,
+				},
+				{
+					"x" : 100,
+					"y" : 100,
+				},
+				{
+					"x" : -100,
+					"y" : 100,
+				},
+			]
+		}
+	},
+	"03_2" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 650,
+			"y" : 120,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_03.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox" : {
+			"x" : 650,
+			"y" : 133,
+			"pos" : [
+				{
+					"x" : -100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : 7,
+				},
+				{
+					"x" : 100,
+					"y" : 100,
+				},
+				{
+					"x" : -100,
+					"y" : 100,
+				},
+			]
+		}
+	},
+	"03_3" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 840,
+			"y" : 135,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_03.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox" : {
+			"x" : 840,
+			"y" : 148,
+			"pos" : [
+				{
+					"x" : -100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : 7,
+				},
+				{
+					"x" : 100,
+					"y" : 100,
+				},
+				{
+					"x" : -100,
+					"y" : 100,
+				},
+			]
+		}
+	},
+	"03_4" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 840,
+			"y" : 155,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_03.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox" : {
+			"x" : 840,
+			"y" : 168,
+			"pos" : [
+				{
+					"x" : -100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : 7,
+				},
+				{
+					"x" : 100,
+					"y" : 100,
+				},
+				{
+					"x" : -100,
+					"y" : 100,
+				},
+			]
+		}
+	},
+	"03_5" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 840,
+			"y" : -245,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_03.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"09_3" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 1040,
+			"y" : 163,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_09.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"02_5" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 1040,
+			"y" : -230,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_02.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_9" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 940,
+			"y" : -130,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_10" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 940,
+			"y" : 0,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_11" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 940,
+			"y" : 75,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"09_4" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 1040,
+			"y" : 163,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_09.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox" : {
+			"x" : 1040,
+			"y" : 163,
+			"pos" : [
+				{
+					"x" : -100,
+					"y" : -10,
+				},
+				{
+					"x" : 100,
+					"y" : -10,
+				},
+				{
+					"x" : 100,
+					"y" : 15,
+				},
+				{
+					"x" : -100,
+					"y" : 15,
+				},
+			]
 		}
 	},
 }
