@@ -340,7 +340,7 @@ function init(){
 	}));
 	
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0,
+		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
 		src: 'Image/Screen/flash_mask.png',
 		label: ['Flashmask', 'All']
 	}));
@@ -777,11 +777,10 @@ function update(){
 	_animation.load_finished -= (_animation.load_finished > 0);
 
 	switch(_animation.title){
-		case 0:
+		case 0:			
 			if(!game_controller.respawn){
 				soundset[game_controller.environmental_se.water].audio.volume += (0.8 - soundset[game_controller.environmental_se.water].audio.volume) / 6;
 				gui[game_controller.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[game_controller.feed_index].alpha) / 6;
-				gui[game_controller.flash_index].alpha += (false * 1.0 - gui[game_controller.flash_index].alpha) / 4;
 				game_controller.play_audio.change_speed = 3;
 			}
 			break;
@@ -877,7 +876,7 @@ function update(){
 			break;
 	}
 	
-	gui[game_controller.flash_index].alpha += -gui[game_controller.flash_index].alpha / 5;
+	gui[game_controller.flash_index].alpha += -gui[game_controller.flash_index].alpha / 4.8;
 	
 	game_controller.title_logo.main_index.map(function(e){
 		gui[e].alpha += (1 - gui[e].alpha) / 46;
@@ -1582,6 +1581,7 @@ function control_player_animation(){
 }
 
 function switch_animal(name){
+	gui[game_controller.flash_index].alpha = 1;
 	let index = player.index;
 	player.animal = name;
 	switch(name){
