@@ -267,6 +267,10 @@ function init(){
 			// ネズミ
 			'Image/Character/mouse_0_0.png',
 			'Image/Character/mouse_0_1.png',
+			// ネコ
+			// タカ
+			'Image/Character/hawk_0_0.png',
+			'Image/Character/hawk_1_0.png',
         ],
         label: 'Player'
 	}));
@@ -634,7 +638,14 @@ function init_hitboxes(){
 		[{x: -30, y: 40}, {x: 35, y: 40}, {x: 35, y: -45}, {x: -30, y: -45}],
 		
 		// ネズミ
-		[{x: -35, y: 15}, {x: 35, y: 15}, {x: 35, y: -15}, {x: -35, y: -15}]
+		[{x: -35, y: 15}, {x: 35, y: 15}, {x: 35, y: -15}, {x: -35, y: -15}],
+		
+		// ネコ
+		[{x: -35, y: 15}, {x: 35, y: 15}, {x: 35, y: -15}, {x: -35, y: -15}],
+		
+		// タカ
+		//[{x: -40, y: 30}, {x: 40, y: 30}, {x: 40, y: -30}, {x: -40, y: -30}],
+		[{x: -40, y: 25}, {x: 40, y: 25}, {x: 40, y: -30}, {x: -40, y: -30}],
 	];
 }
 
@@ -1305,7 +1316,7 @@ function player_control(){
 	}
 }
 
-function move_until_not_hit(obj_1, obj_2, count, step, x, y, changeX, changeY){
+function move_until_not_hit(obj_1, obj_2, count, step, x, y, change_x, change_y){
 	var isHit = true;
 	var tentativeX = x;
 	var tentativeY = y;
@@ -1317,8 +1328,8 @@ function move_until_not_hit(obj_1, obj_2, count, step, x, y, changeX, changeY){
 	for(var i = 0; i < count && isHit; i++){
 		isHit = grounds[game_controller.map_id].check_hit(gui[player.hitbox]);
 
-		tentativeX += step * changeX;
-		tentativeY += step * changeY;
+		tentativeX += step * change_x;
+		tentativeY += step * change_y;
 		gui[obj_1].x = center + tentativeX;
 		gui[obj_1].y = center + tentativeY;
 		gui[obj_1].draw();
@@ -1563,6 +1574,7 @@ function control_player_animation(){
 			
 		case 'hawk':
 			// たか
+			frame = player.standing ? 18 : 17;
 			break;
 	}
 	
@@ -1588,6 +1600,7 @@ function switch_animal(name){
 			
 		case 'hawk':
 			// たか
+			gui[index].anime_frame = 17;
 			break;
 	}
 }
@@ -1615,6 +1628,7 @@ function control_hitbox(){
 			
 		case 'hawk':
 			// たか
+			gui[player.hitbox].pos = hitbox_datas[4];
 			break;
 	}
 }
@@ -1639,12 +1653,12 @@ function judge_puzzle(board, answer, confuse = true){
 		var dir = board[i].dir;
 		var rev = board[i].rev;
 		
-		if(rev == 1){
-			if(i == 1 || i == 2 || i == 6) dir += 90;
+		if(rev === 1){
+			if(i === 1 || i === 2 || i === 6) dir += 90;
 		}
 		
-		if(i == 3) dir = (dir + 360) % 90;
-		if(i == 4) dir = (dir + 360) % 180;
+		if(i === 3) dir = (dir + 360) % 90;
+		if(i === 4) dir = (dir + 360) % 180;
 		
 		if(Math.abs(answer[i].rp_x - board[i].rp_x) > allowed_error_pos
 		   || Math.abs(answer[i].rp_y - board[i].rp_y) > allowed_error_pos
