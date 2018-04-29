@@ -750,4 +750,165 @@ var json_mapchip = {
 			"center" : 1
 		}
 	},
+	"11_0" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 30,
+			"y" : 70,
+			"w" : 300,
+			"h" : 600,
+			"src" : "Image/Screen/Mapchip/chip_11.png",
+			"dir" : 180,
+			"center" : 1
+		}
+	},
+	"10_0" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 30,
+			"y" : 55,
+			"w" : 120,
+			"h" : 120,
+			"src" : "Image/Screen/Mapchip/chip_10.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"11_1" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 120,
+			"y" : 75,
+			"w" : 200,
+			"h" : 300,
+			"src" : "Image/Screen/Mapchip/chip_11.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"02_9" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 1240,
+			"y" : 125,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_02.png",
+			"dir" : 5,
+			"center" : 1
+		},
+		"hitbox" : {
+			"x" : 1240,
+			"y" : 155,
+			"pos" : [
+				{
+					"x" : -97,
+					"y" : -39,
+				},
+				{
+					"x" : 102,
+					"y" : -21,
+				},
+				{
+					"x" : 91,
+					"y" : 108,
+				},
+				{
+					"x" : -108,
+					"y" : 91,
+				},
+			]
+		}
+	},
+	"02_10" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 1240,
+			"y" : 135,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_02.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"02_11" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 1435,
+			"y" : 135,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_02.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox" : {
+			"x" : 1435,
+			"y" : 165,
+			"pos" : [
+				{
+					"x" : -100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : 100,
+				},
+				{
+					"x" : -100,
+					"y" : 100,
+				},
+			]
+		}
+	},
+	"08_14" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 1145,
+			"y" : 40,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_15" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 1145,
+			"y" : -60,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_16" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 1145,
+			"y" : -165,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
 }
