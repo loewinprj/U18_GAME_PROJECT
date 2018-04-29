@@ -672,4 +672,82 @@ var json_mapchip = {
 			"center" : 1
 		}
 	},
+	"08_8" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 950,
+			"y" : 40,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_9" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 950,
+			"y" : -20,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_10" : {
+		"reverse" : 0,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 950,
+			"y" : -160,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_11" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 967,
+			"y" : -160,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_12" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 967,
+			"y" : -40,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"08_13" : {
+		"reverse" : 1,
+		"map_id" : 0,
+		"chip" : {
+			"x" : 967,
+			"y" : 40,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_08.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
 }
