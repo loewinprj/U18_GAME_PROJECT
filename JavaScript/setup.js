@@ -27,14 +27,16 @@ var board_datas; // puzzle boards
 
 // Change rate of acceleration
 const accel_speed = {
-	human: 4.1,
+	human: 4.8,
+	mouse: 3.7,
 	hawk: 7.6
 };
 
 // Jump pwoer of player
 const jump_power = {
-	human: 6.3,
-	hawk: 18
+	human: 9,
+	mouse: 6,
+	hawk: 21
 };
 
 const dec_force = 0.7; // The force of inertia
