@@ -24,9 +24,20 @@ var puzzle_datas; // puzzle stage datas
 var board_datas; // puzzle boards
 
 // constant
-const accelSpeed = 4.1; // Change rate of acceleration
-const jumpPower = 6.3; // Jump pwoer of player
-const lowAccel = 0.7; // The force of inertia
+
+// Change rate of acceleration
+const accel_speed = {
+	human: 4.1,
+	hawk: 7.6
+};
+
+// Jump pwoer of player
+const jump_power = {
+	human: 6.3,
+	hawk: 18
+};
+
+const dec_force = 0.7; // The force of inertia
 
 const fps = 1000 / 30; // for setinterval
 
