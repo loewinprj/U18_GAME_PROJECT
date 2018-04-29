@@ -12,6 +12,7 @@ var op_image_set; // to use background with op
 var soundset; // BGM and SE stacks
 var mapchips; // to use ground hit
 var grounds; // grounds stacks
+var mobs; // mobs stacks
 
 var anime_index; // stack indexes of animation objects (effects)
 var effects; // stack objectes of effects
