@@ -556,12 +556,14 @@ function init_mapchip(canvas, context){
 		}
 		
 		// Map chip image soruce
-		gui.push(new canvasEx({
-			canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: chip.center, alpha: 1,
-			src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id || 0, 
-			reverse: data.reverse || 0, direction: chip.dir || 0,
-			label: ['Mapchip', 'Game']
-		}));
+		if(chip !== void(0)){
+			gui.push(new canvasEx({
+				canvas, context, type: img, x: center + chip.x, y: center + chip.y, w: chip.w, h: chip.h, center: chip.center, alpha: 1,
+				src: chip.src, mapchip_data: {x: chip.x, y: chip.y}, map_id: data.map_id || 0, 
+				reverse: data.reverse || 0, direction: chip.dir || 0,
+				label: ['Mapchip', 'Game']
+			}));
+		}
 	});
 }
 
@@ -1194,13 +1196,13 @@ function player_control(){
 	let clear_case = (_debug.screen || !game_controller.puzzle.mode);
 
 	// Deceleration according to law of inertia
-	player.accel.x += (pressed_keys[39] - pressed_keys[37]) * accelSpeed * clear_case; // Rigth and Left arrow keys
+	player.accel.x += (pressed_keys[39] - pressed_keys[37]) * accel_speed[player.animal] * clear_case; // Rigth and Left arrow keys
 	var pre_player_x = player.x;
 	var pre_player_y = player.y;
 	player.x = 0;
 	player.y = 0;
     
-	player.accel.x *= lowAccel;
+	player.accel.x *= dec_force;
 	player.x += player.accel.x;
 
 	player.y += player.accel.y + player.accel.gravity;
@@ -1262,7 +1264,7 @@ function player_control(){
 			player.hit = false;
 			player.accel.y = 0;
 			player.accel.gravity = 0;
-			player.accel.y += (pressed_keys[38] * -jumpPower) * clear_case; //ジャンプを有効化する
+			player.accel.y += (pressed_keys[38] * -jump_power[player.animal]) * clear_case;
 		}
 		player.x = result[0];
 		player.y = result[1];
