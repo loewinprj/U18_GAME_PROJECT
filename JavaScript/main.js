@@ -668,19 +668,7 @@ function init_puzzle_data(canvas, context){
 	
 	// パズルの完成データ
 	puzzle_datas = [
-		[ // 雁
-			/*
-			旧データ
-			{dir: 0}, // 三角形 - 小
-			{dir: 0}, // 三角形 - 中
-			{dir: 180}, // 三角形 - 中
-
-			{dir: 45}, // 四角形 - 正方形
-			{dir: 135, rev: 1}, // 四角形 - 平行四辺形
-			{dir: 45, rev: 1}, // 四角形 - 台形
-			{dir: 225}, // 四角形 - 等脚台形
-			*/
-			
+		[ // おしどり
 			/*重要！！！：0,1,2,3,6 のrevは0になるように模範解答を作成すること
 			3（正方形）はdirが0から89に収まるように
 			4（平行四辺形）はdirが0から179に収まるように
@@ -693,16 +681,87 @@ function init_puzzle_data(canvas, context){
 			{index: 36, dir: 225, rev: 0, x: "center-164.5", y: "center26"},
 			{index: 37, dir: 225, rev: 0, x: "center-151.5", y: "center39"},
 		],
+        [//雁
+            {index: 57, dir: 135, rev: 0, x: "center-182", y: "center-2"},
+            {index: 58, dir: 225, rev: 0, x: "center-114", y: "center103"},
+            {index: 59, dir: 180, rev: 0, x: "center-79", y: "center-33"},
+            {index: 60, dir: 45, rev: 0, x: "center-83", y: "center31"},
+            {index: 61, dir: 40, rev: 1, x: "center-141", y: "center5"},
+            {index: 62, dir: 135, rev: 1, x: "center-18", y: "center39"},
+            {index: 63, dir: 225, rev: 0, x: "center-34", y: "center52"},   
+        ],
 		[ // 富士山
-			{dir: 45}, // 三角形 - 小
-			{dir: 225}, // 三角形 - 中
-			{dir: 45}, // 三角形 - 中
-
-			{dir: 0}, // 四角形 - 正方形
-			{dir: 45}, // 四角形 - 平行四辺形
-			{dir: 225, rev: 1}, // 四角形 - 台形
-			{dir: 45}, // 四角形 - 等脚台形
+            {index: 57, dir: 45, rev: 0, x: "center-264", y: "center67"},
+            {index: 58, dir: 225, rev: 0, x: "center-257", y: "center51"},
+            {index: 59, dir: 45, rev: 0, x: "center-353", y: "center55"},
+            {index: 60, dir: 0, rev: 0, x: "center-301", y: "center16"},
+            {index: 61, dir: 45, rev: 0, x: "center-302", y: "center80"},
+            {index: 62, dir: 135, rev: 1, x: "center-213", y: "center90"},
+            {index: 63, dir: 45, rev: 0, x: "center-377", y: "center108"},
 		],
+        [ //猿
+            {index: 57, dir: 135, rev: 0, x: "center-154", y: "center-24"},
+            {index: 58, dir: 45, rev: 0, x: "center-189", y: "center-163"},
+            {index: 59, dir: 225, rev: 0, x: "center-194", y: "center-67"},
+            {index: 60, dir: 45, rev: 0, x: "center-163", y: "center-194"},
+            {index: 61, dir: 135, rev: 1, x: "center-139", y: "center-247"},
+            {index: 62, dir: 45, rev: 1, x: "center-154", y: "center-105"},
+            {index: 63, dir: 135, rev: 0, x: "center-141", y: "center-87"},
+        ],
+        [//蓮華
+            {index: 57, dir: 315, rev: 0, x: "center153",y: "center25.5"},
+            {index: 58, dir: 0, rev: 0, x: "center159",y: "center-128.5"},
+            {index: 59, dir: 270, rev: 0, x: "center78",y: "center-130.5"},
+            {index: 60, dir: 0, rev: 0, x: "center119", y: "center-126.5"},
+            {index: 61, dir: 45, rev: 0, x: "center143",y: "center-8.5"},
+            {index: 62, dir: 45, rev: 1, x: "center174",y: "center76.5"},
+            {index: 63, dir: 225,  rev: 0, x: "center116",y: "center-91.5"},
+        ],
+        [//家
+            {"index": 57,"dir": 225,"rev": 0,"x": "center92.5","y": "center-35.5"},
+            {"index": 58,"dir": 225,"rev": 0,"x": "center207.5","y": "center-78.5"},
+            {"index": 59,"dir": 45,"rev": 0,"x": "center57.5","y": "center-72.5"},
+            {"index": 60,"dir": 45,"rev": 0,"x": "center57.5","y": "center-44.5"},
+            {"index": 61,"dir": 45,"rev": 0,"x": "center135.5","y": "center-46.5"},
+            {"index": 62,"dir": 315,"rev": 1,"x": "center193.5","y": "center-60.5"},
+            {"index": 63,"dir": 225,"rev": 0,"x": "center132.5","y": "center-130.5"}
+        ],
+        [//鯛
+            {"index": 57,"dir": 225,"rev": 0,"x": "center-61.5","y": "center-179.5"},
+            {"index": 58,"dir": 135,"rev": 0,"x": "center-74.5","y": "center-212.5"},
+            {"index": 59,"dir": 315,"rev": 0,"x": "center136.5","y": "center-221.5"},
+            {"index": 60,"dir": 45,"rev": 0,"x": "center-44.5","y": "center-238.5"},
+            {"index": 61,"dir": 0,"rev": 0,"x": "center-3.5","y": "center-284.5"},
+            {"index": 62,"dir": 135,"rev": 1,"x": "center20.5","y": "center-229.5"},
+            {"index": 63,"dir": 225,"rev": 0,"x": "center3.5","y": "center-217.5"}
+        ],
+        [//生け花
+            {"index": 57,"dir": 225,"rev": 0,"x": "center192.5","y": "center-80.5"},
+            {"index": 58,"dir": 315,"rev": 0,"x": "center238.5","y": "center-116.5"},
+            {"index": 59,"dir": 315,"rev": 0,"x": "center186.5","y": "center-119.5"},
+            {"index": 60,"dir": 45,"rev": 0,"x": "center210.5","y": "center-243.5"},
+            {"index": 61,"dir": 45,"rev": 1,"x": "center208.5","y": "center-117.5"},
+            {"index": 62,"dir": 135,"rev": 0,"x": "center221.5","y": "center-177.5"},
+            {"index": 63,"dir": 45,"rev": 0,"x": "center211.5","y": "center-12.5"}
+        ],
+        [//あんどん
+            { "index": 57, "dir": 315, "rev": 0, "x": "center-181.5", "y": "center-52.5" }, 
+            { "index": 58, "dir": 225, "rev": 0, "x": "center-174.5", "y": "center-170.5" },
+            { "index": 59, "dir": 45, "rev": 0, "x": "center-140.5", "y": "center-9.5" },
+            { "index": 60, "dir": 45, "rev": 0, "x": "center-170.5", "y": "center-140.5" },
+            { "index": 61, "dir": 45, "rev": 0, "x": "center-91.5", "y": "center-36.5" },
+            { "index": 62, "dir": 225, "rev": 0, "x": "center-237.5", "y": "center-25.5" },
+            { "index": 63, "dir": 45, "rev": 0, "x": "center-173.5", "y": "center-62.5" }
+        ],
+        [//切子
+            {"index": 57,"dir": 135,"rev": 0,"x": "center205.5","y": "center3.5"},
+            {"index": 58,"dir": 315,"rev": 0,"x": "center170.5","y": "center-39.5"},
+            {"index": 59,"dir": 45,"rev": 0,"x": "center168.5","y": "center-189.5"},
+            {"index": 60,"dir": 45,"rev": 0,"x": "center192.5","y": "center-268.5"},
+            {"index": 61,"dir": 45,"rev": 0,"x": "center218.5","y": "center-215.5"},
+            {"index": 62,"dir": 135,"rev": 0,"x": "center203.5","y": "center-98.5"},
+            {"index": 63,"dir": 225,"rev": 0,"x": "center190.5","y": "center-193.5"}
+        ]
 	];
 }
 
@@ -1666,7 +1725,16 @@ function judge_puzzle(board, answer, confuse = true){
 		   || Math.abs(answer[i].rp_y - board[i].rp_y) > allowed_error_pos
 		   || Math.abs(answer[i].dir - dir) > allowed_error_dir){
 			if(confuse){
-				return judge_puzzle(board,answer, false);
+                var tmp = board[1];
+                board[1] = board[2];
+                board[2] = tmp;
+                
+                var re = judge_puzzle(board,answer, false);
+                
+                var tmp = board[1];
+                board[1] = board[2];
+                board[2] = tmp;
+				return re;
 			}else{
 				return false;
 			}
