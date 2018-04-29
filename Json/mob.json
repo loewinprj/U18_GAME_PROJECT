@@ -1,0 +1,11 @@
+var json_mob = {
+	"hawk_0" : {
+		"x" : 1100,
+		"y" : -290,
+		"w" : 90,
+		"h" : 90,
+		"center" : 1,
+		"reverse" : 1,
+		"src" : "Image/Character/hawk_1_0.png",
+	}
+}
