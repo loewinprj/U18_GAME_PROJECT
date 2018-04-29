@@ -695,13 +695,11 @@ function init_puzzle_data(canvas, context){
 	
 	// パズルの完成データ
 	puzzle_datas = [
-		/*
-			重要！！！：0,1,2,3,6 のrevは0になるように模範解答を作成すること
+		[ // おしどり
+			/*重要！！！：0,1,2,3,6 のrevは0になるように模範解答を作成すること
 			3（正方形）はdirが0から89に収まるように
 			4（平行四辺形）はdirが0から179に収まるように
 		*/
-		
-		[ // おしどり
 			{index: 31, dir: 135, rev: 0, x: "center-243.5", y: "center-23"},
 			{index: 32, dir: 315, rev: 0, x: "center-120.5", y: "center-12"},
 			{index: 33, dir: 135, rev: 0, x: "center-229.5", y: "center-9"},
@@ -1463,11 +1461,11 @@ function drag_objects(){
 
 	if(drag > -1){
 		if(!gui[drag].pinX){
-			gui[drag].x = center + (mouse.x - width / 2);
+			gui[drag].x = center + (mouse.x - width / 2 + gui[drag].drag_x) ;
 		}
 
 		if(!gui[drag].pinY){
-			gui[drag].y = center + (mouse.y - height / 2);
+			gui[drag].y = center + (mouse.y - height / 2 + gui[drag].drag_y);
 		}
 
 		if(check_include_label(gui[drag].label, 'Puzzle') && !game_controller.puzzle.mode){
@@ -1488,7 +1486,8 @@ function drag_objects(){
 						if((distance(e.x, e.y, mouse.x, mouse.y, canv) < max) && drag === -1){
 							max = distance(e.x, e.y, mouse.x, mouse.y, canv);
 							mouse.drag = i;
-
+                            gui[i].drag_x = ~~e.x.match(/-?\d+/)[0] + width / 2 - mouse.x
+                            gui[i].drag_y = ~~e.y.match(/-?\d+/)[0] + height / 2 - mouse.y
 							if(check_include_label(e.label, 'Selector')){
 								mouse.last_drag_index = mouse.drag;
 							}
@@ -1760,15 +1759,15 @@ function judge_puzzle(board, answer, confuse = true){
 		   || Math.abs(answer[i].rp_y - board[i].rp_y) > allowed_error_pos
 		   || Math.abs(answer[i].dir - dir) > allowed_error_dir){
 			if(confuse){
-				var tmp = board[1];
-				board[1] = board[2];
-				board[2] = tmp;
-
-				var re = judge_puzzle(board,answer, false);
-				var tmp = board[1];
-				board[1] = board[2];
-				board[2] = tmp;
-
+                var tmp = board[1];
+                board[1] = board[2];
+                board[2] = tmp;
+                
+                var re = judge_puzzle(board,answer, false);
+                
+                var tmp = board[1];
+                board[1] = board[2];
+                board[2] = tmp;
 				return re;
 			}else{
 				return false;
