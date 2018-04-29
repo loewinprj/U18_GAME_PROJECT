@@ -123,8 +123,8 @@ function init(){
 		hitbox: 0,
 		
 		save: {
-			x: 0,
-			y: 0,
+			x: 4800,
+			y: -250,
 			index: 0
 		},
 		
@@ -343,7 +343,7 @@ function init(){
 	}));
 	
 	gui.push(new canvasEx({
-		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 1,
+		canvas, context, type: img, x: 0, y: 0, w: fit, h: fit, alpha: 0,
 		src: 'Image/Screen/flash_mask.png',
 		label: ['Flashmask', 'All']
 	}));
@@ -1392,7 +1392,8 @@ function player_control(){
 				if(abs(player.save.x - game_controller.scroll.x) + (1 - gui[game_controller.feed_index].alpha) < 0.1){
 					setTimeout(function(){
 						game_controller.play_audio.max_volume = 0.6;
-						game_controller.scroll.x = 0;
+						game_controller.scroll.x = player.save.x;
+						game_controller.scroll.y = player.save.y;
 						gui[player.index].alpha = 1;
 						player.accel.gravity = 0;
 
