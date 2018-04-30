@@ -5627,4 +5627,139 @@ var json_mapchip = {
 			"center" : 1
 		}
 	},
+	"07_39" : {
+		"reverse" : 0,
+		"map_id" : 1,
+		"chip" : {
+			"x" : 810,
+			"y" : 400,
+			"w" : 100,
+			"h" : 100,
+			"src" : "Image/Screen/Mapchip/chip_07.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"07_40" : {
+		"reverse" : 0,
+		"map_id" : 1,
+		"chip" : {
+			"x" : 610,
+			"y" : 400,
+			"w" : 100,
+			"h" : 100,
+			"src" : "Image/Screen/Mapchip/chip_07.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"07_41" : {
+		"reverse" : 1,
+		"map_id" : 1,
+		"chip" : {
+			"x" : 730,
+			"y" : 400,
+			"w" : 100,
+			"h" : 100,
+			"src" : "Image/Screen/Mapchip/chip_07.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"07_42" : {
+		"reverse" : 0,
+		"map_id" : 1,
+		"chip" : {
+			"x" : 1000,
+			"y" : 400,
+			"w" : 100,
+			"h" : 100,
+			"src" : "Image/Screen/Mapchip/chip_07.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"07_43" : {
+		"reverse" : 1,
+		"map_id" : 1,
+		"chip" : {
+			"x" : 1200,
+			"y" : 400,
+			"w" : 100,
+			"h" : 100,
+			"src" : "Image/Screen/Mapchip/chip_07.png",
+			"dir" : 0,
+			"center" : 1
+		}
+	},
+	"02_113" : {
+		"reverse" : 0,
+		"map_id" : 1,
+		"chip" : {
+			"x" : 1370,
+			"y" : 410,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_02.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox" : {
+			"x" : 1370,
+			"y" : 440,
+			"pos" : [
+				{
+					"x" : -100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : 100,
+				},
+				{
+					"x" : -100,
+					"y" : 100,
+				},
+			]
+		}
+	},
+	"02_114" : {
+		"reverse" : 0,
+		"map_id" : 1,
+		"chip" : {
+			"x" : 1370,
+			"y" : 410,
+			"w" : 200,
+			"h" : 200,
+			"src" : "Image/Screen/Mapchip/chip_02.png",
+			"dir" : 0,
+			"center" : 1
+		},
+		"hitbox" : {
+			"x" : 1370,
+			"y" : 440,
+			"pos" : [
+				{
+					"x" : -100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : -30,
+				},
+				{
+					"x" : 100,
+					"y" : 100,
+				},
+				{
+					"x" : -100,
+					"y" : 100,
+				},
+			]
+		}
+	},
 }
