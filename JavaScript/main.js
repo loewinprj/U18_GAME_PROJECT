@@ -720,13 +720,13 @@ function init_puzzle_data(canvas, context){
 			{index: 37, dir: 225, rev: 0, x: "center-151.5", y: "center39"},
 		],
 		[ //雁	
-            {index: 284, dir: 135, rev: 0, x: "center-177", y: "center36"}
-            {index: 285, dir: 0, rev: 0, x: "center-74", y: "center9", …}
-            {index: 286, dir: 45, rev: 0, x: "center-113", y: "center152"}
-            {index: 287, dir: 45, rev: 0, x: "center-85", y: "center74"}
-            {index: 288, dir: 45, rev: 1, x: "center-140", y: "center44"}
-            {index: 289, dir: 135, rev: 1, x: "center-20", y: "center83"}
-            {index: 290, dir: 225, rev: 0, x: "center-39", y: "center95"} 
+			{index: 284, dir: 135, rev: 0, x: "center-177", y: "center36"},
+		        {index: 285, dir: 0, rev: 0, x: "center-74", y: "center9"},
+			{index: 286, dir: 45, rev: 0, x: "center-113", y: "center152"},
+			{index: 287, dir: 45, rev: 0, x: "center-85", y: "center74"},
+			{index: 288, dir: 45, rev: 1, x: "center-140", y: "center44"},
+			{index: 289, dir: 135, rev: 1, x: "center-20", y: "center83"},
+			{index: 290, dir: 225, rev: 0, x: "center-39", y: "center95"},
 		],
 		[ // 富士山
 			{index: 57, dir: 45, rev: 0, x: "center-264", y: "center67"},
