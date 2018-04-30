@@ -283,7 +283,6 @@ function init(){
 	gui.push(new canvasEx({
 		canvas, context, type: pth, x: center, y: center, bold: 1, color: '#D00', mode: stroke,
 		pos: [
-			//{x: -35, y: 13}, {x: 35, y: 13}, {x: 35, y: -15}, {x: -35, y: -15} // mouse
 			{x: -30, y: 40}, {x: 35, y: 40}, {x: 35, y: -45}, {x: -30, y: -45}, // ninja
 		],
 		label: ['Player', 'Hitbox']
@@ -400,11 +399,11 @@ function init(){
 
 	// Init sounds
 	const soundname = [
-		{src: 'Sound/Test/U18-13(1).mp3', volume: 1, loop: 1},
-		{src: 'Sound/Test/U18-14(1)-music.mp3', volume: 0.0, loop: 1},
-		{src: 'Sound/Test/U18-14(1)-water.mp3', volume: 0.8, loop: 1},
-		{src: 'Sound/Test/U18-17(1).mp3', volume: 0.7, loop: 0},
-		{src: 'Sound/Test/SE-7(1)_remix.mp3', volume: 0.6, loop: 0},
+		{src: 'Sound/BGM/title.mp3', volume: 1, loop: 1},
+		{src: 'Sound/BGM/map01.mp3', volume: 0.0, loop: 1},
+		{src: 'Sound/BGM/opening.mp3', volume: 0.7, loop: 0},
+		{src: 'Sound/SE/water.mp3', volume: 0.8, loop: 1},
+		{src: 'Sound/SE/pause.mp3', volume: 0.6, loop: 0},
 	];
 
 	soundset = new Array(soundname.length).fill(0);
@@ -415,11 +414,11 @@ function init(){
 		soundset[i].volume(_this.volume);
 		soundset[i].loop(_this.loop);
 		
-		if(src === 'Sound/Test/SE-7(1)_remix.mp3'){
+		if(src === 'Sound/SE/pause.mp3'){
 			game_controller.pause.se_index = i;
 		}
 		
-		if(src === 'Sound/Test/U18-14(1)-water.mp3'){
+		if(src === 'Sound/SE/water.mp3'){
 			game_controller.environmental_se.water = i;
 		}
 	});
@@ -912,22 +911,26 @@ function update(){
 		
 		case 3:
 			setTimeout(function(){
-				if(false){
+				game_controller.play_audio.change_speed = 6;
+				game_controller.play_audio.max_volume = 0.6;
+				game_controller.play_audio.index = 2;
+				game_controller.play_audio.pause = 1;
+				game_controller.play_audio.play = 1;
+					
+				if(pressed_keys[32]){
 					game_controller.play_audio.change_speed = 6;
-					game_controller.play_audio.max_volume = 1;
+					game_controller.play_audio.max_volume = 0.6;
 					game_controller.play_audio.index = 1;
 					game_controller.play_audio.pause = 1;
 					game_controller.play_audio.play = 1;
-					
+
 					game_controller.screen_mode = 'Game';
 					_animation.title = 0;
+
+					setTimeout(function(){
+						soundset[game_controller.environmental_se.water].play();
+					}, 300);
 				} else {
-					game_controller.play_audio.change_speed = 6;
-					game_controller.play_audio.max_volume = 0.6;
-					game_controller.play_audio.index = 3;
-					game_controller.play_audio.pause = 1;
-					game_controller.play_audio.play = 1;
-					
 					game_controller.screen_mode = 'Opening';
 					_animation.title = 4;
 				}
@@ -935,10 +938,9 @@ function update(){
 			break;
 			
 		case 4:
-			// オープニングを付ける予定
-			gui[game_controller.feed_index].alpha += (0.3 - gui[game_controller.feed_index].alpha) / 16; // とりあえず画面明るくしておけ
+			gui[game_controller.feed_index].alpha += (0.3 - gui[game_controller.feed_index].alpha) / 16;
 			
-			if(story.length > game_controller.opening.story_index){
+			if(story.length > game_controller.opening.story_index && !pressed_keys[32] && !game_controller.ended_op){
 				if(abs(0.3 - gui[game_controller.feed_index].alpha) < 0.1){
 					//abs_x
 					if(gui[game_controller.opening.index].abs_x < 50){
@@ -972,19 +974,41 @@ function update(){
 				}
 			}
 
-			if(pressed_keys[32] || story.length === game_controller.opening.story_index){
-				game_controller.play_audio.change_speed = 6;
-				game_controller.play_audio.max_volume = 0.6;
-				game_controller.play_audio.index = 1;
-				game_controller.play_audio.pause = 1;
-				game_controller.play_audio.play = 1;
-					
-				game_controller.screen_mode = 'Game';
-				_animation.title = 0;
+			if((pressed_keys[32] || story.length === game_controller.opening.story_index) && !game_controller.ended_op){
+				game_controller.ended_op = true;
 				
-				setTimeout(function(){
-					soundset[game_controller.environmental_se.water].play();
-				}, 300);
+				if(story.length !== game_controller.opening.story_index){
+					game_controller.play_audio.change_speed = 1.5;
+					game_controller.play_audio.max_volume = 0;
+					
+					setTimeout(function(){
+						game_controller.play_audio.change_speed = 6;
+						game_controller.play_audio.max_volume = 0.6;
+						game_controller.play_audio.index = 1;
+						game_controller.play_audio.pause = 1;
+						game_controller.play_audio.play = 1;
+						
+						game_controller.screen_mode = 'Game';
+						_animation.title = 0;
+
+						setTimeout(function(){
+							soundset[game_controller.environmental_se.water].play();
+						}, 300);
+					}, 500);
+				} else {
+					game_controller.play_audio.change_speed = 6;
+					game_controller.play_audio.max_volume = 0.6;
+					game_controller.play_audio.index = 1;
+					game_controller.play_audio.pause = 1;
+					game_controller.play_audio.play = 1;
+
+					game_controller.screen_mode = 'Game';
+					_animation.title = 0;
+
+					setTimeout(function(){
+						soundset[game_controller.environmental_se.water].play();
+					}, 300);
+				}
 			}
 			break;
 	}
