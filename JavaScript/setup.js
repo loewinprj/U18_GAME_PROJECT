@@ -30,7 +30,7 @@ var stacks; // free value stacks
 
 // Change rate of acceleration
 const accel_speed = {
-	human: 4.8,
+	ninja: 4.8,
 	mouse: 3.7,
 	hawk: 2.0,
 	hawk_2: 7.6
@@ -38,7 +38,7 @@ const accel_speed = {
 
 // Jump pwoer of player
 const jump_power = {
-	human: 9,
+	ninja: 9,
 	mouse: 6,
 	hawk: 21
 };
