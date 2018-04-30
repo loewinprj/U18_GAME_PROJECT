@@ -719,14 +719,14 @@ function init_puzzle_data(canvas, context){
 			{index: 36, dir: 225, rev: 0, x: "center-164.5", y: "center26"},
 			{index: 37, dir: 225, rev: 0, x: "center-151.5", y: "center39"},
 		],
-		[ //雁
-			{index: 57, dir: 135, rev: 0, x: "center-182", y: "center-2"},
-			{index: 58, dir: 225, rev: 0, x: "center-114", y: "center103"},
-			{index: 59, dir: 180, rev: 0, x: "center-79", y: "center-33"},
-			{index: 60, dir: 45, rev: 0, x: "center-83", y: "center31"},
-			{index: 61, dir: 40, rev: 1, x: "center-141", y: "center5"},
-			{index: 62, dir: 135, rev: 1, x: "center-18", y: "center39"},
-			{index: 63, dir: 225, rev: 0, x: "center-34", y: "center52"},   
+		[ //雁	
+            {index: 284, dir: 135, rev: 0, x: "center-177", y: "center36"}
+            {index: 285, dir: 0, rev: 0, x: "center-74", y: "center9", …}
+            {index: 286, dir: 45, rev: 0, x: "center-113", y: "center152"}
+            {index: 287, dir: 45, rev: 0, x: "center-85", y: "center74"}
+            {index: 288, dir: 45, rev: 1, x: "center-140", y: "center44"}
+            {index: 289, dir: 135, rev: 1, x: "center-20", y: "center83"}
+            {index: 290, dir: 225, rev: 0, x: "center-39", y: "center95"} 
 		],
 		[ // 富士山
 			{index: 57, dir: 45, rev: 0, x: "center-264", y: "center67"},
@@ -1850,10 +1850,14 @@ function judge_puzzle(board, answer, confuse = true){
 		   || Math.abs(answer[i].dir - dir) > allowed_error_dir){
 			if(confuse){
 				[board[1], board[2]] = [board[2], board[1]];
+                board[1].dir = (board[1].dir - 180 + 360) % 360;
+                board[2].dir = (board[2].dir + 180 + 360) % 360;
 				
 				var re = judge_puzzle(board,answer, false);
 				
 				[board[1], board[2]] = [board[2], board[1]];
+                board[1].dir = (board[1].dir - 180 + 360) % 360;
+                board[2].dir = (board[2].dir + 180 + 360) % 360;
 
 				return re;
 			}else{
