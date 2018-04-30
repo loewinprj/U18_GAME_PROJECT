@@ -634,6 +634,8 @@ function init_opening(canvas, context){
 			src: 'phoenix',
 			x: center + 300,
 			y: center + -100,
+			w: 230,
+			h: 230,
 			id: 3
 		}
 	];
@@ -673,7 +675,7 @@ function init_mobs(canvas, context){
 		
 		gui.push(new canvasEx({
 			canvas, context, type: img, x: center + data.x, y: center + data.y, w: data.w || 200, h: data.h || 200,
-			center: data.center || 0, reverse: data.reverse || 0, direction: data.dir || 0,
+			center: data.center || 0, reverse: data.reverse || 0, direction: data.dir || 0, alpha: 1,
 			src: data.src, map_id: data.map_id || 0, mob_data: {x: data.x, y: data.y},
 			label: ['Game', 'Mob']
 		}));
@@ -847,6 +849,7 @@ function update(){
 		}
 		
 		switch_map();
+		game_action();
 		draw_debug_label();
 		control_player_animation();
 	}
@@ -1082,7 +1085,7 @@ function draw(){
 				
 			case 'Game':
 				if(check_include_label(label, 'Game')){
-					if(check_include_label(label, 'Mapchip')){
+					if(check_include_label(label, 'Mapchip') || check_include_label(label, 'Mob')){
 						if(e.map_id === game_controller.map_id){
 							e.draw();
 						}
@@ -1502,6 +1505,7 @@ function scroll_mapchips_and_mobs(){
 			
 			let alpha = distance(width / 2, height / 2, x, y) / ((width + height) / 2);
 			alpha = (1 - alpha * 1.1) < 0 ? 0 : 1 - alpha * 1.025;
+			
 			gui[e.index].alpha = alpha;
 		}
 	});
@@ -1509,6 +1513,14 @@ function scroll_mapchips_and_mobs(){
 	mobs[map_id].map(function(e){
 		gui[e.index].x = center + (gui[e.index].mob_data.x + game_controller.scroll.x);
 		gui[e.index].y = center + (gui[e.index].mob_data.y + game_controller.scroll.y);
+		
+		let x = convert_position(gui[e.index].x, 'x', canv);
+		let y = convert_position(gui[e.index].y, 'y', canv);
+			
+		let alpha = distance(width / 2, height / 2, x, y) / ((width + height) / 2);
+		alpha = (1 - alpha * 1.1) < 0 ? 0 : 1 - alpha * 1.025;
+		
+		gui[e.index].alpha = alpha;
 	});
 }
 
@@ -1913,5 +1925,13 @@ function swap_with_switch_map(){
 			game_controller.scroll.y = game_controller.next_y;
 			game_controller.map_id = game_controller.next_map;
 		}
+	}
+}
+
+function game_action(){
+	switch(game_controller.map_id){
+		case 1:
+			// tut
+			break;
 	}
 }
