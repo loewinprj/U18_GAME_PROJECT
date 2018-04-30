@@ -104,7 +104,8 @@ function init(){
 		map_switched: 0,
 		master_volume: 1, // master volume
 		
-		tutorial: 0
+		tutorial: 0,
+		transform_id: 0
 	};
 
     // Player's detailed information
@@ -409,6 +410,7 @@ function init(){
 		{src: 'Sound/BGM/opening.mp3', volume: 0.7, loop: 0},
 		{src: 'Sound/SE/water.mp3', volume: 0.8, loop: 1},
 		{src: 'Sound/SE/pause.mp3', volume: 0.6, loop: 0},
+		{src: 'Sound/SE/transform.mp3', volume: 0.7, loop: 0}
 	];
 
 	soundset = new Array(soundname.length).fill(0);
@@ -426,6 +428,10 @@ function init(){
 		if(src === 'Sound/SE/water.mp3'){
 			game_controller.environmental_se.water = i;
 		}
+		
+		if(src === 'Sound/SE/transform.mp3'){
+			game_controller.transform_id = i;
+		}
 	});
 
 	// setup _animation object
@@ -439,11 +445,11 @@ function init(){
 	pressed_keys = []; // Reset the array for stack pressed keys
 	pressed_keys[37] = pressed_keys[38] = pressed_keys[39] = pressed_keys[40] = 0; // Measures against NaN
 	
-	mapchips = new Array(2).fill(null);
-	grounds = new Array(2).fill(null);
-	mobs = new Array(2).fill(null);
+	mapchips = new Array(3).fill(null);
+	grounds = new Array(3).fill(null);
+	mobs = new Array(3).fill(null);
 	
-	for(let i = 0; i < 2; i++){
+	for(let i = 0; i < 3; i++){
 		grounds[i] = new group();
 		mapchips[i] = [];
 		mobs[i] = [];
@@ -871,13 +877,6 @@ function update(){
 	
 	swap_with_switch_map();	
 	pause_control();
-	
-	// Talk window
-	if(game_controller.screen_mode === 'Game'){
-		let index = game_controller.talk.window.index;
-		gui[index].alpha += (game_controller.talk.mode - gui[index].alpha) / 3;	
-
-	}
 
 	// Mask alpha
 	gui.forEach(function(e){
@@ -1242,7 +1241,11 @@ function draw_effects(){
 }
 
 function draw_talk_window(){
-	//game_controller.talk.mode
+	if(game_controller.screen_mode === 'Game'){
+		let index = game_controller.talk.window.index;
+		gui[index].alpha += (game_controller.talk.mode - gui[index].alpha) / 2;	
+	}
+	
 	if(game_controller.talk.mode && game_controller.talk.text !== ''){
 		game_controller.talk.text.map(function(e){
 			e.object.draw();
@@ -1770,9 +1773,12 @@ function control_player_animation(){
 }
 
 function switch_animal(name){
+	soundset[[game_controller.transform_id]].play(1);
 	gui[game_controller.flash_index].alpha = 1;
+	
 	let index = player.index;
 	player.animal = name;
+	
 	switch(name){
 		case 'ninja':
 			gui[index].anime_frame = 0; // にんげん
@@ -1937,6 +1943,17 @@ function switch_map(){
 				player.save.y = -250;
 			}
 			break;
+			
+		case 1:
+			if(-480 > game_controller.scroll.x && !game_controller.map_switched){
+				game_controller.map_switched = 30;
+				game_controller.next_map = 2;
+				game_controller.next_x = 3000;
+				game_controller.next_y = -250;
+				player.save.x = 5000;
+				player.save.y = -250;
+			}
+			break;
 	}
 }
 
@@ -1947,6 +1964,7 @@ function swap_with_switch_map(){
 			game_controller.scroll.x = game_controller.next_x;
 			game_controller.scroll.y = game_controller.next_y;
 			game_controller.map_id = game_controller.next_map;
+			switch_animal('ninja');
 		}
 	}
 }
@@ -1960,15 +1978,15 @@ function game_action(){
 					game_controller.tutorial = 1;
 					stacks.x = game_controller.scroll.x;
 					stacks.y = game_controller.scroll.y;
-					create_talk_window(120, '上下左右それぞれの矢印キーで、\nプレイヤーの移動ができます。\n移動してみてください', 0.9);
+					create_talk_window(120, '上下左右それぞれの矢印キーで、\nプレイヤーの移動ができます。\n移動してみてください');
 				}, 500);
 			}
 			if(game_controller.tutorial === 1 && (stacks.x !== game_controller.scroll.x || stacks.y !== game_controller.scroll.y)){
 				game_controller.tutorial = -1;
 				setTimeout(function(){
 					game_controller.tutorial = 2;
-					create_talk_window(120, 'いいかんじです。\n右に進みましょう。', 0.9);
-				}, 1000);
+					create_talk_window(120, 'いいかんじです。\n右に進みましょう。');
+				}, 1500);
 			}
 			break;
 			
@@ -1977,12 +1995,12 @@ function game_action(){
 				game_controller.tutorial = -1;
 				setTimeout(function(){
 					game_controller.tutorial = 3;
-					create_talk_window(120, 'このさきは崖なので、\nこのままでは進めません。', 0.9);
-				}, 200);
+					create_talk_window(120, 'このさきは崖なので、\nこのままでは進めません。');
+				}, 100);
 			}
 			if(game_controller.tutorial === 3){
 				game_controller.tutorial = 4;
-				create_talk_window(120, '前にいる鷹に変身しましょう。\n対象動物が視野に居るときに\nXキーを押してください。', 0.9);
+				create_talk_window(120, '前にいる鷹に変身しましょう。\n対象動物が視野に居るときに\nXキーを押してください。');
 			}
 			break;
 	}
