@@ -18,6 +18,9 @@ function init(){
     set_size();
     clear();
 
+	// free value stack object
+	stacks = {};
+	
     // debug status
     _debug = {
         hitbox: false,
@@ -99,7 +102,9 @@ function init(){
 		
 		map_id: 0,
 		map_switched: 0,
-		master_volume: 1 // master volume
+		master_volume: 1, // master volume
+		
+		tutorial: 0
 	};
 
     // Player's detailed information
@@ -129,7 +134,7 @@ function init(){
 			index: 0
 		},
 		
-		animal: 'human'
+		animal: 'ninja'
 	};
 
 	// Mouse positions
@@ -594,7 +599,7 @@ function init_opening(canvas, context){
 	op_image_set = [
 		{
 			src: 'moon',
-			x: maximum + -750,
+			x: center + 500,
 			y: 150,
 			w: 60,
 			h: 60,
@@ -602,7 +607,7 @@ function init_opening(canvas, context){
 		},
 		{
 			src: 'ship',
-			x: maximum + -800,
+			x: center + 430,
 			y: 230,
 			w: 120,
 			h: 120,
@@ -852,6 +857,8 @@ function update(){
 		game_action();
 		draw_debug_label();
 		control_player_animation();
+		
+		control_switch_animal();
 	}
 	
 	swap_with_switch_map();	
@@ -1496,31 +1503,39 @@ function move_until_not_hit(obj_1, obj_2, count, step, x, y, change_x, change_y)
 function scroll_mapchips_and_mobs(){
 	let map_id = game_controller.map_id;
 	mapchips[map_id].map(function(e){
-		gui[e.index].x = center + (gui[e.index].mapchip_data.x + game_controller.scroll.x);
-		gui[e.index].y = center + (gui[e.index].mapchip_data.y + game_controller.scroll.y);
+		let index = e.index;
+		
+		gui[index].x = center + (gui[index].mapchip_data.x + game_controller.scroll.x);
+		gui[index].y = center + (gui[index].mapchip_data.y + game_controller.scroll.y);
 		
 		if(!check_include_label(e.label, 'Hitbox')){
-			let x = convert_position(gui[e.index].x, 'x', canv);
-			let y = convert_position(gui[e.index].y, 'y', canv);
+			let x = convert_position(gui[index].x, 'x', canv);
+			let y = convert_position(gui[index].y, 'y', canv);
 			
 			let alpha = distance(width / 2, height / 2, x, y) / ((width + height) / 2);
 			alpha = (1 - alpha * 1.1) < 0 ? 0 : 1 - alpha * 1.025;
 			
-			gui[e.index].alpha = alpha;
+			gui[index].alpha = alpha;
 		}
 	});
 	
 	mobs[map_id].map(function(e){
-		gui[e.index].x = center + (gui[e.index].mob_data.x + game_controller.scroll.x);
-		gui[e.index].y = center + (gui[e.index].mob_data.y + game_controller.scroll.y);
+		let index = e.index;
 		
-		let x = convert_position(gui[e.index].x, 'x', canv);
-		let y = convert_position(gui[e.index].y, 'y', canv);
+		gui[index].x = center + (gui[index].mob_data.x + game_controller.scroll.x);
+		gui[index].y = center + (gui[index].mob_data.y + game_controller.scroll.y);
+		
+		let x = convert_position(gui[index].x, 'x', canv);
+		let y = convert_position(gui[index].y, 'y', canv);
 			
 		let alpha = distance(width / 2, height / 2, x, y) / ((width + height) / 2);
 		alpha = (1 - alpha * 1.1) < 0 ? 0 : 1 - alpha * 1.025;
 		
-		gui[e.index].alpha = alpha;
+		gui[index].alpha = alpha;
+		
+		if(alpha > 0){
+			stacks.animal_index = index;
+		}
 	});
 }
 
@@ -1700,7 +1715,7 @@ function control_player_animation(){
 	let frame = gui[index].anime_frame;
 	
 	switch(player.animal){
-		case 'human':
+		case 'ninja':
 			if(player.standing){
 				if(frame === 14 && !(pressed_keys[37] || pressed_keys[39])){
 					frame = 3;
@@ -1751,7 +1766,7 @@ function switch_animal(name){
 	let index = player.index;
 	player.animal = name;
 	switch(name){
-		case 'human':
+		case 'ninja':
 			gui[index].anime_frame = 0; // にんげん
 			break;
 			
@@ -1775,7 +1790,7 @@ function control_hitbox(){
 	let frame = gui[player.index].anime_frame;
 	
 	switch(player.animal){
-		case 'human':
+		case 'ninja':
 			if(frame > 3){
 				gui[player.hitbox].pos = hitbox_datas[1];
 			} else {
@@ -1930,8 +1945,50 @@ function swap_with_switch_map(){
 
 function game_action(){
 	switch(game_controller.map_id){
-		case 1:
-			// tut
+		case 0:
+			if(game_controller.tutorial === 0 && player.standing){
+				game_controller.tutorial = -1;
+				setTimeout(function(){
+					game_controller.tutorial = 1;
+					stacks.x = game_controller.scroll.x;
+					stacks.y = game_controller.scroll.y;
+					create_talk_window(120, '上下左右それぞれの矢印キーで、\nプレイヤーの移動ができます。\n移動してみてください', 0.9);
+				}, 500);
+			}
+			if(game_controller.tutorial === 1 && (stacks.x !== game_controller.scroll.x || stacks.y !== game_controller.scroll.y)){
+				game_controller.tutorial = -1;
+				setTimeout(function(){
+					game_controller.tutorial = 2;
+					create_talk_window(120, 'いいかんじです。\n右に進みましょう。', 0.9);
+				}, 1000);
+			}
 			break;
+			
+		case 1:
+			if(game_controller.tutorial === 2 && 2500 > game_controller.scroll.x){
+				game_controller.tutorial = -1;
+				setTimeout(function(){
+					game_controller.tutorial = 3;
+					create_talk_window(120, 'このさきは崖なので、\nこのままでは進めません。', 0.9);
+				}, 200);
+			}
+			if(game_controller.tutorial === 3){
+				game_controller.tutorial = 4;
+				create_talk_window(120, '前にいる鷹に変身しましょう。\n対象動物が視野に居るときに\nXキーを押してください。', 0.9);
+			}
+			break;
+	}
+}
+
+function control_switch_animal(){
+	if(pressed_keys[88] && !game_controller.puzzle.mode && stacks.animal_index){
+		stacks.animal = gui[stacks.animal_index].src.split(/\//)[2].split(/_/)[0];
+		gui[game_controller.flash_index].alpha = 1;
+		game_controller.puzzle.mode = true;
+		stacks.puzzle_check_mode = true;
+	}
+	
+	if(stacks.puzzle_check_mode){
+		//
 	}
 }
