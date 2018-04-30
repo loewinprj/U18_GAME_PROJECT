@@ -98,6 +98,7 @@ function init(){
 		},
 		
 		map_id: 0,
+		map_switched: 0,
 		master_volume: 1 // master volume
 	};
 
@@ -402,6 +403,7 @@ function init(){
 		{src: 'Sound/Test/U18-13(1).mp3', volume: 1, loop: 1},
 		{src: 'Sound/Test/U18-14(1)-music.mp3', volume: 0.0, loop: 1},
 		{src: 'Sound/Test/U18-14(1)-water.mp3', volume: 0.8, loop: 1},
+		{src: 'Sound/Test/U18-17(1).mp3', volume: 0.7, loop: 0},
 		{src: 'Sound/Test/SE-7(1)_remix.mp3', volume: 0.6, loop: 0},
 	];
 
@@ -661,7 +663,7 @@ function init_hitboxes(){
 		
 		// タカ
 		[{x: -40, y: 25}, {x: 40, y: 25}, {x: 40, y: -30}, {x: -40, y: -30}],
-        [{x: -25, y: 25}, {x: 25, y: 25}, {x: 25, y: -45}, {x: -25, y: -45}],
+		[{x: -25, y: 25}, {x: 25, y: 25}, {x: 25, y: -45}, {x: -25, y: -45}],
 	];
 }
 
@@ -811,6 +813,7 @@ function main(){
 		game_controller.pause.mode = !game_controller.pause.mode;
 		game_controller.pause.buffer = 15;
 		
+		soundset[game_controller.pause.se_index].volume(0.6 * game_controller.master_volume);
 		soundset[game_controller.pause.se_index].play(1);
 		_c.log(`Switched pause mode : ${game_controller.pause.mode}`);
 	}
@@ -845,6 +848,7 @@ function update(){
 			scroll_mapchips_and_mobs();
 		}
 		
+		switch_map();
 		draw_debug_label();
 		control_player_animation();
 	}
@@ -871,7 +875,17 @@ function update(){
 		case 0:			
 			if(!game_controller.respawn){
 				soundset[game_controller.environmental_se.water].audio.volume += (0.8 - soundset[game_controller.environmental_se.water].audio.volume) / 6;
-				gui[game_controller.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[game_controller.feed_index].alpha) / 6;
+				
+				if(game_controller.map_switched && !game_controller.pause.mode){
+					if(game_controller.map_switched >= 11){
+						gui[game_controller.feed_index].alpha += (1 - gui[game_controller.feed_index].alpha) / 4;
+					} else {
+						gui[game_controller.feed_index].alpha += -gui[game_controller.feed_index].alpha / 4;
+					}
+				} else {
+					gui[game_controller.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[game_controller.feed_index].alpha) / 6;
+				}
+				
 				game_controller.play_audio.change_speed = 3;
 			}
 			break;
@@ -908,6 +922,12 @@ function update(){
 					game_controller.screen_mode = 'Game';
 					_animation.title = 0;
 				} else {
+					game_controller.play_audio.change_speed = 6;
+					game_controller.play_audio.max_volume = 0.6;
+					game_controller.play_audio.index = 3;
+					game_controller.play_audio.pause = 1;
+					game_controller.play_audio.play = 1;
+					
 					game_controller.screen_mode = 'Opening';
 					_animation.title = 4;
 				}
@@ -918,39 +938,41 @@ function update(){
 			// オープニングを付ける予定
 			gui[game_controller.feed_index].alpha += (0.3 - gui[game_controller.feed_index].alpha) / 16; // とりあえず画面明るくしておけ
 			
-			if(abs(0.3 - gui[game_controller.feed_index].alpha) < 0.1){
-				//abs_x
-				if(gui[game_controller.opening.index].abs_x < 50){
-					gui[game_controller.opening.index].abs_x += 0.6; // オープニング速度
-					gui[game_controller.opening.index].x = center + gui[game_controller.opening.index].abs_x;
-					
-					let alpha = 1 - abs(gui[game_controller.opening.index].abs_x / 50);
-					alpha = alpha > 0 ? alpha : 0;
-					
-					gui[game_controller.opening.index].alpha = alpha;
-					
-					gui.map(function(obj){
-						let label = obj.label;
-						if(check_include_label(label, 'Opening') && check_include_label(label, 'Background')){
-							if(obj.id === game_controller.opening.story_index){
-								obj.alpha = alpha;
-							} else {
-								obj.alpha = 0;
+			if(story.length > game_controller.opening.story_index){
+				if(abs(0.3 - gui[game_controller.feed_index].alpha) < 0.1){
+					//abs_x
+					if(gui[game_controller.opening.index].abs_x < 50){
+						gui[game_controller.opening.index].abs_x += 0.6; // オープニング速度
+						gui[game_controller.opening.index].x = center + gui[game_controller.opening.index].abs_x;
+
+						let alpha = 1 - abs(gui[game_controller.opening.index].abs_x / 50);
+						alpha = alpha > 0 ? alpha : 0;
+
+						gui[game_controller.opening.index].alpha = alpha;
+
+						gui.map(function(obj){
+							let label = obj.label;
+							if(check_include_label(label, 'Opening') && check_include_label(label, 'Background')){
+								if(obj.id === game_controller.opening.story_index){
+									obj.alpha = alpha;
+								} else {
+									obj.alpha = 0;
+								}
 							}
-						}
-					});
-				} else {
-					// テロップを次へ
-					game_controller.opening.story_index++;
-					gui[game_controller.opening.index].text = story[game_controller.opening.story_index];
-					// xとalphaをリセット
-					gui[game_controller.opening.index].x = center + -50;
-					gui[game_controller.opening.index].abs_x = -50;
-					gui[game_controller.opening.index].alpha = 0;
+						});
+					} else {
+						// テロップを次へ
+						game_controller.opening.story_index++;
+						gui[game_controller.opening.index].text = story[game_controller.opening.story_index];
+						// xとalphaをリセット
+						gui[game_controller.opening.index].x = center + -50;
+						gui[game_controller.opening.index].abs_x = -50;
+						gui[game_controller.opening.index].alpha = 0;
+					}
 				}
 			}
 
-			if(pressed_keys[32]){
+			if(pressed_keys[32] || story.length === game_controller.opening.story_index){
 				game_controller.play_audio.change_speed = 6;
 				game_controller.play_audio.max_volume = 0.6;
 				game_controller.play_audio.index = 1;
@@ -1104,10 +1126,11 @@ function draw_last_drag_object(){
 		if(_debug.screen){
 			let yScale = h / 2;
 			let xScale = w / 2;
-            /*
+
+			/*
 			cont.lineWidth = 2;
 			cont.strokeStyle = '#C00';
-            
+
 			cont.moveTo(x - xScale, y - yScale);
 
 
@@ -1116,7 +1139,7 @@ function draw_last_drag_object(){
 			cont.lineTo(x + xScale, y - yScale);
 			cont.lineTo(x - xScale, y - yScale);
 			cont.stroke();
-            */
+			*/
 		} else {
 			cont.fillStyle = 'rgba(255, 255, 255, 0.1)';
 			for(let i = 5; i--;){
@@ -1286,9 +1309,12 @@ function player_control(){
 	let clear_case = (_debug.screen || !game_controller.puzzle.mode);
 
 	// Deceleration according to law of inertia
-    var speed_change = "";
-    if(gui[player.index].anime_frame == 17) speed_change = "_2";
+	var speed_change = '';
+	if(gui[player.index].anime_frame == 17){
+		speed_change = '_2';
+	}
 	player.accel.x += (pressed_keys[39] - pressed_keys[37]) * accel_speed[player.animal + speed_change] * clear_case; // Rigth and Left arrow keys
+	
 	var pre_player_x = player.x;
 	var pre_player_y = player.y;
 	player.x = 0;
@@ -1732,9 +1758,8 @@ function control_hitbox(){
 			
 		case 'hawk':
 			// たか
-			//gui[player.hitbox].pos = hitbox_datas[4];
-            if(frame == 17){
-                gui[player.hitbox].pos = hitbox_datas[4];
+			if(frame === 17){
+				gui[player.hitbox].pos = hitbox_datas[4];
 			} else {
 				gui[player.hitbox].pos = hitbox_datas[5];
 			}
@@ -1838,5 +1863,28 @@ function pause_control(){
 	} else {
 		soundset[game_controller.environmental_se.water].audio.volume = 0.8 * game_controller.master_volume;
 		game_controller.play_audio.max_volume = 1 * game_controller.master_volume;
+	}
+}
+
+function switch_map(){
+	switch(game_controller.map_id){
+		case 0:
+			if(-3260 > game_controller.scroll.x && !game_controller.map_switched){
+				game_controller.map_switched = 20;
+				game_controller.next_map = 1;
+				game_controller.next_x = 0;
+				game_controller.next_y = 0;
+				_c.log('CAN U FEEL THIS?');
+			}
+			break;
+	}
+	
+	if(game_controller.map_switched){
+		game_controller.map_switched--;
+		if(game_controller.map_switched < 1){
+			game_controller.scroll.x = game_controller.next_x;
+			game_controller.scroll.y = game_controller.next_y;
+			game_controller.map_id = game_controller.next_map;
+		}
 	}
 }
