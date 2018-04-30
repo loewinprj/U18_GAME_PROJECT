@@ -30,7 +30,8 @@ var board_datas; // puzzle boards
 const accel_speed = {
 	human: 4.8,
 	mouse: 3.7,
-	hawk: 7.6
+	hawk: 2.0,
+    hawk_2: 7.6
 };
 
 // Jump pwoer of player
