@@ -33,10 +33,10 @@ class canvasEx{
 	constructor(input){
 		Object.assign(this,input);
 		
-		if(this.switchFrame === void(0)){
+		if(this.switchFrame === void 0){
 			this.switchFrame = [null];
 		}
-		if(this.frame === void(0)){
+		if(this.frame === void 0){
 			this.frame = -1;
 		}
 
@@ -60,7 +60,7 @@ class canvasEx{
 			this.text = this.text.split('').reverse().join('');
 		}
 
-		if(this.animation !== void(0)){
+		if(this.animation !== void 0){
 			_max_images += this.animation.length;
 			this.anime_frame = 0;
 			this.anime = true;
@@ -118,12 +118,12 @@ class canvasEx{
 		ctx.fillStyle = this.color;
 		ctx.strokeStyle = this.color;
 		
-		if(alpha !== void(0)){
+		if(alpha !== void 0){
 			alphaMemory = ctx.globalAlpha;
 			ctx.globalAlpha = alpha;
 		}
 		
-		if(label !== void(0)){
+		if(label !== void 0){
     		if(label === 'Hitbox' || label.indexOf('Hitbox') > -1){
     		    if(alphaMemory === null){
                     alphaMemory = ctx.globalAlpha;
@@ -134,7 +134,7 @@ class canvasEx{
     		}
 		}
 		
-		if(direction !== void(0)){
+		if(direction !== void 0){
 			ctx.translate(x, y);
 			ctx.rotate(direction * Math.PI / 180);
 			ctx.translate(-x, -y);
@@ -179,7 +179,7 @@ class canvasEx{
 				if(caseText){
 					var text = this.text;
 					var size = 30 * (this.size / 100);
-					var mode = this.mode === 0 || this.mode === void(0);
+					var mode = this.mode === 0 || this.mode === void 0;
 
 					if(this.align === center){
 						if(mode){
@@ -200,7 +200,7 @@ class canvasEx{
 						let fontStack = json_font[txt];
 
 						
-						if(fontStack !== void(0)){
+						if(fontStack !== void 0){
 							let charCode = txt.charCodeAt(0);
 							if(charCode === 12289 || charCode === 12290/*text[i] === '、' || text[i] === '。'*/){
 								if(mode){
@@ -230,14 +230,14 @@ class canvasEx{
 
 			// draw image
 			case img:
-				var imgSrc = this.img;
+				var img_data = this.img;
 				var reverse = this.reverse;
 
 				var fw = img.width / 2 * isCenter;
 				var fh = img.height / 2 * isCenter;
 
 				if(this.anime){
-					imgSrc = this.animation[this.anime_frame];
+					img_data = this.animation[this.anime_frame];
 				}
 
 				if(isNaN(fw)){
@@ -251,18 +251,18 @@ class canvasEx{
 					ctx.scale(-1, 1);
 				}
 
-				if(this.json !== void(0)){
+				if(this.json !== void 0){
 					var jx = Number(this.json.x);
 					var jy = Number(this.json.y);
 					var width = Number(this.json.width);
 					var height = Number(this.json.height);
 
-					if(w !== void(0) && h !== void(0)){
-						ctx.drawImage(imgSrc, jx, jy, width, height, (reverse ? -1 : 1) * x - fw, y - fh, w, h); // Draw!
+					if(w !== void 0 && h !== void 0){
+						ctx.drawImage(img_data, jx, jy, width, height, (reverse ? -1 : 1) * x - fw, y - fh, w, h); // Draw!
 					}else{
-						ctx.drawImage(imgSrc, jx, jy, width, height, (reverse ? -1 : 1) * x - fw, y - fh, img.width, img.height); // Draw!
+						ctx.drawImage(img_data, jx, jy, width, height, (reverse ? -1 : 1) * x - fw, y - fh, img.width, img.height); // Draw!
 					}
-				}else if(w !== void(0) && h !== void(0)){
+				}else if(w !== void 0 && h !== void 0){
 					fw = w / 2 * this.center;
 					fh = h / 2 * this.center;
 
@@ -273,9 +273,12 @@ class canvasEx{
 						fh = 0;
 					}
 
-					ctx.drawImage(imgSrc, (reverse ? -1 : 1) * x - fw, y - fh, w, h); // Draw!
+					ctx.drawImage(img_data, (reverse ? -1 : 1) * x - fw, y - fh, w, h); // Draw!
 				}else{
-					ctx.drawImage(imgSrc, (reverse ? -1 : 1) * x - fw, y - fh); // Draw!
+					fw = img_data.width / 2 * this.center;
+					fh = img_data.height / 2 * this.center;
+					
+					ctx.drawImage(img_data, (reverse ? -1 : 1) * x - fw, y - fh); // Draw!
 				}
 
 				if(this.anime && status){
@@ -286,7 +289,7 @@ class canvasEx{
 
 		ctx.restore();
 
-		if(alpha !== void(0)){
+		if(alpha !== void 0){
 			ctx.globalAlpha = alphaMemory;
 		}
 	}
@@ -298,10 +301,10 @@ class canvasEx{
 		let x = this.x;
 		let y = this.y;
 
-		if(mode[1] !== void(0)){
+		if(mode[1] !== void 0){
 			x = mode[1];
 		}
-		if(mode[2] !== void(0)){
+		if(mode[2] !== void 0){
 			y = mode[2];
 		}
 
@@ -408,7 +411,7 @@ class group{
 		this.posStack = [];
 		for(var i = 0; i < this.objects.length; i++){
 			var input = this.objects[i];
-			if(input.positions !== void(0)){
+			if(input.positions !== void 0){
 				for(var j = 0, len = input.positions.length; j < len; j++){
 					this.posStack.push(input.positions[j]);
 				}
@@ -441,7 +444,7 @@ class group{
 	}
 
 	addPosStack(input){
-		if(input.positions !== void(0)){
+		if(input.positions !== void 0){
 			for(var j = 0, len = input.positions.length; j < len; j++){
 				this.posStack.push(input.positions[j]);
 			}
@@ -503,7 +506,7 @@ class group{
 		for(let i in this.objects){
 			const e = this.objects[i];
 			
-			if(e.label !== void(0) && e.label === 'Group hitbox'){
+			if(e.label !== void 0 && e.label === 'Group hitbox'){
 				let pos = [];				
 				e.pos.map(function(e){
 					pos.push({
@@ -602,7 +605,7 @@ function random(x, y){
 
 function distance(x_0, y_0, x_1, y_1, canvas){
 	
-	if(canvas !== void(0)){
+	if(canvas !== void 0){
 		x_0 = convert_position(x_0, 'x', canvas);
 		x_1 = convert_position(x_1, 'x', canvas);
 
