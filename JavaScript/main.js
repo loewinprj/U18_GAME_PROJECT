@@ -1106,7 +1106,7 @@ function draw_last_drag_object(){
 
 			cont.lineWidth = 2;
 			cont.strokeStyle = '#C00';
-
+            /*
 			cont.moveTo(x - xScale, y - yScale);
 
 
@@ -1115,6 +1115,7 @@ function draw_last_drag_object(){
 			cont.lineTo(x + xScale, y - yScale);
 			cont.lineTo(x - xScale, y - yScale);
 			cont.stroke();
+            */
 		} else {
 			cont.fillStyle = 'rgba(255, 255, 255, 0.1)';
 			for(let i = 5; i--;){
@@ -1519,7 +1520,7 @@ function puzzle_events(){
 	if(mouse.down){
 		let index = mouse.last_drag_index;
 		
-		if(!mouse.buffer.reverse && distance(mouse.x, mouse.y, convert_position(center, 'x', canv), convert_position(maximum, 'y', canv)) < 275){
+		if(!mouse.buffer.reverse && distance(mouse.x, mouse.y, convert_position(center, 'x', canv), convert_position(maximum, 'y', canv) + 75) < 275){
 			gui[index].reverse = !gui[index].reverse;
 			console.log('REVERSE');
 			
