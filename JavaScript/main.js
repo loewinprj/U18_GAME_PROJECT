@@ -1106,7 +1106,6 @@ function draw_last_drag_object(){
 
 			cont.lineWidth = 2;
 			cont.strokeStyle = '#C00';
-            /*
 			cont.moveTo(x - xScale, y - yScale);
 
 
@@ -1115,7 +1114,7 @@ function draw_last_drag_object(){
 			cont.lineTo(x + xScale, y - yScale);
 			cont.lineTo(x - xScale, y - yScale);
 			cont.stroke();
-            */
+            
 		} else {
 			cont.fillStyle = 'rgba(255, 255, 255, 0.1)';
 			for(let i = 5; i--;){
