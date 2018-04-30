@@ -24,7 +24,7 @@ var player; // player object
 var puzzle_datas; // puzzle stage datas
 var board_datas; // puzzle boards
 
-var stacks = {}; // free value stacks
+var stacks; // free value stacks
 
 // constant
 
