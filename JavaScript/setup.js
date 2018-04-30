@@ -24,6 +24,8 @@ var player; // player object
 var puzzle_datas; // puzzle stage datas
 var board_datas; // puzzle boards
 
+var stacks = {}; // free value stacks
+
 // constant
 
 // Change rate of acceleration
@@ -31,7 +33,7 @@ const accel_speed = {
 	human: 4.8,
 	mouse: 3.7,
 	hawk: 2.0,
-    hawk_2: 7.6
+	hawk_2: 7.6
 };
 
 // Jump pwoer of player
