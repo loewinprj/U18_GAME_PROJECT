@@ -703,7 +703,7 @@ function init_puzzle_data(canvas, context){
 	});
 	
 	// パズルの完成データ
-	puzzle_datas = [		
+	puzzle_datas = [
 		[ // おしどり
 			
 		/*
@@ -719,9 +719,9 @@ function init_puzzle_data(canvas, context){
 			{index: 36, dir: 225, rev: 0, x: "center-164.5", y: "center26"},
 			{index: 37, dir: 225, rev: 0, x: "center-151.5", y: "center39"},
 		],
-		[ //雁	
+		[ //雁
 			{index: 284, dir: 135, rev: 0, x: "center-177", y: "center36"},
-		        {index: 285, dir: 0, rev: 0, x: "center-74", y: "center9"},
+			{index: 285, dir: 0, rev: 0, x: "center-74", y: "center9"},
 			{index: 286, dir: 45, rev: 0, x: "center-113", y: "center152"},
 			{index: 287, dir: 45, rev: 0, x: "center-85", y: "center74"},
 			{index: 288, dir: 45, rev: 1, x: "center-140", y: "center44"},
@@ -801,6 +801,14 @@ function init_puzzle_data(canvas, context){
 			{"index": 63,"dir": 225,"rev": 0,"x": "center190.5","y": "center-193.5"}
 		]
 	];
+	
+	// 解答画像読み込み
+	for(let i = 0; i < puzzle_datas.length; i++){
+		gui.push(new canvasEx({
+			canvas, context, type: img, x: center, y: -200, w: 200, h: 200, center: 1, alpha: 1,
+			src: `Image/Puzzle/answer_${('00' + (i + 1)).slice(-2)}.png`, label: ['Game', 'Answer']
+		}));
+	}
 }
 
 // Main loop method
@@ -1850,14 +1858,10 @@ function judge_puzzle(board, answer, confuse = true){
 		   || Math.abs(answer[i].dir - dir) > allowed_error_dir){
 			if(confuse){
 				[board[1], board[2]] = [board[2], board[1]];
-                board[1].dir = (board[1].dir - 180 + 360) % 360;
-                board[2].dir = (board[2].dir + 180 + 360) % 360;
 				
 				var re = judge_puzzle(board,answer, false);
 				
 				[board[1], board[2]] = [board[2], board[1]];
-                board[1].dir = (board[1].dir - 180 + 360) % 360;
-                board[2].dir = (board[2].dir + 180 + 360) % 360;
 
 				return re;
 			}else{
@@ -1993,6 +1997,6 @@ function control_switch_animal(){
 	}
 	
 	if(stacks.puzzle_check_mode){
-		//
+		// 判定をここに
 	}
 }
