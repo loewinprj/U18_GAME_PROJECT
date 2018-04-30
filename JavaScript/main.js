@@ -823,10 +823,9 @@ function main(){
 // Update methods
 function update(){
 	audio_update();
-	
 	key_events();
 	
-	if(!game_controller.pause.mode && !game_controller.talk.mode){
+	if(!game_controller.pause.mode && !game_controller.talk.mode && (!game_controller.map_switched || game_controller.map_switched < 11)){
 		if(player.frame > player.frame_speed){
 			player.frame = 0;
 		}
@@ -852,6 +851,7 @@ function update(){
 		control_player_animation();
 	}
 	
+	swap_with_switch_map();	
 	pause_control();
 	
 	// Talk window
@@ -876,10 +876,10 @@ function update(){
 				soundset[game_controller.environmental_se.water].audio.volume += (0.8 - soundset[game_controller.environmental_se.water].audio.volume) / 6;
 				
 				if(game_controller.map_switched && !game_controller.pause.mode){
-					if(game_controller.map_switched >= 11){
-						gui[game_controller.feed_index].alpha += (1 - gui[game_controller.feed_index].alpha) / 4;
-					} else {
-						gui[game_controller.feed_index].alpha += -gui[game_controller.feed_index].alpha / 4;
+					if(game_controller.map_switched >= 20){
+						gui[game_controller.feed_index].alpha += (1 - gui[game_controller.feed_index].alpha) / 3;
+					} else if(game_controller.map_switched <= 10){
+						gui[game_controller.feed_index].alpha += -gui[game_controller.feed_index].alpha / 3;
 					}
 				} else {
 					gui[game_controller.feed_index].alpha += (game_controller.pause.mode * 0.7 - gui[game_controller.feed_index].alpha) / 6;
@@ -1894,18 +1894,21 @@ function switch_map(){
 	switch(game_controller.map_id){
 		case 0:
 			if(-3260 > game_controller.scroll.x && !game_controller.map_switched){
-				game_controller.map_switched = 20;
+				game_controller.map_switched = 30;
 				game_controller.next_map = 1;
-				game_controller.next_x = 0;
-				game_controller.next_y = 0;
-				_c.log('CAN U FEEL THIS?');
+				game_controller.next_x = 3000;
+				game_controller.next_y = -250;
+				player.save.x = 3000;
+				player.save.y = -250;
 			}
 			break;
 	}
-	
+}
+
+function swap_with_switch_map(){
 	if(game_controller.map_switched){
 		game_controller.map_switched--;
-		if(game_controller.map_switched < 1){
+		if(game_controller.map_switched === 11){
 			game_controller.scroll.x = game_controller.next_x;
 			game_controller.scroll.y = game_controller.next_y;
 			game_controller.map_id = game_controller.next_map;
